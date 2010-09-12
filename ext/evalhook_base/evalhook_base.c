@@ -23,5 +23,14 @@ along with evalhook.  if not, see <http://www.gnu.org/licenses/>.
 #include <env.h>
 #include <node.h>
 
+VALUE m_EvalHook ;
+
+VALUE hook_block(VALUE self) {
+	rb_yield(Qnil);
+}
+
+
 extern void Init_evalhook_base() {
+	m_EvalHook = rb_define_module("EvalHook");
+	rb_define_singleton_method(m_EvalHook, "hook_block", hook_block, 0);
 }
