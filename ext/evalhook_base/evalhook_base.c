@@ -220,10 +220,12 @@ void process_recursive_node(NODE* node ) {
   case NODE_CALL:
   case NODE_FCALL:
   case NODE_VCALL:
-    if (nd_type(node) != NODE_FCALL)
-	    process_node(node->nd_recv);
-     if (node->nd_args || nd_type(node) != NODE_FCALL)
- 	   process_node(node->nd_args);
+    if (nd_type(node) != NODE_FCALL) {
+    	if (node->nd_recv) process_node(node->nd_recv);
+	 }
+     if (node->nd_args || nd_type(node) != NODE_FCALL) {
+      	if (node->nd_args) process_node(node->nd_args);
+     }
     break;
 
   case NODE_SUPER:
@@ -466,10 +468,6 @@ void process_recursive_node(NODE* node ) {
   /* case NODE_LSHIFT: */
   default:
     rb_warn("Unhandled node #%d type '%i'", nd_type(node), nd_type(node));
-    if (RNODE(node)->u1.node != NULL) rb_warning("unhandled u1 value");
-    if (RNODE(node)->u2.node != NULL) rb_warning("unhandled u2 value");
-    if (RNODE(node)->u3.node != NULL) rb_warning("unhandled u3 value");
-    if (RTEST(ruby_debug)) fprintf(stderr, "u1 = %p u2 = %p u3 = %p\\n", (void*)node->nd_1st, (void*)node->nd_2nd, (void*)node->nd_3rd);
     break;
   }
 
@@ -483,7 +481,9 @@ void process_node(NODE* node) {
 
 VALUE hook_block(VALUE self) {
 
+
 	printf("%s\n", ruby_frame->node->nd_file);
+	process_node(ruby_frame->node);
 
 	rb_yield(Qnil);
 }
