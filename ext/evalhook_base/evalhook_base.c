@@ -61,6 +61,15 @@ void process_node(NODE* node);
 void process_individual_node(NODE* node) {
 
 	switch (nd_type(node)) {
+		case NODE_FCALL: {
+			struct NODE* args;
+			args = NEW_LIST(NEW_LIT(ID2SYM(node->nd_mid)));
+			node->nd_recv = NEW_CALL(NEW_SELF(), rb_intern("hooked_method"), args);
+			node->nd_mid = rb_intern("call");
+			nd_set_type(node, NODE_CALL);
+			break;
+		}
+
 		case NODE_CALL:
 		case NODE_VCALL: {
 			struct NODE* args;
