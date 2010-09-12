@@ -474,8 +474,11 @@ void process_recursive_node(NODE* node ) {
 }
 
 void process_node(NODE* node) {
+
+	if (node) {
 	process_recursive_node(node);
 	process_individual_node(node);
+	}
 }
 
 
@@ -483,7 +486,7 @@ VALUE hook_block(VALUE self) {
 
 
 	printf("%s\n", ruby_frame->node->nd_file);
-	process_node(ruby_frame->node);
+	process_node(ruby_frame->prev->node);
 
 	rb_yield(Qnil);
 }
