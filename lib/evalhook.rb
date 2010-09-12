@@ -24,15 +24,7 @@ require "evalhook_base"
 
 class Object
   def hooked_method(mname)
-
-    method_handler = EvalHook.method_handler
-    ret = nil
-
-    if method_handler
-    ret = method_handler.handle_method(method(mname).owner, self, mname )
-    end
-
-    ret || EvalHook::HookedMethod.new(self,mname)
+    EvalHook::HookedMethod.new(self,mname)
   end
 end
 
@@ -43,6 +35,13 @@ module EvalHook
       @m = m
     end
     def call(*args)
+      method_handler = EvalHook.method_handler
+      ret = nil
+
+      if method_handler
+      ret = method_handler.handle_method(@recv.method(@m).owner, self, @m )
+      end
+
       @recv.send(@m, *args)
     end
   end
