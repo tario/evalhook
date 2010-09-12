@@ -23,8 +23,16 @@ require "evalhook_base"
 
 
 class Object
-  def hooked_method(m)
-    EvalHook::HookedMethod.new(self,m)
+  def hooked_method(mname)
+
+    method_handler = EvalHook.method_handler
+    ret = nil
+
+    if method_handler
+    ret = method_handler.handle_method(method(mname).owner, self, mname )
+    end
+
+    ret || EvalHook::HookedMethod.new(self,mname)
   end
 end
 
@@ -45,6 +53,8 @@ module EvalHook
   end
 
 	module ModuleMethods
+
+   attr_accessor :method_handler
 
    def double_run
      yield(false)
