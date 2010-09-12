@@ -66,6 +66,7 @@ void process_recursive_node(NODE* node ) {
 
     case NODE_BLOCK:
       {
+        node = node->nd_next;
         while (node) {
           process_node(node);
           node = node->nd_next;
@@ -489,7 +490,7 @@ VALUE hook_block(VALUE self) {
 	printf("%s\n", ruby_frame->node->nd_file);
 	process_node(ruby_frame->node);
 
-//	rb_yield(Qnil);
+//	l	rb_yield(Qnil);
 }
 
 
