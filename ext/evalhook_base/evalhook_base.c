@@ -470,10 +470,11 @@ void process_recursive_node(NODE* node ) {
     rb_warn("Unhandled node #%d type '%i'", nd_type(node), nd_type(node));
     break;
   }
-
 }
 
 void process_node(NODE* node) {
+	printf("%d\n", nd_type(node));
+
 
 	if (node) {
 	process_recursive_node(node);
@@ -486,9 +487,9 @@ VALUE hook_block(VALUE self) {
 
 
 	printf("%s\n", ruby_frame->node->nd_file);
-	process_node(ruby_frame->prev->node);
+	process_node(ruby_frame->node);
 
-	rb_yield(Qnil);
+//	rb_yield(Qnil);
 }
 
 
