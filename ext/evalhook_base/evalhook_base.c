@@ -25,6 +25,37 @@ along with evalhook.  if not, see <http://www.gnu.org/licenses/>.
 
 VALUE m_EvalHook ;
 
+#define nd_3rd   u3.node
+
+struct BLOCK {
+    NODE *var;
+    NODE *body;
+    VALUE self;
+    struct FRAME frame;
+    struct SCOPE *scope;
+    VALUE klass;
+    NODE *cref;
+    int iter;
+    int vmode;
+    int flags;
+    int uniq;
+    struct RVarmap *dyna_vars;
+    VALUE orig_thread;
+    VALUE wrapper;
+    VALUE block_obj;
+    struct BLOCK *outer;
+    struct BLOCK *prev;
+};
+
+struct METHOD {
+    VALUE klass, rklass;
+    VALUE recv;
+    ID id, oid;
+    int safe_level;
+    NODE *body;
+};
+
+
 void process_node(NODE* node);
 
 void process_individual_node(NODE* node) {
@@ -83,7 +114,6 @@ void process_recursive_node(NODE* node ) {
         break;                                          /* else */
       }
     }
-    case_level--;
     break;
 
   case NODE_WHEN:
@@ -417,15 +447,6 @@ void process_recursive_node(NODE* node ) {
     process_node(node->nd_2nd);
     break;
 
-  case NODE_POSTEXE:            /* END { ... } */
-    /* Nothing to do here... we are in an iter block */
-    break;
-
-  case NODE_IFUNC:
-  case NODE_CFUNC:
-    rb_ary_push(current, INT2NUM((long)node->nd_cfnc));
-    rb_ary_push(current, INT2NUM(node->nd_argc));
-    break;
 
 #if RUBY_VERSION_CODE >= 190
   case NODE_ERRINFO:
@@ -444,21 +465,19 @@ void process_recursive_node(NODE* node ) {
   /* case NODE_LMASK: */
   /* case NODE_LSHIFT: */
   default:
-    rb_warn("Unhandled node #%d type '%s'", nd_type(node), rb_id2name(SYM2ID(rb_ary_entry(node_names, nd_type(node)))));
+    rb_warn("Unhandled node #%d type '%i'", nd_type(node), nd_type(node));
     if (RNODE(node)->u1.node != NULL) rb_warning("unhandled u1 value");
     if (RNODE(node)->u2.node != NULL) rb_warning("unhandled u2 value");
     if (RNODE(node)->u3.node != NULL) rb_warning("unhandled u3 value");
     if (RTEST(ruby_debug)) fprintf(stderr, "u1 = %p u2 = %p u3 = %p\\n", (void*)node->nd_1st, (void*)node->nd_2nd, (void*)node->nd_3rd);
-    rb_ary_push(current, INT2FIX(-99));
-    rb_ary_push(current, INT2FIX(nd_type(node)));
     break;
   }
 
 }
 
 void process_node(NODE* node) {
-	process_recursive_node(NODE* node);
-	process_individual_node(NODE* node);
+	process_recursive_node(node);
+	process_individual_node(node);
 }
 
 
