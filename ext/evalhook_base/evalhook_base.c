@@ -59,6 +59,16 @@ struct METHOD {
 void process_node(NODE* node);
 
 void process_individual_node(NODE* node) {
+
+	switch (nd_type(node)) {
+		case NODE_CALL:
+		case NODE_FCALL:
+		case NODE_VCALL:
+//			node->nd_recv = NEW_CALL(node->nd_recv, rb_intern("hooked_method"), rb_ary_new3(1, ID2SYM(node->nd_mid) ) );
+//			node->nd_mid = rb_intern("call");
+			break;
+
+	}
 }
 
 void process_recursive_node(NODE* node ) {
@@ -66,9 +76,8 @@ void process_recursive_node(NODE* node ) {
 
     case NODE_BLOCK:
       {
-        node = node->nd_next;
         while (node) {
-          process_node(node);
+          process_node(node->nd_head);
           node = node->nd_next;
         }
       }
@@ -488,7 +497,7 @@ VALUE hook_block(VALUE self) {
 
 
 	printf("%s\n", ruby_frame->node->nd_file);
-	process_node(ruby_frame->node);
+	process_node(ruby_frame->node->nd_recv);
 
 //	l	rb_yield(Qnil);
 }
