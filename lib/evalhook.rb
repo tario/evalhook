@@ -18,3 +18,59 @@ you should have received a copy of the gnu general public license
 along with evalhook.  if not, see <http://www.gnu.org/licenses/>.
 
 =end
+require "evalhook"
+require "evalhook_base"
+
+
+class Object
+  def hooked_method(m)
+    EvalHook::HookedMethod.new(self,m)
+  end
+end
+
+module EvalHook
+  class HookedMethod
+    def initialize(recv, m)
+      @recv = recv
+      @m = m
+    end
+    def call(*args)
+      @recv.send(@m, *args)
+    end
+  end
+
+  class FakeEvalHook
+    def self.hook_block
+    end
+  end
+
+	module ModuleMethods
+
+   def double_run
+     yield(false)
+     yield(true)
+   end
+
+   def evalhook(*args)
+
+
+      args[0] = "
+        EvalHook.double_run do |run|
+          ( if (run)
+            #{args[0]}
+            EvalHook::FakeEvalHook
+          else
+            EvalHook
+          end ).hook_block
+
+        end
+       "
+      eval(*args)
+
+   end
+	end
+
+  class << self
+    include ModuleMethods
+  end
+end
