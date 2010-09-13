@@ -20,6 +20,7 @@ along with evalhook.  if not, see <http://www.gnu.org/licenses/>.
 =end
 require "evalhook"
 require "evalhook_base"
+require "evalhook/redirect_helper"
 
 
 class Object
@@ -29,6 +30,7 @@ class Object
 end
 
 module EvalHook
+
   class HookedMethod
     def initialize(recv, m)
       @recv = recv
@@ -42,7 +44,23 @@ module EvalHook
       ret = method_handler.handle_method(@recv.method(@m).owner, self, @m )
       end
 
-      @recv.send(@m, *args)
+      if ret.instance_of? RedirectHelper::MethodRedirect
+        if block_given?
+          ret.klass.instance_method(ret.method_name).bind(ret.recv).call(*args) do |*x|
+            yield(*x)
+          end
+        else
+          ret.klass.instance_method(ret.method_name).bind(ret.recv).call(*args)
+        end
+      else
+        if block_given?
+          @recv.send(@m, *args) do |*x|
+            yield(*x)
+          end
+        else
+          @recv.send(@m, *args)
+        end
+      end
     end
   end
 
