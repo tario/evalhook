@@ -490,7 +490,6 @@ void process_recursive_node(NODE* node ) {
   /* case NODE_LMASK: */
   /* case NODE_LSHIFT: */
   default:
-    rb_warn("Unhandled node #%d type '%i'", nd_type(node), nd_type(node));
     break;
   }
 }
