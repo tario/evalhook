@@ -61,6 +61,9 @@ void process_node(NODE* node);
 void process_individual_node(NODE* node) {
 
 	switch (nd_type(node)) {
+		case NODE_COLON3: {
+			rb_raise(rb_eSecurityError, "Forbidden node type colon3 (reference to global namespace)");
+		}
 		case NODE_FCALL: {
 			struct NODE* args;
 			args = NEW_LIST(NEW_LIT(ID2SYM(node->nd_mid)));
