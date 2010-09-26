@@ -69,6 +69,25 @@ module EvalHook
     end
   end
 
+  class HookHandler
+    def evalhook(*args)
+
+      args[0] = "
+        EvalHook.double_run do |run|
+          ( if (run)
+            #{args[0]}
+            EvalHook::FakeEvalHook
+          else
+            EvalHook
+          end ).hook_block
+
+        end
+       "
+      eval(*args)
+
+    end
+  end
+
 	module ModuleMethods
 
    attr_accessor :method_handler
