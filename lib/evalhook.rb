@@ -73,15 +73,18 @@ module EvalHook
     def evalhook(*args)
 
       args[0] = "
+        retvalue = nil
         EvalHook.double_run do |run|
           ( if (run)
-            #{args[0]}
+            retvalue = begin
+              #{args[0]}
+            end
             EvalHook::FakeEvalHook
           else
             EvalHook
           end ).hook_block
-
         end
+        retvalue
        "
       eval(*args)
 
@@ -95,24 +98,6 @@ module EvalHook
    def double_run
      yield(false)
      yield(true)
-   end
-
-   def evalhook(*args)
-
-
-      args[0] = "
-        EvalHook.double_run do |run|
-          ( if (run)
-            #{args[0]}
-            EvalHook::FakeEvalHook
-          else
-            EvalHook
-          end ).hook_block
-
-        end
-       "
-      eval(*args)
-
    end
 	end
 
