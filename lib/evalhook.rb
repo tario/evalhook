@@ -72,6 +72,8 @@ module EvalHook
   class HookHandler
     def evalhook(*args)
 
+      EvalHook.method_handler = self
+
       args[0] = "
         retvalue = nil
         EvalHook.double_run do |run|
