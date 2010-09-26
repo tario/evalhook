@@ -41,7 +41,7 @@ module EvalHook
       ret = nil
 
       if method_handler
-      ret = method_handler.handle_method(@recv.method(@m).owner, self, @m )
+      ret = method_handler.handle_method(@recv.method(@m).owner, @recv, @m )
       end
 
       if ret.instance_of? RedirectHelper::MethodRedirect
