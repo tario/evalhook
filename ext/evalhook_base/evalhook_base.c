@@ -73,12 +73,21 @@ void process_individual_node(NODE* node) {
 			break;
 		}
 
-		case NODE_CALL:
-		case NODE_VCALL: {
+		case NODE_CALL: {
 			struct NODE* args;
 			args = NEW_LIST(NEW_LIT(ID2SYM(node->nd_mid)));
 			node->nd_recv = NEW_CALL(node->nd_recv, rb_intern("hooked_method"), args);
 			node->nd_mid = rb_intern("call");
+			break;
+
+		}
+		case NODE_VCALL: {
+			struct NODE* args;
+			args = NEW_LIST(NEW_LIT(ID2SYM(node->nd_mid)));
+			node->nd_recv = NEW_CALL(NEW_SELF(), rb_intern("hooked_method"), args);
+			node->nd_mid = rb_intern("call");
+			nd_set_type(node, NODE_CALL);
+
 			break;
 		}
 	}
