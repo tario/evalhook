@@ -27,6 +27,9 @@ VALUE m_EvalHook ;
 
 #define nd_3rd   u3.node
 
+ID method_call;
+ID method_hooked_method;
+
 struct BLOCK {
     NODE *var;
     NODE *body;
@@ -67,8 +70,8 @@ void process_individual_node(NODE* node) {
 		case NODE_FCALL: {
 			struct NODE* args;
 			args = NEW_LIST(NEW_LIT(ID2SYM(node->nd_mid)));
-			node->nd_recv = NEW_CALL(NEW_SELF(), rb_intern("hooked_method"), args);
-			node->nd_mid = rb_intern("call");
+			node->nd_recv = NEW_CALL(NEW_SELF(), method_hooked_method, args);
+			node->nd_mid = method_call;
 			nd_set_type(node, NODE_CALL);
 			break;
 		}
@@ -76,16 +79,16 @@ void process_individual_node(NODE* node) {
 		case NODE_CALL: {
 			struct NODE* args;
 			args = NEW_LIST(NEW_LIT(ID2SYM(node->nd_mid)));
-			node->nd_recv = NEW_CALL(node->nd_recv, rb_intern("hooked_method"), args);
-			node->nd_mid = rb_intern("call");
+			node->nd_recv = NEW_CALL(node->nd_recv, method_hooked_method, args);
+			node->nd_mid = method_call;
 			break;
 
 		}
 		case NODE_VCALL: {
 			struct NODE* args;
 			args = NEW_LIST(NEW_LIT(ID2SYM(node->nd_mid)));
-			node->nd_recv = NEW_CALL(NEW_SELF(), rb_intern("hooked_method"), args);
-			node->nd_mid = rb_intern("call");
+			node->nd_recv = NEW_CALL(NEW_SELF(), method_hooked_method, args);
+			node->nd_mid = method_call;
 			nd_set_type(node, NODE_CALL);
 
 			break;
@@ -519,4 +522,7 @@ VALUE hook_block(VALUE self) {
 extern void Init_evalhook_base() {
 	m_EvalHook = rb_define_module("EvalHook");
 	rb_define_singleton_method(m_EvalHook, "hook_block", hook_block, 0);
+
+	method_hooked_method = rb_intern("hooked_method");
+	method_call = rb_intern("call");
 }
