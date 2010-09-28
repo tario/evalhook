@@ -30,6 +30,11 @@ VALUE m_EvalHook ;
 ID method_call;
 ID method_hooked_method;
 ID method_local_hooked_method;
+ID method_private_hooked_method;
+ID method_public_hooked_method;
+ID method_protected_hooked_method;
+
+ID method_public, method_private, method_protected;
 
 struct BLOCK {
     NODE *var;
@@ -64,12 +69,19 @@ void process_node(NODE* node);
 
 void process_individual_node(NODE* node) {
 
+	ID id = node->nd_mid;
+
 	switch (nd_type(node)) {
 		case NODE_COLON3: {
 			rb_raise(rb_eSecurityError, "Forbidden node type colon3 (reference to global namespace)");
 		}
 		case NODE_FCALL: {
 			struct NODE* args;
+
+			if (id == method_public) break;
+			if (id == method_private) break;
+			if (id == method_protected) break;
+
 			args = NEW_LIST(NEW_LIT(ID2SYM(node->nd_mid)));
 			node->nd_recv = NEW_CALL(NEW_SELF(), method_local_hooked_method, args);
 			node->nd_mid = method_call;
@@ -87,6 +99,11 @@ void process_individual_node(NODE* node) {
 		}
 		case NODE_VCALL: {
 			struct NODE* args;
+
+			if (id == method_public) break;
+			if (id == method_private) break;
+			if (id == method_protected) break;
+
 			args = NEW_LIST(NEW_LIT(ID2SYM(node->nd_mid)));
 			node->nd_recv = NEW_CALL(NEW_SELF(), method_local_hooked_method, args);
 			node->nd_mid = method_call;
@@ -527,4 +544,8 @@ extern void Init_evalhook_base() {
 	method_local_hooked_method = rb_intern("local_hooked_method");
 	method_hooked_method = rb_intern("hooked_method");
 	method_call = rb_intern("call");
+	method_private = rb_intern("private");
+	method_public = rb_intern("public");
+	method_protected = rb_intern("protected");
+
 }
