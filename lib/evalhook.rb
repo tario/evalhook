@@ -40,8 +40,14 @@ module EvalHook
       @m = m
       @localcall = localcall
     end
+
+    def set_hook_handler(method_handler)
+      @method_handler = method_handler
+      self
+    end
+
     def call(*args)
-      method_handler = EvalHook.method_handler
+      method_handler = @method_handler
       ret = nil
 
       if method_handler
@@ -76,7 +82,7 @@ module EvalHook
   end
 
   class FakeEvalHook
-    def self.hook_block
+    def self.hook_block(*args)
     end
   end
 
@@ -95,7 +101,7 @@ module EvalHook
             EvalHook::FakeEvalHook
           else
             EvalHook
-          end ).hook_block
+          end ).hook_block(ObjectSpace._id2ref(#{object_id}))
         end
         retvalue
        "

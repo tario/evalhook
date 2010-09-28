@@ -36,6 +36,8 @@ ID method_protected_hooked_method;
 
 ID method_public, method_private, method_protected;
 
+ID method_set_hook_handler;
+
 struct BLOCK {
     NODE *var;
     NODE *body;
@@ -65,9 +67,30 @@ struct METHOD {
 };
 
 
-void process_node(NODE* node);
+void process_node(NODE* node, VALUE handler);
 
-void process_individual_node(NODE* node) {
+void patch_local_call_node(NODE* node, VALUE handler) {
+	NODE* args1 = NEW_LIST(NEW_LIT(ID2SYM(node->nd_mid)));
+	NODE* args2 = NEW_LIST(NEW_LIT(handler));
+
+	node->nd_recv = NEW_CALL(NEW_SELF(), method_local_hooked_method, args1);
+	node->nd_recv = NEW_CALL(node->nd_recv, method_set_hook_handler, args2);
+	node->nd_mid = method_call;
+
+	nd_set_type(node, NODE_CALL);
+}
+
+void patch_call_node(NODE* node, VALUE handler) {
+	NODE* args1 = NEW_LIST(NEW_LIT(ID2SYM(node->nd_mid)));
+	NODE* args2 = NEW_LIST(NEW_LIT(handler));
+
+	node->nd_recv = NEW_CALL(node->nd_recv, method_hooked_method, args1);
+	node->nd_recv = NEW_CALL(node->nd_recv, method_set_hook_handler, args2);
+
+	node->nd_mid = method_call;
+}
+
+void process_individual_node(NODE* node, VALUE handler) {
 
 	ID id = node->nd_mid;
 
@@ -76,51 +99,38 @@ void process_individual_node(NODE* node) {
 			rb_raise(rb_eSecurityError, "Forbidden node type colon3 (reference to global namespace)");
 		}
 		case NODE_FCALL: {
-			struct NODE* args;
-
 			if (id == method_public) break;
 			if (id == method_private) break;
 			if (id == method_protected) break;
 
-			args = NEW_LIST(NEW_LIT(ID2SYM(node->nd_mid)));
-			node->nd_recv = NEW_CALL(NEW_SELF(), method_local_hooked_method, args);
-			node->nd_mid = method_call;
-			nd_set_type(node, NODE_CALL);
+			patch_local_call_node(node, handler);
 			break;
 		}
 
 		case NODE_CALL: {
-			struct NODE* args;
-			args = NEW_LIST(NEW_LIT(ID2SYM(node->nd_mid)));
-			node->nd_recv = NEW_CALL(node->nd_recv, method_hooked_method, args);
-			node->nd_mid = method_call;
+			patch_call_node(node, handler);
 			break;
 
 		}
 		case NODE_VCALL: {
-			struct NODE* args;
-
 			if (id == method_public) break;
 			if (id == method_private) break;
 			if (id == method_protected) break;
 
-			args = NEW_LIST(NEW_LIT(ID2SYM(node->nd_mid)));
-			node->nd_recv = NEW_CALL(NEW_SELF(), method_local_hooked_method, args);
-			node->nd_mid = method_call;
-			nd_set_type(node, NODE_CALL);
+			patch_local_call_node(node, handler);
 
 			break;
 		}
 	}
 }
 
-void process_recursive_node(NODE* node ) {
+void process_recursive_node(NODE* node, VALUE handler ) {
   switch (nd_type(node)) {
 
     case NODE_BLOCK:
       {
         while (node) {
-          process_node(node->nd_head);
+          process_node(node->nd_head, handler);
           node = node->nd_next;
         }
       }
@@ -129,38 +139,38 @@ void process_recursive_node(NODE* node ) {
     case NODE_FBODY:
     case NODE_DEFINED:
     case NODE_COLON2:
-      process_node(node->nd_head);
+      process_node(node->nd_head, handler);
       break;
 
     case NODE_MATCH2:
     case NODE_MATCH3:
-      process_node(node->nd_recv);
-      process_node(node->nd_value);
+      process_node(node->nd_recv, handler);
+      process_node(node->nd_value, handler);
       break;
 
     case NODE_BEGIN:
     case NODE_OPT_N:
     case NODE_NOT:
-      process_node(node->nd_body);
+      process_node(node->nd_body, handler);
       break;
 
     case NODE_IF:
-      process_node(node->nd_cond);
+      process_node(node->nd_cond, handler);
       if (node->nd_body) {
-	      process_node(node->nd_body);
+	      process_node(node->nd_body, handler);
       }
       if (node->nd_else) {
-	      process_node(node->nd_else);
+	      process_node(node->nd_else, handler);
       }
       break;
 
   case NODE_CASE:
     if (node->nd_head != NULL) {
-      process_node(node->nd_head);
+      process_node(node->nd_head, handler);
     }
     node = node->nd_body;
     while (node) {
-      process_node(node);
+      process_node(node, handler);
       if (nd_type(node) == NODE_WHEN) {                 /* when */
         node = node->nd_next;
       } else {
@@ -170,53 +180,53 @@ void process_recursive_node(NODE* node ) {
     break;
 
   case NODE_WHEN:
-    process_node(node->nd_head);
+    process_node(node->nd_head, handler);
     if (node->nd_body) {
-      process_node(node->nd_body);
+      process_node(node->nd_body, handler);
     }
     break;
 
   case NODE_WHILE:
   case NODE_UNTIL:
-    process_node(node->nd_cond);
+    process_node(node->nd_cond, handler);
     if (node->nd_body) {
-      process_node(node->nd_body);
+      process_node(node->nd_body, handler);
     }
     break;
 
   case NODE_BLOCK_PASS:
-    process_node(node->nd_body);
-    process_node(node->nd_iter);
+    process_node(node->nd_body, handler);
+    process_node(node->nd_iter, handler);
     break;
 
   case NODE_ITER:
   case NODE_FOR:
-    process_node(node->nd_iter);
+    process_node(node->nd_iter, handler);
     if (node->nd_var != (NODE *)1
         && node->nd_var != (NODE *)2
         && node->nd_var != NULL) {
-	    process_node(node->nd_var);
+	    process_node(node->nd_var, handler);
     }
-    process_node(node->nd_body);
+    process_node(node->nd_body, handler);
     break;
 
   case NODE_BREAK:
   case NODE_NEXT:
     if (node->nd_stts)
-	    process_node(node->nd_stts);
+	    process_node(node->nd_stts, handler);
 
     break;
 
   case NODE_YIELD:
     if (node->nd_stts)
-      process_node(node->nd_stts);
+      process_node(node->nd_stts, handler);
 
     break;
 
   case NODE_RESCUE:
-    process_node(node->nd_1st);
-    process_node(node->nd_2nd);
-    process_node(node->nd_3rd);
+    process_node(node->nd_1st, handler);
+    process_node(node->nd_2nd, handler);
+    process_node(node->nd_3rd, handler);
     break;
 
   /*
@@ -228,61 +238,61 @@ void process_recursive_node(NODE* node ) {
 
   case NODE_RESBODY:
       if (node->nd_3rd) {
-        process_node(node->nd_3rd);
+        process_node(node->nd_3rd, handler);
       }
-      process_node(node->nd_2nd);
-      process_node(node->nd_1st);
+      process_node(node->nd_2nd, handler);
+      process_node(node->nd_1st, handler);
     break;
 
   case NODE_ENSURE:
-    process_node(node->nd_head);
+    process_node(node->nd_head, handler);
     if (node->nd_ensr) {
-    process_node(node->nd_ensr);
+    process_node(node->nd_ensr, handler);
     }
     break;
 
   case NODE_AND:
   case NODE_OR:
-      process_node(node->nd_1st);
-      process_node(node->nd_2nd);
+      process_node(node->nd_1st, handler);
+      process_node(node->nd_2nd, handler);
     break;
 
   case NODE_FLIP2:
   case NODE_FLIP3:
-    process_node(node->nd_beg);
-    process_node(node->nd_end);
+    process_node(node->nd_beg, handler);
+    process_node(node->nd_end, handler);
     break;
 
   case NODE_DOT2:
   case NODE_DOT3:
-    process_node(node->nd_beg);
-    process_node(node->nd_end);
+    process_node(node->nd_beg, handler);
+    process_node(node->nd_end, handler);
     break;
 
   case NODE_RETURN:
     if (node->nd_stts)
-      process_node(node->nd_stts);
+      process_node(node->nd_stts, handler);
     break;
 
   case NODE_ARGSCAT:
   case NODE_ARGSPUSH:
-    process_node(node->nd_head);
-    process_node(node->nd_body);
+    process_node(node->nd_head, handler);
+    process_node(node->nd_body, handler);
     break;
 
   case NODE_CALL:
   case NODE_FCALL:
   case NODE_VCALL:
     if (nd_type(node) != NODE_FCALL) {
-    	if (node->nd_recv) process_node(node->nd_recv);
+    	if (node->nd_recv) process_node(node->nd_recv, handler);
 	 }
      if (node->nd_args || nd_type(node) != NODE_FCALL) {
-      	if (node->nd_args) process_node(node->nd_args);
+      	if (node->nd_args) process_node(node->nd_args, handler);
      }
     break;
 
   case NODE_SUPER:
-    process_node(node->nd_args);
+    process_node(node->nd_args, handler);
     break;
 
   case NODE_BMETHOD:
@@ -292,9 +302,9 @@ void process_recursive_node(NODE* node ) {
 
       if (data->var == 0 || data->var == (NODE *)1 || data->var == (NODE *)2) {
       } else {
-	      process_node(data->var);
+	      process_node(data->var, handler);
       }
-      process_node(data->body);
+      process_node(data->body, handler);
     }
     break;
 
@@ -303,7 +313,7 @@ void process_recursive_node(NODE* node ) {
     {
       struct METHOD *data;
       Data_Get_Struct(node->nd_cval, struct METHOD, data);
-      process_node(data->body);
+      process_node(data->body, handler);
 
       break;
     }
@@ -311,45 +321,45 @@ void process_recursive_node(NODE* node ) {
 
   case NODE_METHOD:
     // You should not ever get here. parse_tree_for_meth passes nd_body
-    process_node(node->nd_body);
+    process_node(node->nd_body, handler);
     break;
 
   case NODE_SCOPE:
-    process_node(node->nd_next);
+    process_node(node->nd_next, handler);
     break;
 
   case NODE_OP_ASGN1:
-    process_node(node->nd_recv);
+    process_node(node->nd_recv, handler);
 #if RUBY_VERSION_CODE < 185
-    process_node(node->nd_args->nd_next);
+    process_node(node->nd_args->nd_next, handler);
 #else
-    process_node(node->nd_args->nd_2nd);
+    process_node(node->nd_args->nd_2nd, handler);
 #endif
-    process_node(node->nd_args->nd_head);
+    process_node(node->nd_args->nd_head, handler);
     break;
 
   case NODE_OP_ASGN2:
-    process_node(node->nd_recv);
-    process_node(node->nd_value);
+    process_node(node->nd_recv, handler);
+    process_node(node->nd_value, handler);
     break;
 
   case NODE_OP_ASGN_AND:
   case NODE_OP_ASGN_OR:
-    process_node(node->nd_head);
-    process_node(node->nd_value);
+    process_node(node->nd_head, handler);
+    process_node(node->nd_value, handler);
     break;
 
   case NODE_MASGN:
     if (node->nd_head) {
-    process_node(node->nd_head);
+    process_node(node->nd_head, handler);
     }
     if (node->nd_args) {
       if (node->nd_args != (NODE *)-1) {
-	    process_node(node->nd_args);
+	    process_node(node->nd_args, handler);
       }
     }
     if (node->nd_value) {
-	    process_node(node->nd_value);
+	    process_node(node->nd_value, handler);
     }
     break;
 
@@ -359,35 +369,35 @@ void process_recursive_node(NODE* node ) {
   case NODE_CVASGN:
   case NODE_CVDECL:
   case NODE_GASGN:
-    process_node(node->nd_value);
+    process_node(node->nd_value, handler);
     break;
 
   case NODE_CDECL:
     if (node->nd_vid) {
     } else {
-      process_node(node->nd_else);
+      process_node(node->nd_else, handler);
     }
-    process_node(node->nd_value);
+    process_node(node->nd_value, handler);
     break;
 
   case NODE_DASGN_CURR:
     if (node->nd_value) {
-      process_node(node->nd_value);
+      process_node(node->nd_value, handler);
     }
     break;
 
   case NODE_ALIAS:            /* u1 u2 (alias :blah :blah2) */
 #if RUBY_VERSION_CODE < 185
 #else
-    process_node(node->nd_1st);
-    process_node(node->nd_2nd);
+    process_node(node->nd_1st, handler);
+    process_node(node->nd_2nd, handler);
 #endif
     break;
 
   case NODE_UNDEF:            /* u2    (undef name, ...) */
 #if RUBY_VERSION_CODE < 185
 #else
-    process_node(node->nd_value);
+    process_node(node->nd_value, handler);
 #endif
     break;
 
@@ -397,11 +407,11 @@ void process_recursive_node(NODE* node ) {
 
       list = node->nd_head;
       while (list) {
-	    process_node(node->nd_head);
+	    process_node(node->nd_head, handler);
         list = list->nd_next;
         if (list == 0)
           rb_bug("odd number list for Hash");
-	    process_node(node->nd_head);
+	    process_node(node->nd_head, handler);
         list = list->nd_next;
       }
     }
@@ -409,7 +419,7 @@ void process_recursive_node(NODE* node ) {
 
   case NODE_ARRAY:
       while (node) {
-	    process_node(node->nd_head);
+	    process_node(node->nd_head, handler);
         node = node->nd_next;
       }
     break;
@@ -425,13 +435,13 @@ void process_recursive_node(NODE* node ) {
         if (list->nd_head) {
           switch (nd_type(list->nd_head)) {
           case NODE_STR:
-		    process_node(list->nd_head);
+		    process_node(list->nd_head, handler);
             break;
           case NODE_EVSTR:
-		    process_node(list->nd_head);
+		    process_node(list->nd_head, handler);
             break;
           default:
-		    process_node(list->nd_head);
+		    process_node(list->nd_head, handler);
             break;
           }
         }
@@ -444,9 +454,9 @@ void process_recursive_node(NODE* node ) {
   case NODE_DEFS:
     if (node->nd_defn) {
       if (nd_type(node) == NODE_DEFS)
-	    process_node(node->nd_recv);
+	    process_node(node->nd_recv, handler);
 
-      process_node(node->nd_defn);
+      process_node(node->nd_defn, handler);
     }
     break;
 
@@ -454,38 +464,38 @@ void process_recursive_node(NODE* node ) {
   case NODE_MODULE:
     if (nd_type(node->nd_cpath) == NODE_COLON2 && ! node->nd_cpath->nd_vid) {
     } else {
-      process_node(node->nd_cpath);
+      process_node(node->nd_cpath, handler);
     }
 
     if (nd_type(node) == NODE_CLASS) {
       if (node->nd_super) {
-        process_node(node->nd_super);
+        process_node(node->nd_super, handler);
       }
     }
-    process_node(node->nd_body);
+    process_node(node->nd_body, handler);
     break;
 
   case NODE_SCLASS:
-    process_node(node->nd_recv);
-    process_node(node->nd_body);
+    process_node(node->nd_recv, handler);
+    process_node(node->nd_body, handler);
     break;
 
   case NODE_ARGS: {
     NODE *optnode;
     optnode = node->nd_opt;
     if (optnode) {
-	  process_node(node->nd_opt);
+	  process_node(node->nd_opt, handler);
     }
   }  break;
 
   case NODE_NEWLINE:
-    process_node(node->nd_next);
+    process_node(node->nd_next, handler);
     break;
 
   case NODE_SPLAT:
   case NODE_TO_ARY:
   case NODE_SVALUE:             /* a = b, c */
-    process_node(node->nd_head);
+    process_node(node->nd_head, handler);
     break;
 
   case NODE_ATTRASGN:           /* literal.meth = y u1 u2 u3 */
@@ -493,13 +503,13 @@ void process_recursive_node(NODE* node ) {
     if (node->nd_1st == RNODE(1)) {
 //      add_to_parse_tree(self, current, NEW_SELF(), locals);
     } else {
-        process_node(node->nd_1st);
+        process_node(node->nd_1st, handler);
     }
-    process_node(node->nd_3rd);
+    process_node(node->nd_3rd, handler);
     break;
 
   case NODE_EVSTR:
-    process_node(node->nd_2nd);
+    process_node(node->nd_2nd, handler);
     break;
 
 
@@ -524,22 +534,22 @@ void process_recursive_node(NODE* node ) {
   }
 }
 
-void process_node(NODE* node) {
+void process_node(NODE* node, VALUE handler) {
 	if (node) {
-	process_recursive_node(node);
-	process_individual_node(node);
+	process_recursive_node(node, handler);
+	process_individual_node(node, handler);
 	}
 }
 
 
-VALUE hook_block(VALUE self) {
-	process_node(ruby_frame->node->nd_recv);
+VALUE hook_block(VALUE self, VALUE handler) {
+	process_node(ruby_frame->node->nd_recv, handler);
 }
 
 
 extern void Init_evalhook_base() {
 	m_EvalHook = rb_define_module("EvalHook");
-	rb_define_singleton_method(m_EvalHook, "hook_block", hook_block, 0);
+	rb_define_singleton_method(m_EvalHook, "hook_block", hook_block, 1);
 
 	method_local_hooked_method = rb_intern("local_hooked_method");
 	method_hooked_method = rb_intern("hooked_method");
@@ -547,5 +557,5 @@ extern void Init_evalhook_base() {
 	method_private = rb_intern("private");
 	method_public = rb_intern("public");
 	method_protected = rb_intern("protected");
-
+	method_set_hook_handler = rb_intern("set_hook_handler");
 }
