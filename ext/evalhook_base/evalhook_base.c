@@ -91,7 +91,6 @@ void patch_call_node(NODE* node, VALUE handler) {
 }
 
 void process_individual_node(NODE* node, VALUE handler) {
-
 	ID id = node->nd_mid;
 
 	switch (nd_type(node)) {
@@ -125,6 +124,7 @@ void process_individual_node(NODE* node, VALUE handler) {
 }
 
 void process_recursive_node(NODE* node, VALUE handler ) {
+
   switch (nd_type(node)) {
 
     case NODE_BLOCK:
@@ -407,11 +407,7 @@ void process_recursive_node(NODE* node, VALUE handler ) {
 
       list = node->nd_head;
       while (list) {
-	    process_node(node->nd_head, handler);
-        list = list->nd_next;
-        if (list == 0)
-          rb_bug("odd number list for Hash");
-	    process_node(node->nd_head, handler);
+	    process_node(list->nd_head, handler);
         list = list->nd_next;
       }
     }
