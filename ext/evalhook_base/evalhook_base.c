@@ -429,17 +429,7 @@ void process_recursive_node(NODE* node, VALUE handler ) {
       NODE *list = node->nd_next;
       while (list) {
         if (list->nd_head) {
-          switch (nd_type(list->nd_head)) {
-          case NODE_STR:
-		    process_node(list->nd_head, handler);
-            break;
-          case NODE_EVSTR:
-		    process_node(list->nd_head, handler);
-            break;
-          default:
-		    process_node(list->nd_head, handler);
-            break;
-          }
+		  process_node(list->nd_head, handler);
         }
         list = list->nd_next;
       }
