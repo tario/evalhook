@@ -90,6 +90,11 @@ void patch_call_node(NODE* node, VALUE handler) {
 	node->nd_mid = method_call;
 }
 
+struct global_entry {
+    struct global_variable *var;
+    ID id;
+};
+
 void process_individual_node(NODE* node, VALUE handler) {
 	ID id = node->nd_mid;
 
@@ -101,16 +106,19 @@ void process_individual_node(NODE* node, VALUE handler) {
 		case NODE_IASGN:
 		case NODE_DASGN:
 		case NODE_CVASGN:
-		case NODE_CVDECL:
-		case NODE_GASGN:*/
+		case NODE_CVDECL:*/
+		case NODE_GASGN: {
+			NODE* args1 = NEW_LIST(NEW_LIT(ID2SYM(node->nd_entry->id)));
+			NODE* args2 = NEW_LIST(node->nd_value);
+
+			node->nd_recv = NEW_CALL(NEW_LIT(handler), rb_intern("hooked_gasgn"), args1);
+			node->nd_mid = rb_intern("set_value");
+			node->nd_args = args2;
+
+			nd_set_type(node, NODE_CALL);
+			break;
+		}
 		case NODE_CDECL: {
-/*	result = rb_eval(self, node->nd_value);
-	if (node->nd_vid == 0) {
-	    rb_const_set(class_prefix(self, node->nd_else), node->nd_else->nd_mid, result);
-	}
-	else {
-	    rb_const_set(ruby_cbase, node->nd_vid, result);
-	}*/
 
 			NODE* else_node = node->nd_else;
 			NODE* head_node = node->nd_head;

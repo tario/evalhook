@@ -113,10 +113,37 @@ module EvalHook
       end
     end
 
-    def hooked_cdecl(context)
-      return HookCdecl.new(context,self)
+    class HookGasgn
+      def initialize(global_id, hook_handler)
+        @global_id = global_id
+        @hook_handler = hook_handler
+      end
+
+      def set_value(value)
+        global_id = @global_id
+
+        ret = @hook_handler.handle_gasgn(@global_id, value)
+
+        if ret then
+          global_id = ret.global_id
+          value = ret.value
+        end
+
+        eval("#{global_id} = value")
+      end
     end
 
+    def hooked_cdecl(context)
+      HookCdecl.new(context,self)
+    end
+
+    def hooked_gasgn(global_id)
+      HookGasgn.new(global_id,self)
+    end
+
+    def handle_gasgn(*args)
+      nil
+    end
 
     def handle_cdecl(*args)
       nil
