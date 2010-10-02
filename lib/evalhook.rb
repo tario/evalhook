@@ -46,6 +46,10 @@ module EvalHook
       self
     end
 
+    def set_class(klass)
+      @klass = klass
+    end
+
     def call(*args)
       method_handler = @method_handler
       ret = nil
@@ -54,29 +58,22 @@ module EvalHook
       ret = method_handler.handle_method(@recv.method(@m).owner, @recv, @m )
       end
 
+      klass = @klass || @recv.method(@m).owner
+      method_name = @m
+      recv = @recv
+
       if ret.instance_of? RedirectHelper::MethodRedirect
-        if block_given?
-          ret.klass.instance_method(ret.method_name).bind(ret.recv).call(*args) do |*x|
-            yield(*x)
-          end
-        else
-          ret.klass.instance_method(ret.method_name).bind(ret.recv).call(*args)
+        klass = ret.klass
+        method_name = ret.method_name
+        recv = ret.recv
+      end
+
+      if block_given?
+        klass.instance_method(method_name).bind(recv).call(*args) do |*x|
+          yield(*x)
         end
       else
-
-        unless @localcall
-          unless @recv.respond_to? @m
-            raise NoMethodError, "private method '#{@m}' called for #{@recv}"
-          end
-        end
-
-        if block_given?
-          @recv.send(@m, *args) do |*x|
-            yield(*x)
-          end
-        else
-          @recv.send(@m, *args)
-        end
+        klass.instance_method(method_name).bind(recv).call(*args)
       end
     end
   end
@@ -89,8 +86,8 @@ module EvalHook
   class HookHandler
 
     def hooked_super(*args)
-      hm = caller_obj.hooked_method(caller_method)
-      hm.set_class(caller_class.superclass)
+      hm = caller_obj(2).hooked_method(caller_method(2))
+      hm.set_class(caller_class(2).superclass)
       hm.set_hook_handler(self)
 
       if block_given?

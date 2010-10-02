@@ -24,6 +24,7 @@ along with evalhook.  if not, see <http://www.gnu.org/licenses/>.
 #include <node.h>
 
 VALUE m_EvalHook ;
+VALUE c_HookHandler;
 
 #define nd_3rd   u3.node
 
@@ -33,7 +34,6 @@ ID method_local_hooked_method;
 ID method_private_hooked_method;
 ID method_public_hooked_method;
 ID method_protected_hooked_method;
-
 ID method_public, method_private, method_protected;
 
 ID method_set_hook_handler;
@@ -532,10 +532,44 @@ VALUE hook_block(VALUE self, VALUE handler) {
 	process_node(ruby_frame->node->nd_recv, handler);
 }
 
+VALUE caller_method(VALUE self, VALUE rblevel) {
+	int level = FIX2INT(rblevel);
+
+	struct FRAME* frame = ruby_frame;
+	while(level--) frame = frame->prev;
+
+	return ID2SYM(frame->orig_func);
+}
+
+VALUE caller_class(VALUE self, VALUE rblevel) {
+	int level = FIX2INT(rblevel);
+
+	struct FRAME* frame = ruby_frame;
+	while(level--) frame = frame->prev;
+
+	return frame->last_class;
+}
+
+VALUE caller_obj(VALUE self, VALUE rblevel) {
+	int level = FIX2INT(rblevel);
+
+	struct FRAME* frame = ruby_frame;
+	while(level--) frame = frame->prev;
+
+	return frame->self;
+}
+
 
 extern void Init_evalhook_base() {
 	m_EvalHook = rb_define_module("EvalHook");
+
+	c_HookHandler = rb_define_class_under(m_EvalHook, "HookHandler", rb_cObject);
+
 	rb_define_singleton_method(m_EvalHook, "hook_block", hook_block, 1);
+
+	rb_define_method(c_HookHandler, "caller_method", caller_method, 1);
+	rb_define_method(c_HookHandler, "caller_class", caller_class, 1);
+	rb_define_method(c_HookHandler, "caller_obj", caller_obj, 1);
 
 	method_local_hooked_method = rb_intern("local_hooked_method");
 	method_hooked_method = rb_intern("hooked_method");
