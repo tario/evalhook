@@ -86,6 +86,43 @@ module EvalHook
 
   class HookHandler
 
+    class HookCdecl
+      def initialize(klass, hook_handler)
+        @klass = klass
+        @hook_handler = hook_handler
+      end
+
+      def set_id(const_id)
+        @const_id = const_id
+        self
+      end
+
+      def set_value(value)
+        klass = @klass
+        const_id = @const_id
+
+        ret = @hook_handler.handle_cdecl( @klass, @const_id, value )
+
+        if ret then
+          klass = ret.klass
+          const_id = ret.const_id
+          value = ret.value
+        end
+
+        klass.const_set(const_id, value)
+      end
+    end
+
+    def hooked_cdecl(context)
+      return HookCdecl.new(context,self)
+    end
+
+
+    def handle_cdecl(*args)
+      nil
+    end
+
+
     def hooked_super(*args)
       hm = caller_obj(2).hooked_method(caller_method(2))
       hm.set_class(caller_class(2).superclass)

@@ -131,8 +131,8 @@ void process_individual_node(NODE* node, VALUE handler) {
 			NODE* args2 = NEW_LIST(NEW_LIT(ID2SYM(vid)));
 			NODE* args3 = NEW_LIST(node->nd_value);
 
-			node->nd_recv = NEW_CALL(NEW_LIT(handler), rb_intern("handle_cdecl"), args1);
-			node->nd_recv = NEW_CALL(NEW_LIT(handler), rb_intern("set_id"), args2);
+			node->nd_recv = NEW_CALL(NEW_LIT(handler), rb_intern("hooked_cdecl"), args1);
+			node->nd_recv = NEW_CALL(node->nd_recv, rb_intern("set_id"), args2);
 			node->nd_mid = rb_intern("set_value");
 			node->nd_args = args3;
 
