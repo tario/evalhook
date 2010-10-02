@@ -87,6 +87,21 @@ module EvalHook
   end
 
   class HookHandler
+
+    def hooked_super(*args)
+      hm = caller_obj.hooked_method(caller_method)
+      hm.set_class(caller_class.superclass)
+      hm.set_hook_handler(self)
+
+      if block_given?
+        hm.call(*args) do |*x|
+          yield(*x)
+        end
+      else
+        hm.call(*args)
+      end
+    end
+
     def evalhook(*args)
 
       EvalHook.method_handler = self
