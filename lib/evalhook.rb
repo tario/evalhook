@@ -48,19 +48,20 @@ module EvalHook
 
     def set_class(klass)
       @klass = klass
+      self
     end
 
     def call(*args)
       method_handler = @method_handler
       ret = nil
 
-      if method_handler
-      ret = method_handler.handle_method(@recv.method(@m).owner, @recv, @m )
-      end
-
       klass = @klass || @recv.method(@m).owner
       method_name = @m
       recv = @recv
+
+      if method_handler
+      ret = method_handler.handle_method(klass, recv, method_name )
+      end
 
       if ret.instance_of? RedirectHelper::MethodRedirect
         klass = ret.klass
