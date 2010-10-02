@@ -97,6 +97,13 @@ void process_individual_node(NODE* node, VALUE handler) {
 		case NODE_COLON3: {
 			rb_raise(rb_eSecurityError, "Forbidden node type colon3 (reference to global namespace)");
 		}
+		case NODE_SUPER:
+		case NODE_ZSUPER: {
+			node->nd_mid = rb_intern("hooked_super");
+			node->nd_recv = NEW_LIT(handler);
+			nd_set_type(node, NODE_CALL);
+			break;
+		}
 		case NODE_FCALL: {
 			if (id == method_public) break;
 			if (id == method_private) break;
