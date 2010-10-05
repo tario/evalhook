@@ -586,6 +586,17 @@ void process_node(NODE* node, VALUE handler) {
 	}
 }
 
+VALUE hook_tree(VALUE self, VALUE rb_method) {
+
+	struct METHOD* method;
+	Data_Get_Struct(rb_method,struct METHOD,method);
+
+	NODE* node = method->body->nd_defn;
+	process_node(node, self);
+
+	return Qnil;
+}
+
 
 VALUE hook_block(VALUE self, VALUE handler) {
 	process_node(ruby_frame->node->nd_recv, handler);
@@ -625,6 +636,8 @@ extern void Init_evalhook_base() {
 	c_HookHandler = rb_define_class_under(m_EvalHook, "HookHandler", rb_cObject);
 
 	rb_define_singleton_method(m_EvalHook, "hook_block", hook_block, 1);
+
+	rb_define_method(c_HookHandler, "hook_tree", hook_tree, 1);
 
 	rb_define_method(c_HookHandler, "caller_method", caller_method, 1);
 	rb_define_method(c_HookHandler, "caller_class", caller_class, 1);
