@@ -586,7 +586,7 @@ void process_node(NODE* node, VALUE handler) {
 	}
 }
 
-VALUE hook_tree(VALUE self, VALUE rb_method) {
+VALUE hook_method_tree(VALUE self, VALUE rb_method) {
 
 	struct METHOD* method;
 	Data_Get_Struct(rb_method,struct METHOD,method);
@@ -637,7 +637,7 @@ extern void Init_evalhook_base() {
 
 	rb_define_singleton_method(m_EvalHook, "hook_block", hook_block, 1);
 
-	rb_define_method(c_HookHandler, "hook_tree", hook_tree, 1);
+	rb_define_method(c_HookHandler, "hook_method_tree", hook_method_tree, 1);
 
 	rb_define_method(c_HookHandler, "caller_method", caller_method, 1);
 	rb_define_method(c_HookHandler, "caller_class", caller_class, 1);
