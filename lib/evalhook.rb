@@ -63,7 +63,7 @@ module EvalHook
       ret = method_handler.handle_method(klass, recv, method_name )
       end
 
-      if ret.instance_of? RedirectHelper::MethodRedirect
+      if ret.kind_of? RedirectHelper::MethodRedirect
         klass = ret.klass
         method_name = ret.method_name
         recv = ret.recv
