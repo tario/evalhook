@@ -149,6 +149,9 @@ module EvalHook
       nil
     end
 
+    def handle_method(klass,recv,method_name)
+      nil
+    end
 
     def hooked_super(*args)
       hm = caller_obj(2).hooked_method(caller_method(2))
