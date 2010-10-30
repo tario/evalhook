@@ -1,0 +1,12 @@
+0.1.0	Created RDOC
+		
+		Implemented use examples
+
+		Fixed functionality for shikashi sandbox
+
+		added method hook tree no hook the tree of a ruby method
+
+		implemented hook of global vars assignments
+
+		implemented hook of constant assigment (handle_cdecl)
+

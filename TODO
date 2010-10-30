@@ -1,0 +1,2 @@
+* Using of parainterpretation in place of in-memory node tree changing
+* Ruby 1.9 compatibility
