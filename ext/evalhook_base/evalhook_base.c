@@ -633,6 +633,32 @@ VALUE caller_obj(VALUE self, VALUE rblevel) {
 extern void Init_evalhook_base() {
 	m_EvalHook = rb_define_module("EvalHook");
 
+/*
+Class to create hook instances for specific handling of method calls and/or const and global assignment
+
+=== Example:
+
+Hook of method calls
+
+	require "rubygems"
+	require "evalhook"
+
+	class Hook < EvalHook::HookHandler
+		def handle_method(klass, recv, method_name)
+			print "called #{klass}##{method_name} over #{recv}\n"
+			nil
+		end
+	end
+
+	h = Hook.new
+	h.evalhook('print "hello world\n"')
+
+
+
+
+See README for more examples
+
+*/
 	c_HookHandler = rb_define_class_under(m_EvalHook, "HookHandler", rb_cObject);
 
 	rb_define_singleton_method(m_EvalHook, "hook_block", hook_block, 1);
