@@ -1,0 +1,79 @@
+= evalhook - Alternate eval which hook all methods (and more) in the evaluated code
+
+== Installation
+
+=== Gem installation
+
+Run in the terminal:
+
+sudo gem install evalhook
+
+OR
+
+* Download the last version of the gem from http://github.com/tario/evalhook/downloads
+* Install the gem with the following;
+
+sudo gem install evalhook-X.X.X.gem.
+
+== Documentation
+
+Full API documentation can be found on:
+http://tario.github.com/evalhook/doc/
+
+== Usage
+
+This examples and more can be found in examples directory
+
+=== Basic Example
+
+Hook of method calls
+
+	require "rubygems"
+	require "evalhook"
+
+	class Hook < EvalHook::HookHandler
+		def handle_method(klass, recv, method_name)
+			print "called #{klass}##{method_name} over #{recv}\n"
+			nil
+		end
+	end
+
+	h = Hook.new
+	h.evalhook('print "hello world\n"')
+
+=== Basic Example 2
+
+Hook of global variables and constants
+
+	require "rubygems"
+	require "evalhook"
+
+	class Hook < EvalHook::HookHandler
+		# global variable assignment/creation
+		def handle_gasgn( global_name, new_value)
+			print "assignment of #{global_name} = #{new_value}\n"
+			nil
+		end
+
+		# constant assignment/creation
+		def handle_cdecl( container, const_name, new_value)
+			print "assignment of #{container}::#{const_name} = #{new_value}\n"
+			nil
+		end
+	end
+
+	h = Hook.new
+	h.evalhook('
+	$a = 4
+	A = 4', binding)
+
+
+=== Basic Example 3
+
+Redirect of method calls
+
+	
+== Copying
+
+Copyright (c) 2010 Dario Seminara, released under the GPL License (see LICENSE)
+	
