@@ -33,10 +33,7 @@ module RedirectHelper
 # def handle_method
 #   return RedirectHelper::Redirect.new(X, X.new, :foo)
 # end
-# ...
-#
-#Note: Use x.redirect(:foo) instead (see Object#redirect )
-#
+
   class Redirect
     include MethodRedirect
 

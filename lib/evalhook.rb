@@ -34,23 +34,28 @@ end
 
 module EvalHook
 
+  # used internally
   class HookedMethod
+
     def initialize(recv, m,localcall)
       @recv = recv
       @m = m
       @localcall = localcall
     end
 
+    # used internally
     def set_hook_handler(method_handler)
       @method_handler = method_handler
       self
     end
 
+    # used internally
     def set_class(klass)
       @klass = klass
       self
     end
 
+    # used internally
     def call(*args)
       method_handler = @method_handler
       ret = nil
@@ -79,6 +84,7 @@ module EvalHook
     end
   end
 
+  # used internally
   class FakeEvalHook
     def self.hook_block(*args)
     end
@@ -86,6 +92,7 @@ module EvalHook
 
   class HookHandler
 
+    # used internally
     class HookCdecl
       def initialize(klass, hook_handler)
         @klass = klass
@@ -113,6 +120,7 @@ module EvalHook
       end
     end
 
+    # used internally
     class HookGasgn
       def initialize(global_id, hook_handler)
         @global_id = global_id
@@ -133,22 +141,27 @@ module EvalHook
       end
     end
 
+    # used internally
     def hooked_cdecl(context)
       HookCdecl.new(context,self)
     end
 
+    # used internally
     def hooked_gasgn(global_id)
       HookGasgn.new(global_id,self)
     end
 
+    # Overwrite to handle the assignment/creation of global variables. By default do nothing but assign the variable. See examples
     def handle_gasgn(*args)
       nil
     end
 
+    # Overwrite to handle the assignment/creation of constants. By default do nothing but assign the variable. See examples
     def handle_cdecl(*args)
       nil
     end
 
+    # Overwrite to handle the method calls. By default do nothing and the methods are called normally
     def handle_method(klass,recv,method_name)
       nil
     end
