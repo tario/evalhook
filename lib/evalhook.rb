@@ -180,16 +180,16 @@ module EvalHook
       end
     end
 
-    def evalhook(*args)
+    def evalhook(code, b_ = binding, name = "(eval)", line = 1)
 
       EvalHook.method_handler = self
 
-      args[0] = "
+      code = "
         retvalue = nil
         EvalHook.double_run do |run|
           ( if (run)
             retvalue = begin
-              #{args[0]}
+              #{code}
             end
             EvalHook::FakeEvalHook
           else
@@ -198,7 +198,7 @@ module EvalHook
         end
         retvalue
        "
-      eval(*args)
+      eval(code, b_, name, line)
 
     end
   end
