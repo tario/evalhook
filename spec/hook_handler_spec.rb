@@ -1,7 +1,7 @@
 require "rubygems"
 require "evalhook"
 
-describe String, "hook handler" do
+describe String, "hook handler defaults" do
    it "should throw exception when call evalhook with no parameters" do
   		hook_handler = EvalHook::HookHandler.new
 
