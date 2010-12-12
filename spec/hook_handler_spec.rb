@@ -22,5 +22,26 @@ describe EvalHook::HookHandler, "hook handler" do
     end
   end
 
+  it "should allow reference to global variables" do
+     hook_handler = EvalHook::HookHandler.new
+
+     $global_variable_test = 5
+     hook_handler.evalhook("$global_variable_test").should be == $global_variable_test
+  end
+
+  it "should allow reference to constants" do
+     hook_handler = EvalHook::HookHandler.new
+
+     CONSTANTTEST = 5
+     hook_handler.evalhook("CONSTANTTEST").should be == CONSTANTTEST
+  end
+
+  it "should allow reference to local variables" do
+     hook_handler = EvalHook::HookHandler.new
+
+     a = 5
+     hook_handler.evalhook("a").should be == a
+  end
+
 end
 
