@@ -180,7 +180,7 @@ module EvalHook
       end
     end
 
-    def evalhook(code, b_ = binding, name = "(eval)", line = 1)
+    def evalhook_i(code, b_ = nil, name = "(eval)", line = 1)
 
       EvalHook.method_handler = self
 

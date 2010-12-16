@@ -99,8 +99,8 @@ void process_individual_node(NODE* node, VALUE handler) {
 	ID id = node->nd_mid;
 
 	switch (nd_type(node)) {
-		case NODE_COLON3: {
 			rb_raise(rb_eSecurityError, "Forbidden node type colon3 (reference to global namespace)");
+		case NODE_COLON3: {
 		}
 /*		case NODE_LASGN:
 		case NODE_IASGN:
@@ -630,6 +630,90 @@ VALUE caller_obj(VALUE self, VALUE rblevel) {
 }
 
 
+static void
+blk_mark(data)
+    struct BLOCK *data;
+{
+    while (data) {
+	rb_gc_mark_frame(&data->frame);
+	rb_gc_mark((VALUE)data->scope);
+	rb_gc_mark((VALUE)data->var);
+	rb_gc_mark((VALUE)data->body);
+	rb_gc_mark((VALUE)data->self);
+	rb_gc_mark((VALUE)data->dyna_vars);
+	rb_gc_mark((VALUE)data->cref);
+	rb_gc_mark(data->wrapper);
+	rb_gc_mark(data->block_obj);
+	data = data->prev;
+    }
+}
+
+static void
+blk_free(data)
+    struct BLOCK *data;
+{
+    void *tmp;
+
+    while (data) {
+	frame_free(&data->frame);
+	tmp = data;
+	data = data->prev;
+	free(tmp);
+    }
+}
+
+
+
+/*
+ *  call-seq:
+ *     binding -> a_binding
+ *
+ *  Returns a +Binding+ object, describing the variable and
+ *  method bindings at the point of call. This object can be used when
+ *  calling +eval+ to execute the evaluated command in this
+ *  environment. Also see the description of class +Binding+.
+ *
+ *     def getBinding(param)
+ *       return binding
+ *     end
+ *     b = getBinding("hello")
+ *     eval("param", b)   #=> "hello"
+ */
+
+static VALUE
+rb_f_evalhook(argc, argv, recv)
+	int argc;
+	VALUE* argv;
+	VALUE recv;
+{
+
+
+	VALUE bind = Qnil;
+ 	VALUE file = Qnil;
+ 	VALUE line = Qnil;
+
+ 	if (argc == 0) {
+		return rb_funcall2(recv,rb_intern("evalhook_i"), 0, 0);
+ 	}
+
+ 	if (argc > 1) bind = argv[1];
+ 	if (argc > 2) file = argv[2];
+ 	if (argc > 3) line = argv[3];
+
+	if (argc < 2) argc = 2;
+
+	if (bind == Qnil) {
+		argv[1] = rb_funcall(recv, rb_intern("binding"),0);
+	}
+
+	if (file == Qnil) {
+		argc = 2;
+	}
+
+	return rb_funcall2(recv,rb_intern("evalhook_i"), argc, argv);
+}
+
+
 extern void Init_evalhook_base() {
 	m_EvalHook = rb_define_module("EvalHook");
 
@@ -676,4 +760,6 @@ See README for more examples
 	method_public = rb_intern("public");
 	method_protected = rb_intern("protected");
 	method_set_hook_handler = rb_intern("set_hook_handler");
+
+    rb_define_method(c_HookHandler, "evalhook", rb_f_evalhook, -1);
 }
