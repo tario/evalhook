@@ -63,15 +63,6 @@ describe String, "hook handler defaults" do
     hook_handler.evalhook("X.new.foo")
   end
 
-  it "should capture method calls" do
-    hook_handler = EvalHook::HookHandler.new
-
-    hook_handler.should_receive(:handle_method).with(X.class,X,:new)
-    hook_handler.should_receive(:handle_method).with(X,anything(),:foo)
-
-    hook_handler.evalhook("X.new.foo")
-  end
-
   it "should capture constant assignment" do
     hook_handler = EvalHook::HookHandler.new
 
