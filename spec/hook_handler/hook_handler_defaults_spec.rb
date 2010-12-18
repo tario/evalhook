@@ -43,11 +43,18 @@ describe String, "hook handler defaults" do
      hook_handler.evalhook("a").should be == a
   end
 
+
+  class N
+    def foo(hook_handler)
+      @a = 5
+      hook_handler.evalhook("@a")
+    end
+  end
+
+
   it "should allow reference to instance variables" do
      hook_handler = EvalHook::HookHandler.new
-
-     @a = 5
-     hook_handler.evalhook("@a").should be == @a
+     N.new.foo(hook_handler).should be == 5
   end
 
   class X

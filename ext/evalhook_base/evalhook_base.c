@@ -703,7 +703,13 @@ rb_f_evalhook(argc, argv, recv)
 	if (argc < 2) argc = 2;
 
 	if (bind == Qnil) {
-		argv[1] = rb_funcall(recv, rb_intern("binding"),0);
+		bind = rb_funcall(recv, rb_intern("binding"),0);
+		argv[1] = bind;
+
+		struct BLOCK* data;
+		Data_Get_Struct(bind, struct BLOCK, data);
+
+		data->self = data->frame.prev->prev->self;
 	}
 
 	if (file == Qnil) {
