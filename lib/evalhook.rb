@@ -92,6 +92,8 @@ module EvalHook
 
   class HookHandler
 
+    include RedirectHelper
+
     # used internally
     class HookCdecl
       def initialize(klass, hook_handler)

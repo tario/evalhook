@@ -51,4 +51,7 @@ module RedirectHelper
     end
   end
 
+  def redirect_method(*args)
+    Redirect.new(*args)
+  end
 end

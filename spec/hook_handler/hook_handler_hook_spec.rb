@@ -5,8 +5,9 @@ describe EvalHook::HookHandler, "hook handler hooks" do
 
   class TestHookHandler < EvalHook::HookHandler
     def handle_method(klass, recv, method_name)
+
       if (method_name == :foo)
-        return redirect_method(klass, recv, "bar")
+        return redirect_method(klass, recv, :bar)
       end
 
       nil
@@ -43,7 +44,6 @@ describe EvalHook::HookHandler, "hook handler hooks" do
     hh = TestHookHandler.new
 
     x = X.new
-    x.should_receive(:bar)
     hh.evalhook("x.foo", binding).should be == 4
   end
 
