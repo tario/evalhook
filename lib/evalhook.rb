@@ -184,8 +184,6 @@ module EvalHook
 
     def evalhook_i(code, b_ = nil, name = "(eval)", line = 1)
 
-      EvalHook.method_handler = self
-
       EvalHook.validate_syntax code
 
       code = "
