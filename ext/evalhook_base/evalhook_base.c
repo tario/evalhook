@@ -719,6 +719,17 @@ rb_f_evalhook(argc, argv, recv)
 	return rb_funcall2(recv,rb_intern("evalhook_i"), argc, argv);
 }
 
+VALUE validate_syntax(VALUE self, VALUE code) {
+
+	NODE* node = rb_compile_string("(eval)", code, 1);
+
+	if (node == 0) {
+		rb_raise(rb_eSyntaxError,"");
+	}
+
+	return Qnil;
+}
+
 
 extern void Init_evalhook_base() {
 	m_EvalHook = rb_define_module("EvalHook");
@@ -752,6 +763,7 @@ See README for more examples
 	c_HookHandler = rb_define_class_under(m_EvalHook, "HookHandler", rb_cObject);
 
 	rb_define_singleton_method(m_EvalHook, "hook_block", hook_block, 1);
+	rb_define_singleton_method(m_EvalHook, "validate_syntax", validate_syntax, 1);
 
 	rb_define_method(c_HookHandler, "hook_method_tree", hook_method_tree, 1);
 

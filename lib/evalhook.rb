@@ -186,6 +186,8 @@ module EvalHook
 
       EvalHook.method_handler = self
 
+      EvalHook.validate_syntax code
+
       code = "
         retvalue = nil
         EvalHook.double_run do |run|
