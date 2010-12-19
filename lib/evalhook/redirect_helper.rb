@@ -51,7 +51,22 @@ module RedirectHelper
     end
   end
 
+  class RedirectGasgn
+    attr_reader :global_id
+    attr_reader :value
+
+    def initialize(global_id, value)
+      @global_id = global_id
+      @value = value
+    end
+  end
+
   def redirect_method(*args)
     Redirect.new(*args)
   end
+
+  def redirect_gasgn(*args)
+    RedirectGasgn.new(*args)
+  end
+
 end
