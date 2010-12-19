@@ -632,7 +632,12 @@ VALUE caller_obj(VALUE self, VALUE rblevel) {
 
 VALUE validate_syntax(VALUE self, VALUE code) {
 
-	rb_compile_string("(eval)", code, 1);
+	NODE* node = rb_compile_string("(eval)", code, 1);
+
+	if (node == 0) {
+		rb_raise(rb_eSyntaxError,"");
+	}
+
 	return Qnil;
 }
 
