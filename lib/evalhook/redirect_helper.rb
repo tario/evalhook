@@ -61,12 +61,28 @@ module RedirectHelper
     end
   end
 
+  class RedirectCdecl
+    attr_reader :klass
+    attr_reader :const_id
+    attr_reader :value
+
+    def initialize(klass, const_id, value)
+      @klass = klass
+      @const_id = const_id
+      @value = value
+    end
+  end
+
   def redirect_method(*args)
     Redirect.new(*args)
   end
 
   def redirect_gasgn(*args)
     RedirectGasgn.new(*args)
+  end
+
+  def redirect_cdecl(*args)
+    RedirectCdecl.new(*args)
   end
 
 end
