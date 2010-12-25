@@ -31,31 +31,41 @@ class MultiHookHandler < HookHandler
     @nested_hook_handlers << nested_hh
   end
 
-  def handle_method(*args)
+  def handle_method(klass, recv, method_id)
+    lastret = nil
+
     @nested_hook_handlers.each do |hh|
-      lastret = hh.handle_method(*args)
-      return lastret if lastret
+      lastret = hh.handle_method(klass, recv, method_id)
+
+      if (lastret)
+        klass = lastret.klass
+        recv = lastret.recv
+        method_id = lastret.method_name
+      end
     end
 
-    nil
+    lastret
   end
 
   def handle_cdecl(*args)
+    lastret = nil
+
     @nested_hook_handlers.each do |hh|
       lastret = hh.handle_cdecl(*args)
-      return lastret if lastret
     end
 
-    nil
+    lastret
   end
 
   def handle_gasgn(*args)
+
+    lastret = nil
+
     @nested_hook_handlers.each do |hh|
       lastret = hh.handle_gasgn(*args)
-      return lastret if lastret
     end
 
-    nil
+    lastret
   end
 
 end
