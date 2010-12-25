@@ -68,9 +68,7 @@ describe EvalHook::MultiHookHandler, "multiple hook handler" do
     nested_handler = EvalHook::HookHandler.new
     hook_handler.add nested_handler
 
-    hook_handler.should_receive(:handle_method).with(X.class,X,:new)
     nested_handler.should_receive(:handle_method).with(X.class,X,:new)
-    hook_handler.should_receive(:handle_method).with(X,anything(),:foo)
     nested_handler.should_receive(:handle_method).with(X,anything(),:foo)
 
     hook_handler.evalhook("X.new.foo")
@@ -82,7 +80,6 @@ describe EvalHook::MultiHookHandler, "multiple hook handler" do
     nested_handler = EvalHook::HookHandler.new
     hook_handler.add nested_handler
 
-    hook_handler.should_receive(:handle_cdecl).with(Object,:TEST_CONSTANT,4)
     nested_handler.should_receive(:handle_cdecl).with(Object,:TEST_CONSTANT,4)
 
     hook_handler.evalhook("TEST_CONSTANT = 4")
@@ -94,7 +91,6 @@ describe EvalHook::MultiHookHandler, "multiple hook handler" do
     nested_handler = EvalHook::HookHandler.new
     hook_handler.add nested_handler
 
-    hook_handler.should_receive(:handle_gasgn).with(:$test_global_variable,4)
     nested_handler.should_receive(:handle_gasgn).with(:$test_global_variable,4)
 
     hook_handler.evalhook("$test_global_variable = 4")
