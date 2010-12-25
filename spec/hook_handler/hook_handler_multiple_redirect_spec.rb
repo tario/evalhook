@@ -28,5 +28,38 @@ describe EvalHook::MultiHookHandler, "multiple hook handler redirect" do
 
       hook_handler.evalhook(handle[1])
     end
+  end
+
+   class X_
+     def foo
+      nil
+     end
+
+     def bar
+       nil
+     end
    end
+
+
+  it "should handle redirects on recall of handle_method" do
+      hook_handler = EvalHook::MultiHookHandler.new
+
+      nested_handler_1 = EvalHook::HookHandler.new
+      nested_handler_2 = EvalHook::HookHandler.new
+      hook_handler.add nested_handler_1
+      hook_handler.add nested_handler_2
+
+      x = X_.new
+
+      redir = RedirectHelper::Redirect.new(X_, x, :bar)
+
+      nested_handler_2.should_receive(:handle_method).
+                        with(X_, x, :bar).
+                        and_return(nil)
+
+      hook_handler.evalhook("x.foo")
+
+
+  end
+
 end
