@@ -51,7 +51,9 @@ describe EvalHook::MultiHookHandler, "multiple hook handler redirect" do
 
       x = X_.new
 
-      redir = RedirectHelper::Redirect.new(X_, x, :bar)
+      def nested_handler_1.handle_method(klass, recv, m )
+        RedirectHelper::Redirect.new(klass, recv, :bar)
+      end
 
       nested_handler_2.should_receive(:handle_method).
                         with(X_, x, :bar).
