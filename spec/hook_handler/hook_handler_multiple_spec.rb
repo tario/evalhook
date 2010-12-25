@@ -1,7 +1,7 @@
 require "rubygems"
 require "evalhook"
 
-describe EvalHook::HookHandler, "hook handler hooks" do
+describe EvalHook::MultiHookHandler, "multiple hook handler" do
 
 
   it "should instance empty MultiHookHandler" do
@@ -62,7 +62,7 @@ describe EvalHook::HookHandler, "hook handler hooks" do
     hook_handler.add EvalHook::HookHandler.new
   end
 
-  it "nested hook handler should capture method calls" do
+  it "should recall handle_method to nested hook handler" do
     hook_handler = EvalHook::MultiHookHandler.new
 
     nested_handler = EvalHook::HookHandler.new
@@ -76,7 +76,7 @@ describe EvalHook::HookHandler, "hook handler hooks" do
     hook_handler.evalhook("X.new.foo")
   end
 
-  it "nested hook handler should capture constant assignment" do
+  it "should recall handle_cdecl to nested hook handler" do
     hook_handler = EvalHook::MultiHookHandler.new
 
     nested_handler = EvalHook::HookHandler.new
@@ -88,7 +88,7 @@ describe EvalHook::HookHandler, "hook handler hooks" do
     hook_handler.evalhook("TEST_CONSTANT = 4")
   end
 
-  it "nested hook handler should capture global assignment" do
+  it "should recall handle_gasgn to nested hook handler" do
     hook_handler = EvalHook::MultiHookHandler.new
 
     nested_handler = EvalHook::HookHandler.new
