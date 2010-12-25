@@ -30,6 +30,12 @@ class MultiHookHandler < HookHandler
   def add(nested_hh)
     @nested_hook_handlers << nested_hh
   end
+
+  def handle_method(*args)
+    @nested_hook_handlers.each do |hh|
+      hh.handle_method(*args)
+    end
+  end
 end
 
 end
