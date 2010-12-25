@@ -21,6 +21,7 @@ along with evalhook.  if not, see <http://www.gnu.org/licenses/>.
 require "evalhook"
 require "evalhook_base"
 require "evalhook/redirect_helper"
+require "evalhook/multi_hook_handler"
 
 
 class Object
