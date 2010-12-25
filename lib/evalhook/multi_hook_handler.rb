@@ -23,7 +23,13 @@ require "evalhook"
 module EvalHook
 
 class MultiHookHandler < HookHandler
+  def initialize
+    @nested_hook_handlers = Array.new
+  end
+
+  def add(nested_hh)
+    @nested_hook_handlers << nested_hh
+  end
 end
 
 end
-
