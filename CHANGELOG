@@ -1,3 +1,7 @@
+0.2.0	Added MultiHookHandler (for multiple nested hooks)
+
+		Added spec test
+
 0.1.1	Fixed ruby injection flaw in evalhook trick
 
 0.1.0	Created RDOC
