@@ -99,6 +99,10 @@ void process_individual_node(NODE* node, VALUE handler) {
 	ID id = node->nd_mid;
 
 	switch (nd_type(node)) {
+		case NODE_XSTR:
+		case NODE_DXSTR:{
+			rb_raise(rb_eSecurityError, "Forbidden node type xstr (reference to global namespace)");
+		}
 		case NODE_COLON3: {
 			rb_raise(rb_eSecurityError, "Forbidden node type colon3 (reference to global namespace)");
 		}
