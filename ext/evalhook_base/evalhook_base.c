@@ -103,7 +103,7 @@ void process_individual_node(NODE* node, VALUE handler) {
 
 			NODE* args1 = NEW_LIST(NEW_LIT(node->nd_lit));
 			node->nd_recv = NEW_LIT(handler);
-			node->nd_mid = rb_intern("handle_xstr");
+			node->nd_mid = rb_intern("hooked_xstr");
 			node->nd_args = args1;
 
 			nd_set_type(node, NODE_CALL);

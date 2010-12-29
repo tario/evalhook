@@ -68,6 +68,18 @@ class MultiHookHandler < HookHandler
     lastret
   end
 
+  def handle_xstr(str)
+
+    lastret = nil
+
+    @nested_hook_handlers.each do |hh|
+      lastret = hh.handle_xstr(str)
+      str = lastret || str
+    end
+
+    lastret
+  end
+
 end
 
 end

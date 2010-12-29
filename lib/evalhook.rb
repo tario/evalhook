@@ -164,6 +164,10 @@ module EvalHook
       nil
     end
 
+    def handle_xstr(*args)
+      nil
+    end
+
     # Overwrite to handle the method calls. By default do nothing and the methods are called normally
     def handle_method(klass,recv,method_name)
       nil
@@ -181,6 +185,10 @@ module EvalHook
       else
         hm.call(*args)
       end
+    end
+
+    def hooked_xstr(str)
+      runstr = handle_xstr(str) || str
     end
 
     def evalhook_i(code, b_ = nil, name = "(eval)", line = 1)
