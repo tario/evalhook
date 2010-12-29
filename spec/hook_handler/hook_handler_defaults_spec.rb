@@ -93,5 +93,28 @@ describe EvalHook::HookHandler, "hook handler defaults" do
 
   end
 
+  it "should capture system exec with backsticks" do
+    hook_handler = EvalHook::HookHandler.new
+
+    hook_handler.should_receive(:handle_xstr).with("echo test")
+    hook_handler.evalhook("`echo test`")
+
+  end
+
+  it "should capture system exec with %x" do
+    hook_handler = EvalHook::HookHandler.new
+
+    hook_handler.should_receive(:handle_xstr).with("echo test")
+    hook_handler.evalhook("%x[echo test]")
+  end
+
+  it "should capture colon3" do
+    hook_handler = EvalHook::HookHandler.new
+
+    hook_handler.should_receive(:handle_colon3).with(:A)
+    hook_handler.evalhook("::A")
+  end
+
+
 end
 
