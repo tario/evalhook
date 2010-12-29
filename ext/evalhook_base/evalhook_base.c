@@ -104,7 +104,12 @@ void process_individual_node(NODE* node, VALUE handler) {
 			rb_raise(rb_eSecurityError, "Forbidden node type xstr (system call execution)");
 		}
 		case NODE_COLON3: {
-			rb_raise(rb_eSecurityError, "Forbidden node type colon3 (reference to global namespace)");
+			node->nd_recv = NEW_LIT(handler);
+			node->nd_mid = rb_intern("handle_colon3");
+			node->nd_args = NEW_LIST(NEW_LIT(ID2SYM(node->u2.id)));
+
+			nd_set_type(node, NODE_CALL);
+			break;
 		}
 /*		case NODE_LASGN:
 		case NODE_IASGN:
