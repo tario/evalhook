@@ -101,6 +101,14 @@ describe EvalHook::HookHandler, "hook handler defaults" do
 
   end
 
+  it "should capture system exec with backsticks and dynamic strings" do
+    hook_handler = EvalHook::HookHandler.new
+
+    hook_handler.should_receive(:handle_xstr).with("echo test")
+    hook_handler.evalhook("`echo \#{}test`")
+
+  end
+
   it "should capture system exec with %x" do
     hook_handler = EvalHook::HookHandler.new
 
