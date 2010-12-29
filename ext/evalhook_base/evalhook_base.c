@@ -99,7 +99,16 @@ void process_individual_node(NODE* node, VALUE handler) {
 	ID id = node->nd_mid;
 
 	switch (nd_type(node)) {
-		case NODE_XSTR:
+		case NODE_XSTR:{
+
+			NODE* args1 = NEW_LIST(NEW_LIT(node->nd_lit));
+			node->nd_recv = NEW_LIT(handler);
+			node->nd_mid = rb_intern("handle_xstr");
+			node->nd_args = args1;
+
+			nd_set_type(node, NODE_CALL);
+			break;
+		}
 		case NODE_DXSTR:{
 			rb_raise(rb_eSecurityError, "Forbidden node type xstr (system call execution)");
 		}
