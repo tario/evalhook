@@ -112,14 +112,21 @@ void process_individual_node(NODE* node, VALUE handler) {
 		case NODE_CVASGN:
 		case NODE_CVDECL:*/
 		case NODE_GASGN: {
-			NODE* args1 = NEW_LIST(NEW_LIT(ID2SYM(node->nd_entry->id)));
-			NODE* args2 = NEW_LIST(node->nd_value);
 
-			node->nd_recv = NEW_CALL(NEW_LIT(handler), rb_intern("hooked_gasgn"), args1);
-			node->nd_mid = rb_intern("set_value");
-			node->nd_args = args2;
+				NODE* args1;
+				NODE* args2 = NEW_LIST(node->nd_value);
 
-			nd_set_type(node, NODE_CALL);
+				if (node->nd_entry != 0) {
+					args1 = NEW_LIST(NEW_LIT(ID2SYM(node->nd_entry->id)));
+				} else {
+					args1 = NEW_LIST(NEW_LIT(ID2SYM(rb_intern("unknown_global"))));
+				}
+
+				node->nd_recv = NEW_CALL(NEW_LIT(handler), rb_intern("hooked_gasgn"), args1);
+				node->nd_mid = rb_intern("set_value");
+				node->nd_args = args2;
+
+				nd_set_type(node, NODE_CALL);
 			break;
 		}
 		case NODE_CDECL: {
