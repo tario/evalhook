@@ -110,7 +110,21 @@ void process_individual_node(NODE* node, VALUE handler) {
 			break;
 		}
 		case NODE_DXSTR:{
-			rb_raise(rb_eSecurityError, "Forbidden node type xstr (system call execution)");
+
+			NODE* newnode = malloc(sizeof(NODE));
+
+			memcpy(newnode, node, sizeof(NODE));
+			nd_set_type(newnode, NODE_DSTR);
+
+			NODE* args1 = NEW_LIST(newnode);
+
+			node->nd_recv = NEW_LIT(handler);
+			node->nd_mid = rb_intern("hooked_xstr");
+			node->nd_args = args1;
+
+			nd_set_type(node, NODE_CALL);
+
+			break;
 		}
 		case NODE_COLON3: {
 
