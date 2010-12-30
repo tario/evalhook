@@ -164,6 +164,10 @@ module EvalHook
       nil
     end
 
+    def handle_colon3(*args)
+      nil
+    end
+
     def handle_xstr(*args)
       nil
     end
