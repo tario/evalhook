@@ -1,4 +1,6 @@
-0.2.0	Added MultiHookHandler (for multiple nested hooks)
+0.2.0	Added support to hook xstr nodes (system calls with backsticks and %x)
+
+		Added MultiHookHandler (for multiple nested hooks)
 
 		Added spec test
 
