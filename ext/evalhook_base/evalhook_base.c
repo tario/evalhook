@@ -31,6 +31,13 @@ along with evalhook.  if not, see <http://www.gnu.org/licenses/>.
 #include "ruby1_9/env.h"
 #endif
 
+#ifdef RUBY1_8
+#define RUBY_VERSION_CODE 186
+#endif
+#ifdef RUBY1_9
+#define RUBY_VERSION_CODE 191
+#endif
+
 
 VALUE m_EvalHook ;
 VALUE c_HookHandler;
@@ -264,7 +271,9 @@ void process_recursive_node(NODE* node, VALUE handler ) {
 
     case NODE_BEGIN:
     case NODE_OPT_N:
+#ifndef RUBY1_9
     case NODE_NOT:
+#endif
       process_node(node->nd_body, handler);
       break;
 
@@ -588,15 +597,19 @@ void process_recursive_node(NODE* node, VALUE handler ) {
     }
   }  break;
 
+#ifndef RUBY1_9
   case NODE_NEWLINE:
     process_node(node->nd_next, handler);
     break;
+#endif
 
   case NODE_SPLAT:
   case NODE_TO_ARY:
+#ifndef RUBY1_9
   case NODE_SVALUE:             /* a = b, c */
     process_node(node->nd_head, handler);
     break;
+#endif
 
   case NODE_ATTRASGN:           /* literal.meth = y u1 u2 u3 */
     /* node id node */
@@ -625,7 +638,9 @@ void process_recursive_node(NODE* node, VALUE handler ) {
   /* Nodes we found but have yet to decypher */
   /* I think these are all runtime only... not positive but... */
   case NODE_MEMO:               /* enum.c zip */
+#ifndef RUBY1_9
   case NODE_CREF:
+#endif
   /* #defines: */
   /* case NODE_LMASK: */
   /* case NODE_LSHIFT: */
