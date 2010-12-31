@@ -181,7 +181,11 @@ void process_individual_node(NODE* node, VALUE handler) {
 				base_class = else_node;
 				vid = node->nd_else->nd_mid;
 			} else {
+#ifdef RUBY1_8
 				base_class = NEW_LIT( (ruby_cref->nd_clss));
+#else
+				base_class = Qnil;
+#endif
 				vid = node->nd_vid;
 			}
 
