@@ -20,8 +20,17 @@ along with evalhook.  if not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <ruby.h>
-#include <env.h>
+
+#ifdef RUBY1_8
 #include <node.h>
+#include <env.h>
+#endif
+
+#ifdef RUBY1_9
+#include "ruby1_9/node.h"
+#include "ruby1_9/env.h"
+#endif
+
 
 VALUE m_EvalHook ;
 VALUE c_HookHandler;
