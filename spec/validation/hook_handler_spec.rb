@@ -16,4 +16,9 @@ describe EvalHook::HookHandler, "hook handler flaws" do
     }.should raise_error(SyntaxError)
 
   end
+
+  it "should validate as OK empty string" do
+    hh = EvalHook::HookHandler.new
+    hh.evalhook("")
+  end
 end
