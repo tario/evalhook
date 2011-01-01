@@ -131,7 +131,7 @@ void process_individual_node(NODE* node, VALUE handler) {
 			ID const_id = node->u2.id;
 
 			node->nd_mid = const_id;
-			node->nd_head = NEW_CONST(rb_funcall(handler, rb_intern("base_namespace"),0) );
+			node->nd_head = NEW_CONST(SYM2ID(rb_funcall(handler, rb_intern("base_namespace"),0)));
 
 			nd_set_type(node, NODE_COLON2);
 			break;

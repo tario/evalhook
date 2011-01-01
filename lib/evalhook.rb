@@ -95,6 +95,8 @@ module EvalHook
 
     include RedirectHelper
 
+    attr_accessor :base_namespace
+
     # used internally
     class HookCdecl
       def initialize(klass, hook_handler)
