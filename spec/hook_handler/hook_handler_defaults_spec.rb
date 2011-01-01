@@ -1,6 +1,12 @@
 require "rubygems"
 require "evalhook"
 
+class NilClass
+  def strip
+    ""
+  end
+end
+
 describe EvalHook::HookHandler, "hook handler defaults" do
    it "should throw exception when call evalhook with no parameters" do
   		hook_handler = EvalHook::HookHandler.new
@@ -114,6 +120,23 @@ describe EvalHook::HookHandler, "hook handler defaults" do
 
     hook_handler.should_receive(:handle_xstr).with("echo test")
     hook_handler.evalhook("%x[echo test]")
+  end
+
+
+  module B
+
+  end
+  module A
+    module B
+
+    end
+  end
+
+  it "should allow define base_namespace" do
+    hook_handler = EvalHook::HookHandler.new
+
+    hook_handler.base_namespace = :A
+    hook_handler.evalhook("::B").should be == A::B
   end
 
 end
