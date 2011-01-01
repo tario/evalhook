@@ -116,13 +116,5 @@ describe EvalHook::HookHandler, "hook handler defaults" do
     hook_handler.evalhook("%x[echo test]")
   end
 
-  it "should capture colon3" do
-    hook_handler = EvalHook::HookHandler.new
-
-    hook_handler.should_receive(:handle_colon3).with(:A)
-    hook_handler.evalhook("::A")
-  end
-
-
 end
 
