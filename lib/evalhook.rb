@@ -97,6 +97,14 @@ module EvalHook
 
     attr_accessor :base_namespace
 
+    def base_namespace=( obj )
+      if obj.instance_of? Symbol
+        @base_namespace = obj
+      else
+        @base_namespace = obj.to_s.to_sym
+      end
+    end
+
     # used internally
     class HookCdecl
       def initialize(klass, hook_handler)
