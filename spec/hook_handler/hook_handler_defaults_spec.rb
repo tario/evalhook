@@ -139,5 +139,12 @@ describe EvalHook::HookHandler, "hook handler defaults" do
     hook_handler.evalhook("::B").should be == A::B
   end
 
+  it "should allow define base_namespace (const)" do
+    hook_handler = EvalHook::HookHandler.new
+
+    hook_handler.base_namespace = A
+    hook_handler.evalhook("::B").should be == A::B
+  end
+
 end
 
