@@ -128,13 +128,12 @@ void process_individual_node(NODE* node, VALUE handler) {
 		}
 		case NODE_COLON3: {
 
-			NODE* args1 = NEW_LIST(NEW_LIT(ID2SYM(node->u2.id)));
+			ID const_id = node->u2.id;
 
-			node->nd_recv = NEW_LIT(handler);
-			node->nd_mid = rb_intern("handle_colon3");
-			node->nd_args = args1;
+			node->nd_mid = const_id;
+			node->nd_head = NEW_CONST(rb_funcall(handler, rb_intern("base_namespace"),0) );
 
-			nd_set_type(node, NODE_CALL);
+			nd_set_type(node, NODE_COLON2);
 			break;
 		}
 /*		case NODE_LASGN:
