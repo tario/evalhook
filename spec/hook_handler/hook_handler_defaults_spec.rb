@@ -128,6 +128,9 @@ describe EvalHook::HookHandler, "hook handler defaults" do
   end
   module A
     module B
+      class C
+
+      end
 
     end
   end
@@ -144,6 +147,33 @@ describe EvalHook::HookHandler, "hook handler defaults" do
 
     hook_handler.base_namespace = A
     hook_handler.evalhook("::B").should be == A::B
+  end
+
+  class C1
+    def foo
+      "C1#foo"
+    end
+  end
+  module A1
+    class C1
+      def foo
+        "A1::C1#foo"
+      end
+    end
+  end
+
+  it "should allow define base_namespace (class)" do
+    hook_handler = EvalHook::HookHandler.new
+
+    hook_handler.base_namespace = A1
+    hook_handler.evalhook("class ::C1
+            def foo
+              '::C1#foo at evalhook'
+            end
+        end")
+
+    C1.new.foo.should be == "C1#foo" # C1#foo class remains unchanged
+    A1::C1.new.foo.should be == "::C1#foo at evalhook" # A1::C1#foo changes
   end
 
 end
