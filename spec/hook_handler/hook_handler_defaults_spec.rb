@@ -176,5 +176,31 @@ describe EvalHook::HookHandler, "hook handler defaults" do
     A1::C1.new.foo.should be == "::C1#foo at evalhook" # A1::C1#foo changes
   end
 
+
+  class C2
+    def foo
+      "C2#foo"
+    end
+  end
+
+  it "should default base_namespace to Object" do
+    hook_handler = EvalHook::HookHandler.new
+
+    hook_handler.evalhook("
+
+        module Z
+          class ::C2
+              def foo
+                '::C2#foo at evalhook'
+              end
+          end
+
+        end
+    ")
+
+    C2.new.foo.should be == "::C2#foo at evalhook"
+  end
+
+
 end
 
