@@ -97,6 +97,11 @@ module EvalHook
 
     attr_accessor :base_namespace
 
+    def initialize
+      super
+      self.base_namespace = Object
+    end
+
     def base_namespace=( obj )
       if obj.instance_of? Symbol
         @base_namespace = obj
