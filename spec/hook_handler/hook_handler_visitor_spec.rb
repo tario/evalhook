@@ -38,4 +38,24 @@ describe EvalHook::HookHandler, "hook handler visitor" do
 
   end
 
+  it "should capture inside class" do
+      x = X.new
+      hh = EvalHook::HookHandler.new
+
+      hh.should_receive(:handle_method).with(X,x,:foo)
+
+      hh.evalhook("
+        class Y2
+          def bar(x)
+            x.foo
+          end
+        end
+        "
+      )
+
+      y2 = Y2.new
+      y2.bar(x)
+
+  end
+
 end
