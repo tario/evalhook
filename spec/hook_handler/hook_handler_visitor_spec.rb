@@ -17,10 +17,10 @@ describe EvalHook::HookHandler, "hook handler visitor" do
       hh.should_receive(:handle_method).with(X,x,:foo)
 
       hh.evalhook(code)
+
+      entry_point(x)
     end
   end
-
-  visitor_it "x.foo", "should capture single method call"
 
   it "should capture inside method" do
       x = X.new
@@ -55,6 +55,33 @@ describe EvalHook::HookHandler, "hook handler visitor" do
 
       y2 = Y2.new
       y2.bar(x)
+
+  end
+
+  it "should capture inside class and yield" do
+      x = X.new
+      hh = EvalHook::HookHandler.new
+
+      hh.should_receive(:handle_method)
+      hh.should_receive(:handle_method).with(X,x,:foo)
+
+      hh.evalhook("
+        class Y3
+          def bar_(x)
+            yield(x)
+          end
+
+          def bar(x)
+            bar_(x) do |x_|
+              x_.foo
+            end
+          end
+        end
+        "
+      )
+
+      y3 = Y3.new
+      y3.bar(x)
 
   end
 
