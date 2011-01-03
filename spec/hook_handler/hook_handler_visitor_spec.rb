@@ -85,4 +85,20 @@ describe EvalHook::HookHandler, "hook handler visitor" do
 
   end
 
+  it "should capture inside a proc" do
+      x = X.new
+      hh = EvalHook::HookHandler.new
+
+      hh.should_receive(:handle_method).with(Kernel, anything(),:proc)
+      hh.should_receive(:handle_method).with(X,x,:foo)
+
+      c = nil
+      hh.evalhook("
+          c = proc do |x| x.foo end
+        "
+      )
+      c.call(x)
+
+  end
+
 end
