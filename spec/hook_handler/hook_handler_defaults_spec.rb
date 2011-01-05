@@ -168,12 +168,12 @@ describe EvalHook::HookHandler, "hook handler defaults" do
     hook_handler.base_namespace = A1
     hook_handler.evalhook("class ::C1
             def foo
-              '::C1#foo at evalhook'
+              'A1::C1#foo at evalhook'
             end
         end")
 
     C1.new.foo.should be == "C1#foo" # C1#foo class remains unchanged
-    A1::C1.new.foo.should be == "::C1#foo at evalhook" # A1::C1#foo changes
+    A1::C1.new.foo.should be == "A1::C1#foo at evalhook" # A1::C1#foo changes
   end
 
 
@@ -201,6 +201,26 @@ describe EvalHook::HookHandler, "hook handler defaults" do
     C2.new.foo.should be == "::C2#foo at evalhook"
   end
 
+  module A1
+    module A2
+
+    end
+  end
+
+
+  it "should allow define base_namespace (3 levels)" do
+    hook_handler = EvalHook::HookHandler.new
+
+    hook_handler.base_namespace = A1::A2
+    hook_handler.evalhook("class ::C1
+            def foo
+              'A1::A2::C1#foo at evalhook'
+            end
+        end")
+
+    C1.new.foo.should be == "C1#foo" # C1#foo class remains unchanged
+    A1::A2::C1.new.foo.should be == "A1::A2::C1#foo at evalhook" # A1::C1#foo changes
+  end
 
 end
 
