@@ -130,8 +130,36 @@ void process_individual_node(NODE* node, VALUE handler) {
 
 			ID const_id = node->u2.id;
 
-			node->nd_mid = const_id;
-			node->nd_head = NEW_CONST(SYM2ID(rb_funcall(handler, rb_intern("base_namespace"),0)));
+			VALUE two_points = rb_str_new2("::");
+			VALUE base_namespace_sym = rb_funcall(handler, rb_intern("base_namespace"),0);
+			VALUE base_namespace_str = rb_funcall(base_namespace_sym, rb_intern("to_s"), 0);
+			VALUE base_namespace_array = rb_funcall(base_namespace_str, rb_intern("split"), 1, two_points);
+
+			if (RARRAY(base_namespace_array)->len == 1) {
+				node->nd_mid = const_id;
+				node->nd_head = NEW_CONST(SYM2ID(base_namespace_sym));
+			} else {
+				node->nd_mid = const_id;
+
+				NODE* prevnode;
+
+				int i;
+				for (i=0; i<RARRAY(base_namespace_array)->len; ++i) {
+
+
+					VALUE curr = rb_ary_entry(base_namespace_array, i);
+					ID curr_id =
+						ID2SYM(rb_funcall(curr, rb_intern("to_sym"), 0) );
+
+					if (i==0) {
+						prevnode = NEW_CONST(SYM2ID(base_namespace_sym) );
+					} else {
+						prevnode = NEW_COLON2(prevnode, curr_id);
+					}
+				}
+
+				node->nd_head = prevnode;
+			}
 
 			nd_set_type(node, NODE_COLON2);
 			break;
