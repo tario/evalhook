@@ -148,11 +148,12 @@ void process_individual_node(NODE* node, VALUE handler) {
 
 
 					VALUE curr = rb_ary_entry(base_namespace_array, i);
+
 					ID curr_id =
-						ID2SYM(rb_funcall(curr, rb_intern("to_sym"), 0) );
+						SYM2ID(rb_funcall(curr, rb_intern("to_sym"), 0) );
 
 					if (i==0) {
-						prevnode = NEW_CONST(SYM2ID(base_namespace_sym) );
+						prevnode = NEW_CONST(curr_id);
 					} else {
 						prevnode = NEW_COLON2(prevnode, curr_id);
 					}
