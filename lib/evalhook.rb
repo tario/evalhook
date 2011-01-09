@@ -22,6 +22,7 @@ require "evalhook"
 require "evalhook_base"
 require "evalhook/redirect_helper"
 require "evalhook/multi_hook_handler"
+require "evalmimic"
 
 
 class Object
@@ -208,6 +209,13 @@ module EvalHook
 
     def hooked_xstr(str)
       runstr = handle_xstr(str) || str
+    end
+
+    define_eval_method :evalhook
+
+    def internal_eval(b_, original_args)
+      raise ArgumentError if original_args.size == 0
+      evalhook_i(original_args[0], original_args[1] || b_, "", 0)
     end
 
     def evalhook_i(code, b_ = nil, name = "(eval)", line = 1)

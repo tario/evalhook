@@ -733,63 +733,6 @@ blk_free(data)
 }
 
 
-
-/*
- *  call-seq:
- *     binding -> a_binding
- *
- *  Returns a +Binding+ object, describing the variable and
- *  method bindings at the point of call. This object can be used when
- *  calling +eval+ to execute the evaluated command in this
- *  environment. Also see the description of class +Binding+.
- *
- *     def getBinding(param)
- *       return binding
- *     end
- *     b = getBinding("hello")
- *     eval("param", b)   #=> "hello"
- */
-
-static VALUE
-rb_f_evalhook(argc, argv, recv)
-	int argc;
-	VALUE* argv;
-	VALUE recv;
-{
-
-
-	VALUE bind = Qnil;
- 	VALUE file = Qnil;
- 	VALUE line = Qnil;
-
- 	if (argc == 0) {
-		return rb_funcall2(recv,rb_intern("evalhook_i"), 0, 0);
- 	}
-
- 	if (argc > 1) bind = argv[1];
- 	if (argc > 2) file = argv[2];
- 	if (argc > 3) line = argv[3];
-
-	if (argc < 2) argc = 2;
-
-	if (bind == Qnil) {
-		bind = rb_funcall(recv, rb_intern("binding"),0);
-		argv[1] = bind;
-
-		struct BLOCK* data;
-		Data_Get_Struct(bind, struct BLOCK, data);
-
-		// change the self of the binding to match the real self of the caller
-		data->self = data->frame.prev->prev->self;
-	}
-
-	if (file == Qnil) {
-		argc = 2;
-	}
-
-	return rb_funcall2(recv,rb_intern("evalhook_i"), argc, argv);
-}
-
 VALUE validate_syntax(VALUE self, VALUE code) {
 
 	NODE* node = rb_compile_string("(eval)", code, 1);
@@ -849,6 +792,4 @@ See README for more examples
 	method_public = rb_intern("public");
 	method_protected = rb_intern("protected");
 	method_set_hook_handler = rb_intern("set_hook_handler");
-
-    rb_define_method(c_HookHandler, "evalhook", rb_f_evalhook, -1);
 }
