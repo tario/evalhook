@@ -779,6 +779,7 @@ rb_f_evalhook(argc, argv, recv)
 		struct BLOCK* data;
 		Data_Get_Struct(bind, struct BLOCK, data);
 
+		// change the self of the binding to match the real self of the caller
 		data->self = data->frame.prev->prev->self;
 	}
 
