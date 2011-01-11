@@ -215,7 +215,7 @@ module EvalHook
 
     def internal_eval(b_, original_args)
       raise ArgumentError if original_args.size == 0
-      evalhook_i(original_args[0], original_args[1] || b_, "", 0)
+      evalhook_i(original_args[0], original_args[1] || b_, original_args[2] || "(eval)", original_args[3] || 0)
     end
 
     def evalhook_i(code, b_ = nil, name = "(eval)", line = 1)
