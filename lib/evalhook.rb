@@ -180,10 +180,12 @@ module EvalHook
       nil
     end
 
+    # Overwrite to handle the evaluation o colon3 nodes (access to global namespace)
     def handle_colon3(*args)
       nil
     end
 
+    # Overwrite to handle the evaluation o xstr nodes (execution of shell commands)
     def handle_xstr(*args)
       nil
     end
@@ -193,6 +195,7 @@ module EvalHook
       nil
     end
 
+    # used internally
     def hooked_super(*args)
       hm = caller_obj(2).hooked_method(caller_method(2))
       hm.set_class(caller_class(2).superclass)
@@ -207,12 +210,14 @@ module EvalHook
       end
     end
 
+    # used internally
     def hooked_xstr(str)
       runstr = handle_xstr(str) || str
     end
 
     define_eval_method :evalhook
 
+    # used internally
     def internal_eval(b_, original_args)
       raise ArgumentError if original_args.size == 0
       evalhook_i(original_args[0], original_args[1] || b_, original_args[2] || "(eval)", original_args[3] || 0)
