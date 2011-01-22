@@ -10,7 +10,7 @@ class Hook < EvalHook::HookHandler
 		
 		if method_name == :print
 			# change the method_name to alternative_print
-			Redirect.new(klass, recv, "alternative_print")
+			redirect_method(klass, recv, "alternative_print")
 		else
 			nil # do nothing
 		end
