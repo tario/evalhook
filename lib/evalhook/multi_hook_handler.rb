@@ -27,6 +27,7 @@ class MultiHookHandler < HookHandler
     @nested_hook_handlers = Array.new
   end
 
+  # Add a nested hook handler to the hook handler chain (see examples)
   def add(nested_hh)
     @nested_hook_handlers << nested_hh
   end
@@ -35,12 +36,14 @@ class MultiHookHandler < HookHandler
     lastret = nil
 
     @nested_hook_handlers.each do |hh|
-      lastret = hh.handle_method(klass, recv, method_id)
+      currret = hh.handle_method(klass, recv, method_id)
 
-      if (lastret)
-        klass = lastret.klass
-        recv = lastret.recv
-        method_id = lastret.method_name
+      lastret = currret || lastret
+
+      if (currret)
+        klass = currret.klass
+        recv = currret.recv
+        method_id = currret.method_name
       end
     end
 
@@ -51,7 +54,8 @@ class MultiHookHandler < HookHandler
     lastret = nil
 
     @nested_hook_handlers.each do |hh|
-      lastret = hh.handle_cdecl(*args)
+      currret = hh.handle_cdecl(*args)
+      lastret = currret || lastret
     end
 
     lastret
@@ -62,7 +66,8 @@ class MultiHookHandler < HookHandler
     lastret = nil
 
     @nested_hook_handlers.each do |hh|
-      lastret = hh.handle_gasgn(*args)
+      currret = hh.handle_gasgn(*args)
+      lastret = currret || lastret
     end
 
     lastret
