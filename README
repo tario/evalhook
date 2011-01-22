@@ -102,7 +102,123 @@ Redirect of method calls
 	h.evalhook('print "hello world\n"')
 
 	
+=== MultiHookHandler Example (new feature since 0.2.0)
+
+	require "rubygems"
+	require "evalhook"
+
+	include EvalHook
+
+	class Hook1 < HookHandler
+		def handle_method(klass,recv,method_name)
+			
+			if method_name == :foo
+				redirect_method(klass,recv,:bar)
+			else
+				nil
+			end
+		end
+	end
+
+	class Hook2 < HookHandler
+		def handle_method(klass,recv,method_name)
+
+			if method_name == :bar
+				redirect_method(klass,recv,:test1)
+			else
+				nil
+			end
+		end
+	end
+
+	class X
+		def foo
+			print "foo\n"
+		end
+		
+		def bar
+			print "bar\n"
+		end
+		
+		def test1
+			print "test1\n"
+		end
+	end
+
+
+	x = X.new
+	x.foo # foo
+
+	mmh = MultiHookHandler.new
+	mmh.add( Hook1.new )	# :foo => :bar
+	mmh.add( Hook2.new )   # :bar => :test1
+
+	mmh.evalhook("x.foo") # test1
+	mmh.evalhook("x.bar") # test1
+
+=== MultiHookHandler Example 2
+
+	require "rubygems"
+	require "evalhook"
+
+	include EvalHook
+
+	class DenyFooFilter < HookHandler
+		def handle_method(klass,recv,method_name)
+		
+			if method_name == :foo
+				raise SecurityError
+			else
+				nil
+			end
+		end
+	end
+
+	class RedirectFooToBar < HookHandler
+		def handle_method(klass,recv,method_name)
+
+			if method_name == :foo
+				redirect_method(klass,recv,:bar)
+			else
+				nil
+			end
+		end
+	end
+
+	class X
+		def foo
+			print "foo\n"
+		end
+		
+		def bar
+			print "bar\n"
+		end
+	end
+
+
+	x = X.new
+	x.foo # foo
+
+	mmh = MultiHookHandler.new
+	mmh.add( DenyFooFilter.new )	
+	mmh.add( RedirectFooToBar.new )
+
+	begin
+	mmh.evalhook("x.foo")
+	rescue SecurityError
+	print "foo method filtered by a SecurityError exception\n"
+	end
+
+
+	mmh = MultiHookHandler.new
+	mmh.add( RedirectFooToBar.new )
+	mmh.add( DenyFooFilter.new )	
+
+	mmh.evalhook("x.foo")
+
+	
+	
 == Copying
 
-Copyright (c) 2010 Dario Seminara, released under the GPL License (see LICENSE)
+Copyright (c) 2010-2011 Dario Seminara, released under the GPL License (see LICENSE)
 	
