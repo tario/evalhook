@@ -3,6 +3,10 @@
 		Added MultiHookHandler (for multiple nested hooks)
 
 		Added spec test
+		
+0.1.3	Added check of null pointer of node->nd_entry when process individual gasgn node
+
+0.1.2	Added SecurityError when xstr nodes are found to avoid system calls
 
 0.1.1	Fixed ruby injection flaw in evalhook trick
 
