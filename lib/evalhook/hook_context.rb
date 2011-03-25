@@ -28,6 +28,12 @@ module EvalHook
       @hook_handler = hook_handler
     end
 
+    def ruby_emul_xstr(tree)
+      args = s(:arglist, s(:lit, tree[1]) )
+
+      emul s(:call, s(:lit, @hook_handler), :hooked_xstr, args)
+    end
+
     def ruby_emul_cdecl(tree)
       const_tree = tree[1]
       value_tree = tree[2]
