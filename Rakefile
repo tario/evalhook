@@ -13,6 +13,7 @@ spec = Gem::Specification.new do |s|
   s.summary = 'Alternate eval which hook all methods executed in the evaluated code'
   s.homepage = "http://github.com/tario/evalhook"
   s.add_dependency "evalmimic", ">= 0.1.0"
+  s.add_dependency "partialruby", ">= 0.1.0"
   s.has_rdoc = true
   s.extra_rdoc_files = [ 'README' ]
   s.rdoc_options << '--main' << 'README'
