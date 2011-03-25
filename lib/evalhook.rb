@@ -226,23 +226,6 @@ module EvalHook
     def evalhook_i(code, b_ = nil, name = "(eval)", line = 1)
 
       EvalHook.validate_syntax code
-
-      code = "
-        retvalue = nil
-        EvalHook.double_run do |run|
-          ( if (run)
-            retvalue = begin
-              #{code}
-            end
-            EvalHook::FakeEvalHook
-          else
-            EvalHook
-          end ).hook_block(ObjectSpace._id2ref(#{object_id}))
-        end
-        retvalue
-       "
-      eval(code, b_, name, line)
-
     end
   end
 
