@@ -22,7 +22,11 @@ require "ruby_parser"
 
 module EvalHook
   def self.validate_syntax(code)
-   RubyParser.new.parse(code)
+   begin
+      RubyParser.new.parse(code)
+   rescue
+      raise SyntaxError
+   end
    true
   end
 
