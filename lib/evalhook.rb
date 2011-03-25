@@ -226,6 +226,14 @@ module EvalHook
     def evalhook_i(code, b_ = nil, name = "(eval)", line = 1)
 
       EvalHook.validate_syntax code
+
+      tree = RubyParser.new.parse code
+
+      context = PartialRuby::PureRubyContext.new
+      emulationcode = context.emul tree
+
+      eval emulationcode
+
     end
   end
 
