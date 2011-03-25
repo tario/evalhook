@@ -232,7 +232,7 @@ module EvalHook
       context = PartialRuby::PureRubyContext.new
       emulationcode = context.emul tree
 
-      eval emulationcode
+      eval emulationcode, b_, name, line
 
     end
   end
