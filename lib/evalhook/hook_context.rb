@@ -24,5 +24,8 @@ require "partialruby"
 module EvalHook
   class HookContext < PartialRuby::PureRubyContext
 
+    def initialize(hook_handler)
+      @hook_handler = hook_handler
+    end
   end
 end

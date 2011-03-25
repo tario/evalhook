@@ -22,6 +22,7 @@ require "partialruby"
 require "evalhook/redirect_helper"
 require "evalhook/multi_hook_handler"
 require "evalhook/hook_handler"
+require "evalhook/hook_context"
 require "evalmimic"
 
 
@@ -229,7 +230,7 @@ module EvalHook
 
       tree = RubyParser.new.parse code
 
-      context = PartialRuby::PureRubyContext.new
+      context = EvalHook::HookContext.new(self)
       emulationcode = context.emul tree
 
       eval emulationcode, b_, name, line
