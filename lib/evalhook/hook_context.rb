@@ -27,5 +27,14 @@ module EvalHook
     def initialize(hook_handler)
       @hook_handler = hook_handler
     end
+
+    def ruby_emul_gasgn(tree)
+      args1 = s(:arglist, s(:lit, tree[1]))
+      args2 = s(:arglist, tree[2] )
+
+      firstcall = s(:call, s(:lit, @hook_handler), :hooked_gasgn, args1 )
+      secondcall = s(:call, firstcall, :set_value, args2)
+      emul secondcall
+    end
   end
 end
