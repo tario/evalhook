@@ -3,8 +3,9 @@ require "evalhook"
 
 describe EvalHook::HookHandler, "hook handler hooks" do
 
-  class X
+  class X2
     def foo
+      9
     end
 
     def bar
@@ -18,7 +19,7 @@ describe EvalHook::HookHandler, "hook handler hooks" do
       redirect_method(klass, recv, :bar)
     end
 
-    x = X.new
+    x = X2.new
     hh.evalhook("x.foo", binding).should be == 4
   end
 
