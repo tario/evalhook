@@ -18,10 +18,12 @@ you should have received a copy of the gnu general public license
 along with evalhook.  if not, see <http://www.gnu.org/licenses/>.
 
 =end
+require "ruby_parser"
 
 module EvalHook
-  def self.validate_syntax
-   raise "999"
+  def self.validate_syntax(code)
+   RubyParser.new.parse(code)
+   true
   end
 
   class HookHandler

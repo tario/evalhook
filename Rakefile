@@ -14,6 +14,7 @@ spec = Gem::Specification.new do |s|
   s.homepage = "http://github.com/tario/evalhook"
   s.add_dependency "evalmimic", ">= 0.1.0"
   s.add_dependency "partialruby", ">= 0.1.0"
+  s.add_dependency "ruby_parser", ">= 2.0.6"
   s.has_rdoc = true
   s.extra_rdoc_files = [ 'README' ]
   s.rdoc_options << '--main' << 'README'
