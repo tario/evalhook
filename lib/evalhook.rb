@@ -18,8 +18,7 @@ you should have received a copy of the gnu general public license
 along with evalhook.  if not, see <http://www.gnu.org/licenses/>.
 
 =end
-require "evalhook"
-require "evalhook_base"
+require "partialruby"
 require "evalhook/redirect_helper"
 require "evalhook/multi_hook_handler"
 require "evalmimic"

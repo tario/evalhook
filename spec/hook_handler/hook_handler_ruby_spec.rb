@@ -25,7 +25,7 @@ describe EvalHook::HookHandler, "hook handler ruby basics" do
 
   it "should call 'global' functions" do
 
-    test_hook_handler.evalhook("
+    test_hook_handler.eval("
          def bar
          end
          bar
