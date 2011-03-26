@@ -28,6 +28,29 @@ module EvalHook
       @hook_handler = hook_handler
     end
 
+    def ruby_emul_call(tree)
+
+      method_name = tree[2]
+      args1 = s(:arglist, s(:lit, method_name))
+      args2 = s(:arglist, s(:lit, @hook_handler))
+
+      receiver = tree[1] || s(:self)
+
+      firstcall = nil
+      secondcall = nil
+
+      if tree[1]
+        firstcall = s(:call, receiver, :local_hooked_method, args1)
+        secondcall = s(:call, firstcall, :set_hook_handler, args2)
+      else
+        firstcall = s(:call, receiver, :hooked_method, args1)
+        secondcall = s(:call, firstcall, :set_hook_handler, args2)
+      end
+
+      context = PartialRuby::PureRubyContext.new
+      context.emul s(:call, secondcall, :call, tree[3])
+    end
+
     def ruby_emul_dxstr(tree)
 
       dstr_tree = tree.dup
