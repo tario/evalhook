@@ -31,6 +31,15 @@ module EvalHook
     def ruby_emul_call(tree)
 
       method_name = tree[2]
+
+      if (method_name == :local_hooked_method or
+         method_name == :hooked_method or
+         method_name == :set_hook_handler
+         )
+
+         return super tree
+      end
+
       args1 = s(:arglist, s(:lit, method_name))
       args2 = s(:arglist, s(:lit, @hook_handler))
 
@@ -47,8 +56,7 @@ module EvalHook
         secondcall = s(:call, firstcall, :set_hook_handler, args2)
       end
 
-      context = PartialRuby::PureRubyContext.new
-      context.emul s(:call, secondcall, :call, tree[3])
+      super s(:call, secondcall, :call, tree[3])
     end
 
     def ruby_emul_dxstr(tree)
