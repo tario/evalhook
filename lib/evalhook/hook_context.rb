@@ -28,6 +28,26 @@ module EvalHook
       @hook_handler = hook_handler
     end
 
+    def const_path_emul(code)
+      if code.instance_of? Array
+        if (code.size == 1)
+          s(:const, code[-1].to_sym)
+        else
+          s(:colon2, const_path_emul(code[0..-2]), code[-1].to_sym)
+        end
+      else
+        const_path_emul code.split("::")
+      end
+    end
+
+    def ruby_emul_colon3(tree)
+      if @hook_handler.base_namespace
+        emul s(:colon2, const_path_emul(@hook_handler.base_namespace.to_s), tree[1])
+      else
+        super tree
+      end
+    end
+
     def ruby_emul_call(tree)
 
       method_name = tree[2]
