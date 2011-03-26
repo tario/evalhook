@@ -28,6 +28,16 @@ module EvalHook
       @hook_handler = hook_handler
     end
 
+    def ruby_emul_dxstr(tree)
+
+      dstr_tree = tree.dup
+      dstr_tree[0] = :dstr
+
+      args = s(:arglist, dstr_tree )
+
+      emul s(:call, s(:lit, @hook_handler), :hooked_xstr, args)
+    end
+
     def ruby_emul_xstr(tree)
       args = s(:arglist, s(:lit, tree[1]) )
 
