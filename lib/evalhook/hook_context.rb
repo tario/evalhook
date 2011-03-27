@@ -54,13 +54,14 @@ module EvalHook
 
       if (method_name == :local_hooked_method or
          method_name == :hooked_method or
-         method_name == :set_hook_handler
+         method_name == :set_hook_handler or
+         method_name == :binding
          )
 
          return super tree
       end
 
-      args1 = s(:arglist, s(:lit, method_name))
+      args1 = s(:arglist, s(:lit, method_name), s(:call, nil, :binding, s(:arglist)))
       args2 = s(:arglist, s(:lit, @hook_handler))
 
       receiver = tree[1] || s(:self)

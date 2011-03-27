@@ -27,11 +27,11 @@ require "evalmimic"
 
 
 class Object
-  def local_hooked_method(mname)
-    EvalHook::HookedMethod.new(self,mname,true)
+  def local_hooked_method(mname,_binding)
+    EvalHook::HookedMethod.new(self,mname,true,_binding)
   end
-  def hooked_method(mname)
-    EvalHook::HookedMethod.new(self,mname,false)
+  def hooked_method(mname,_binding)
+    EvalHook::HookedMethod.new(self,mname,false,_binding)
   end
 end
 
@@ -40,10 +40,11 @@ module EvalHook
   # used internally
   class HookedMethod
 
-    def initialize(recv, m,localcall)
+    def initialize(recv, m,localcall,_binding)
       @recv = recv
       @m = m
       @localcall = localcall
+      @_binding = _binding
     end
 
     # used internally
@@ -63,8 +64,15 @@ module EvalHook
       method_handler = @method_handler
       ret = nil
 
-      klass = @klass || @recv.method(@m).owner
       method_name = @m
+      if args.length == 0
+        local_vars = @_binding.eval("local_variables").map(&:to_s)
+        if local_vars.include? method_name.to_s
+          return @_binding.eval(method_name.to_s)
+        end
+      end
+
+      klass = @klass || @recv.method(@m).owner
       recv = @recv
 
       if method_handler
