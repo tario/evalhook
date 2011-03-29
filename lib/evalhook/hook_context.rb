@@ -61,7 +61,8 @@ module EvalHook
          return super tree
       end
 
-      args1 = s(:arglist, s(:lit, method_name), s(:call, nil, :binding, s(:arglist)))
+      args1 = s(:arglist, s(:lit, method_name), marked(s(:call, nil, :binding, s(:arglist))))
+
       args2 = s(:arglist, s(:lit, @hook_handler))
 
       receiver = tree[1] || s(:self)
@@ -70,14 +71,14 @@ module EvalHook
       secondcall = nil
 
       if tree[1]
-        firstcall = s(:call, receiver, :local_hooked_method, args1)
-        secondcall = s(:call, firstcall, :set_hook_handler, args2)
+        firstcall = marked(s(:call, receiver, :local_hooked_method, args1))
+        secondcall = marked(s(:call, firstcall, :set_hook_handler, args2))
       else
-        firstcall = s(:call, receiver, :hooked_method, args1)
-        secondcall = s(:call, firstcall, :set_hook_handler, args2)
+        firstcall = marked(s(:call, receiver, :hooked_method, args1))
+        secondcall = marked(s(:call, firstcall, :set_hook_handler, args2))
       end
 
-      super s(:call, secondcall, :call, tree[3])
+      super marked s(:call, secondcall, :call, tree[3])
     end
 
     def ruby_emul_dxstr(tree)
@@ -87,13 +88,13 @@ module EvalHook
 
       args = s(:arglist, dstr_tree )
 
-      emul s(:call, s(:lit, @hook_handler), :hooked_xstr, args)
+      emul marked(s(:call, s(:lit, @hook_handler), :hooked_xstr, args))
     end
 
     def ruby_emul_xstr(tree)
       args = s(:arglist, s(:lit, tree[1]) )
 
-      emul s(:call, s(:lit, @hook_handler), :hooked_xstr, args)
+      emul marked(s(:call, s(:lit, @hook_handler), :hooked_xstr, args))
     end
 
     def ruby_emul_cdecl(tree)
@@ -120,9 +121,9 @@ module EvalHook
       args2 = s(:arglist, s(:lit, const_id))
       args3 = s(:arglist, value_tree)
 
-      firstcall = s(:call, s(:lit, @hook_handler), :hooked_cdecl, args1 )
-      secondcall = s(:call, firstcall, :set_id, args2)
-      thirdcall = s(:call, secondcall, :set_value, args3)
+      firstcall = marked(s(:call, s(:lit, @hook_handler), :hooked_cdecl, args1 ))
+      secondcall = marked(s(:call, firstcall, :set_id, args2))
+      thirdcall = marked(s(:call, secondcall, :set_value, args3))
 
       emul thirdcall
     end
@@ -131,9 +132,18 @@ module EvalHook
       args1 = s(:arglist, s(:lit, tree[1]))
       args2 = s(:arglist, tree[2] )
 
-      firstcall = s(:call, s(:lit, @hook_handler), :hooked_gasgn, args1 )
-      secondcall = s(:call, firstcall, :set_value, args2)
+      firstcall = marked(s(:call, s(:lit, @hook_handler), :hooked_gasgn, args1))
+      secondcall = marked(s(:call, firstcall, :set_value, args2))
       emul secondcall
+    end
+
+    private
+
+    def marked(ast)
+      def ast.is_marked?
+        true
+      end
+      ast
     end
   end
 end
