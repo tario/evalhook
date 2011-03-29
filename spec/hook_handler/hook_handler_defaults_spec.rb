@@ -222,5 +222,9 @@ describe EvalHook::HookHandler, "hook handler defaults" do
     A1::A2::C1.new.foo.should be == "A1::A2::C1#foo at evalhook" # A1::C1#foo changes
   end
 
+  it "should use current binding when not specified" do
+    a = 9
+    EvalHook::HookHandler.new.evalhook("a").should be == 9
+  end
 end
 
