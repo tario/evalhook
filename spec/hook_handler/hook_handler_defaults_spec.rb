@@ -46,14 +46,14 @@ describe EvalHook::HookHandler, "hook handler defaults" do
      hook_handler = EvalHook::HookHandler.new
 
      a = 5
-     hook_handler.evalhook("a").should be == a
+     hook_handler.evalhook("a", binding).should be == a
   end
 
 
   class N
     def foo(hook_handler)
       @a = 5
-      hook_handler.evalhook("@a")
+      hook_handler.evalhook("@a", binding)
     end
   end
 

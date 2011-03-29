@@ -32,8 +32,7 @@ describe EvalHook::HookHandler, "hook handler visitor" do
         def bar(x)
           x.foo
         end
-        "
-      )
+        ", binding)
       bar(x)
 
   end
@@ -50,7 +49,7 @@ describe EvalHook::HookHandler, "hook handler visitor" do
             x.foo
           end
         end
-        "
+        ", binding
       )
 
       y2 = Y2.new
@@ -77,7 +76,7 @@ describe EvalHook::HookHandler, "hook handler visitor" do
             end
           end
         end
-        "
+        ", binding
       )
 
       y3 = Y3.new
@@ -95,7 +94,7 @@ describe EvalHook::HookHandler, "hook handler visitor" do
       c = nil
       hh.evalhook("
           c = proc do |x| x.foo end
-        "
+        ", binding
       )
       c.call(x)
 

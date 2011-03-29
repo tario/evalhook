@@ -40,7 +40,7 @@ describe EvalHook::HookHandler, "hook handler ruby basics" do
 
   it "should allow assignment of locals" do
     local_test = nil
-    test_hook_handler.evalhook("local_test = 1")
+    test_hook_handler.evalhook("local_test = 1", binding)
     local_test.should be == 1
   end
 

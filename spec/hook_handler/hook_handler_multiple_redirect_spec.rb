@@ -59,7 +59,7 @@ describe EvalHook::MultiHookHandler, "multiple hook handler redirect" do
                         with(X_, x, :bar).
                         and_return(nil)
 
-      hook_handler.evalhook("x.foo")
+      hook_handler.evalhook("x.foo", binding)
 
 
   end
