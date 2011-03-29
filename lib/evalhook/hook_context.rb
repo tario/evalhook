@@ -52,13 +52,8 @@ module EvalHook
 
       method_name = tree[2]
 
-      if (method_name == :local_hooked_method or
-         method_name == :hooked_method or
-         method_name == :set_hook_handler or
-         method_name == :binding
-         )
-
-         return super tree
+      if tree.respond_to?(:is_marked?)
+        return super(tree)
       end
 
       args1 = s(:arglist, s(:lit, method_name), marked(s(:call, nil, :binding, s(:arglist))))
@@ -78,7 +73,7 @@ module EvalHook
         secondcall = marked(s(:call, firstcall, :set_hook_handler, args2))
       end
 
-      super marked s(:call, secondcall, :call, tree[3])
+      super marked(s(:call, secondcall, :call, tree[3]))
     end
 
     def ruby_emul_dxstr(tree)
