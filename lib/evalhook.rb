@@ -26,7 +26,7 @@ require "evalhook/hook_context"
 begin
 require "evalmimic"
 $evalmimic_defined = true
-rescue
+rescue LoadError
 $evalmimic_defined = false
 end
 
