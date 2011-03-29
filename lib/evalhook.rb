@@ -23,7 +23,12 @@ require "evalhook/redirect_helper"
 require "evalhook/multi_hook_handler"
 require "evalhook/hook_handler"
 require "evalhook/hook_context"
+begin
 require "evalmimic"
+$evalmimic_defined = true
+rescue
+$evalmimic_defined = false
+end
 
 
 class Object
@@ -224,14 +229,6 @@ module EvalHook
       runstr = handle_xstr(str) || str
     end
 
-    define_eval_method :evalhook
-
-    # used internally
-    def internal_eval(b_, original_args)
-      raise ArgumentError if original_args.size == 0
-      evalhook_i(original_args[0], original_args[1] || b_, original_args[2] || "(eval)", original_args[3] || 0)
-    end
-
     def evalhook_i(code, b_ = nil, name = "(eval)", line = 1)
 
       EvalHook.validate_syntax code
@@ -244,6 +241,23 @@ module EvalHook
       eval emulationcode, b_, name, line
 
     end
+
+    if ($evalmimic_defined)
+
+      define_eval_method :evalhook
+
+      # used internally
+      def internal_eval(b_, original_args)
+        raise ArgumentError if original_args.size == 0
+        evalhook_i(original_args[0], original_args[1] || b_, original_args[2] || "(eval)", original_args[3] || 0)
+      end
+
+    else
+      def evalhook(*args)
+        evalhook_i(*args)
+      end
+    end
+
   end
 
 	module ModuleMethods
