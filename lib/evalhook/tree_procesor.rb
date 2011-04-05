@@ -92,7 +92,14 @@ module EvalHook
           secondcall = s(:call, firstcall, :set_id, args2)
 
           s(:call, secondcall, :set_value, args3)
+        elsif nodetype == :dxstr
 
+          dstr_tree = tree.dup
+          dstr_tree[0] = :dstr
+
+          args = s(:arglist, dstr_tree )
+
+          s(:call, s(:lit, @hook_handler), :hooked_xstr, args)
 
         elsif nodetype == :xstr
 
