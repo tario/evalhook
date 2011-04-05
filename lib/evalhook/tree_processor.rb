@@ -48,7 +48,7 @@ module EvalHook
 
         if nodetype == :gasgn
           args1 = s(:arglist, s(:lit, tree[1]))
-          args2 = s(:arglist, tree[2] )
+          args2 = s(:arglist, process(tree[2]))
 
           firstcall = s(:call, s(:lit, @hook_handler), :hooked_gasgn, args1)
 
