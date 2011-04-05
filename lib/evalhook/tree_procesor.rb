@@ -93,6 +93,12 @@ module EvalHook
 
           s(:call, secondcall, :set_value, args3)
 
+
+        elsif nodetype == :xstr
+
+          args = s(:arglist, s(:lit, tree[1]) )
+          s(:call, s(:lit, @hook_handler), :hooked_xstr, args)
+
         else
           tree
         end
