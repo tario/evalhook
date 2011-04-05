@@ -98,7 +98,7 @@ module EvalHook
 
           args1 = s(:arglist, base_class_tree)
           args2 = s(:arglist, s(:lit, const_id))
-          args3 = s(:arglist, value_tree)
+          args3 = s(:arglist, process(value_tree))
 
           firstcall = s(:call, s(:lit, @hook_handler), :hooked_cdecl, args1 )
           secondcall = s(:call, firstcall, :set_id, args2)
