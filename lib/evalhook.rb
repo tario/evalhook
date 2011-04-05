@@ -23,6 +23,8 @@ require "evalhook/redirect_helper"
 require "evalhook/multi_hook_handler"
 require "evalhook/hook_handler"
 require "evalhook/hook_context"
+require "evalhook/tree_procesor.rb"
+
 begin
 require "evalmimic"
 $evalmimic_defined = true
@@ -236,6 +238,7 @@ module EvalHook
       tree = RubyParser.new.parse code
 
       context = EvalHook::HookContext.new(self)
+
       emulationcode = context.emul tree
 
       eval emulationcode, b_, name, line
