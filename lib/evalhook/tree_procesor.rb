@@ -63,6 +63,36 @@ module EvalHook
 
           s(:call, secondcall, :call, tree[3])
 
+        elsif nodetype == :cdecl
+
+          const_tree = tree[1]
+          value_tree = tree[2]
+
+          base_class_tree = nil
+          const_id = nil
+
+          unless const_tree.instance_of? Symbol
+            if const_tree[0] == :colon2
+              base_class_tree = const_tree[1]
+              const_id = const_tree[2]
+            elsif const_tree[0] == :colon3
+              base_class_tree = s(:lit, Object)
+              const_id = const_tree[1]
+            end
+          else
+            base_class_tree = s(:lit, Object)
+            const_id = const_tree
+          end
+
+          args1 = s(:arglist, base_class_tree)
+          args2 = s(:arglist, s(:lit, const_id))
+          args3 = s(:arglist, value_tree)
+
+          firstcall = s(:call, s(:lit, @hook_handler), :hooked_cdecl, args1 )
+          secondcall = s(:call, firstcall, :set_id, args2)
+
+          s(:call, secondcall, :set_value, args3)
+
         else
           tree
         end
