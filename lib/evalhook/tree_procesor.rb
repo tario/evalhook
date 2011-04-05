@@ -29,6 +29,18 @@ module EvalHook
       @hook_handler = hook_handler
     end
 
+    def const_path_emul(code)
+      if code.instance_of? Array
+        if (code.size == 1)
+          s(:const, code[-1].to_sym)
+        else
+          s(:colon2, const_path_emul(code[0..-2]), code[-1].to_sym)
+        end
+      else
+        const_path_emul code.split("::")
+      end
+    end
+
     def process(tree)
 
       tree.map_nodes do |tree|
@@ -105,6 +117,13 @@ module EvalHook
 
           args = s(:arglist, s(:lit, tree[1]) )
           s(:call, s(:lit, @hook_handler), :hooked_xstr, args)
+
+        elsif nodetype == :colon3
+          if @hook_handler.base_namespace
+            s(:colon2, const_path_emul(@hook_handler.base_namespace.to_s), tree[1])
+          else
+            tree
+          end
 
         else
           tree
