@@ -49,8 +49,15 @@ end
 class Sexp
   def map_nodes
     if block_given?
-      EvalHook.sexp_map_nodes(self) do |*x|
-        yield(*x)
+
+      replaced_tree = yield(self.dup)
+      if replaced_tree == self
+
+        EvalHook.sexp_map_nodes(replaced_tree) do |*x|
+          yield(*x)
+        end
+      else
+        replaced_tree
       end
     else
       self.dup
