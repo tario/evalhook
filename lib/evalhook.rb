@@ -23,7 +23,7 @@ require "evalhook/redirect_helper"
 require "evalhook/multi_hook_handler"
 require "evalhook/hook_handler"
 require "evalhook/hook_context"
-require "evalhook/tree_procesor"
+require "evalhook/tree_processor"
 
 begin
 require "evalmimic"
