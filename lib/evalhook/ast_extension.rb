@@ -20,26 +20,40 @@ along with evalhook.  if not, see <http://www.gnu.org/licenses/>.
 =end
 require "ruby_parser"
 
-class Sexp
-  def map_ast_nodes
+module EvalHook
+  def self.sexp_map_nodes(sexp)
 
-    ret_tree = self.dup
-    (0..self.count-1).each do |i|
+    ret_tree = sexp.dup
+
+    (0..sexp.count-1).each do |i|
       subtree = ret_tree[i]
 
       if subtree.instance_of? Sexp
-        replace_subtree = yield(subtree)
+        replace_subtree = yield(subtree.dup)
 
-        if replace_subtree != subtree then
-          ret_tree[i] = replace_subtree
-        else
-          subtree.map_nodes do |*x| yield(*x) end
-        end
+         if replace_subtree != subtree then
+           ret_tree[i] = replace_subtree
+         else
+           ret_tree[i] = EvalHook.sexp_map_nodes(subtree) do |*x| yield(*x) end
+         end
       end
 
     end
 
     ret_tree
 
+
+  end
+end
+
+class Sexp
+  def map_nodes
+    if block_given?
+      EvalHook.sexp_map_nodes(self) do |*x|
+        yield(*x)
+      end
+    else
+      self.dup
+    end
   end
 end
