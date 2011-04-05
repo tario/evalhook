@@ -60,7 +60,7 @@ module EvalHook
           args1 = s(:arglist, s(:lit, method_name), s(:call, nil, :binding, s(:arglist)))
           args2 = s(:arglist, s(:lit, @hook_handler))
 
-          receiver = tree[1] || s(:self)
+          receiver = process(tree[1] || s(:self))
 
           firstcall = nil
           secondcall = nil
