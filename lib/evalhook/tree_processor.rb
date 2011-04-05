@@ -73,7 +73,7 @@ module EvalHook
             secondcall = s(:call, firstcall, :set_hook_handler, args2)
           end
 
-          s(:call, secondcall, :call, tree[3])
+          s(:call, secondcall, :call, process(tree[3]))
 
         elsif nodetype == :cdecl
 
