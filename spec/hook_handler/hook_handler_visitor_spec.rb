@@ -144,4 +144,17 @@ describe EvalHook::HookHandler, "hook handler visitor" do
       )
   end
 
+  it "should capture in dxstr system calls" do
+      x = X.new
+      hh = EvalHook::HookHandler.new
+
+      hh.should_receive(:handle_method).with(X,x,:foo)
+
+      c = nil
+      hh.evalhook("
+          `\#{x.foo}`
+        ", binding
+      )
+  end
+
 end
