@@ -7,6 +7,10 @@ describe EvalHook::HookHandler, "hook handler visitor" do
     def foo
 
     end
+
+    def bar(*x)
+
+    end
   end
 
   def self.visitor_it(code, name)
@@ -98,6 +102,20 @@ describe EvalHook::HookHandler, "hook handler visitor" do
       )
       c.call(x)
 
+  end
+
+  it "should capture inside parameters" do
+      x = X.new
+      hh = EvalHook::HookHandler.new
+
+      hh.should_receive(:handle_method).with(X,x,:foo)
+      hh.should_receive(:handle_method).with(X,x,:bar)
+
+      c = nil
+      hh.evalhook("
+          x.bar(x.foo)
+        ", binding
+      )
   end
 
 end
