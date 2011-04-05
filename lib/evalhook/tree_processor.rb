@@ -109,7 +109,7 @@ module EvalHook
           dstr_tree = tree.dup
           dstr_tree[0] = :dstr
 
-          args = s(:arglist, dstr_tree )
+          args = s(:arglist, process(dstr_tree) )
 
           s(:call, s(:lit, @hook_handler), :hooked_xstr, args)
 
