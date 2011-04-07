@@ -19,7 +19,6 @@ along with evalhook.  if not, see <http://www.gnu.org/licenses/>.
 
 =end
 require "ruby_parser"
-require "partialruby"
 require "evalhook/ast_extension"
 
 module EvalHook

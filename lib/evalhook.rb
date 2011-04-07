@@ -18,11 +18,12 @@ you should have received a copy of the gnu general public license
 along with evalhook.  if not, see <http://www.gnu.org/licenses/>.
 
 =end
-require "partialruby"
+require "rubygems"
 require "evalhook/redirect_helper"
 require "evalhook/multi_hook_handler"
 require "evalhook/hook_handler"
 require "evalhook/tree_processor"
+require "ruby2ruby"
 
 begin
 require "evalmimic"
@@ -236,11 +237,9 @@ module EvalHook
 
       tree = RubyParser.new.parse code
 
-      context = PartialRuby::PureRubyContext.new
-
       tree = EvalHook::TreeProcessor.new(self).process(tree)
 
-      emulationcode = context.emul tree
+      emulationcode = Ruby2Ruby.new.process tree
 
       eval emulationcode, b_, name, line
 
