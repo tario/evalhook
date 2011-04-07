@@ -40,6 +40,10 @@ module EvalHook
       end
     end
 
+    def hook_handler_reference
+      s(:call, s(:const, :ObjectSpace), :_id2ref, s(:arglist, s(:lit, @hook_handler.object_id)))
+    end
+
     def process(tree)
 
       tree.map_nodes do |tree|
@@ -49,7 +53,7 @@ module EvalHook
           args1 = s(:arglist, s(:lit, tree[1]))
           args2 = s(:arglist, process(tree[2]))
 
-          firstcall = s(:call, s(:lit, @hook_handler), :hooked_gasgn, args1)
+          firstcall = s(:call, hook_handler_reference, :hooked_gasgn, args1)
 
           s(:call, firstcall, :set_value, args2)
         elsif nodetype == :call
@@ -57,7 +61,7 @@ module EvalHook
           method_name = tree[2]
 
           args1 = s(:arglist, s(:lit, method_name), s(:call, nil, :binding, s(:arglist)))
-          args2 = s(:arglist, s(:lit, @hook_handler))
+          args2 = s(:arglist, hook_handler_reference)
 
           receiver = process(tree[1] || s(:self))
 
@@ -99,7 +103,7 @@ module EvalHook
           args2 = s(:arglist, s(:lit, const_id))
           args3 = s(:arglist, process(value_tree))
 
-          firstcall = s(:call, s(:lit, @hook_handler), :hooked_cdecl, args1 )
+          firstcall = s(:call, hook_handler_reference, :hooked_cdecl, args1 )
           secondcall = s(:call, firstcall, :set_id, args2)
 
           s(:call, secondcall, :set_value, args3)
@@ -110,12 +114,12 @@ module EvalHook
 
           args = s(:arglist, process(dstr_tree) )
 
-          s(:call, s(:lit, @hook_handler), :hooked_xstr, args)
+          s(:call, hook_handler_reference, :hooked_xstr, args)
 
         elsif nodetype == :xstr
 
           args = s(:arglist, s(:lit, tree[1]) )
-          s(:call, s(:lit, @hook_handler), :hooked_xstr, args)
+          s(:call, hook_handler_reference, :hooked_xstr, args)
 
         elsif nodetype == :colon3
           if @hook_handler.base_namespace
