@@ -21,11 +21,14 @@ along with evalhook.  if not, see <http://www.gnu.org/licenses/>.
 require "ruby_parser"
 require "partialruby"
 require "evalhook/ast_extension"
+require "sexp_processor"
 
 module EvalHook
-  class TreeProcessor
 
+
+  class TreeProcessor < SexpProcessor
     def initialize(hook_handler)
+      super()
       @hook_handler = hook_handler
     end
 
@@ -45,31 +48,34 @@ module EvalHook
       s(:call, s(:const, :ObjectSpace), :_id2ref, s(:arglist, s(:lit, @hook_handler.object_id)))
     end
 
-    def process(tree)
+    def process_gasgn(tree)
 
-      tree.map_nodes do |tree|
-        nodetype = tree.first
+      tree.shift
 
-        if nodetype == :gasgn
-          args1 = s(:arglist, s(:lit, tree[1]))
-          args2 = s(:arglist, process(tree[2]))
+      args1 = s(:arglist, s(:lit, tree.shift))
+      args2 = s(:arglist, process(tree.shift))
 
-          firstcall = s(:call, hook_handler_reference, :hooked_gasgn, args1)
+      firstcall = s(:call, hook_handler_reference, :hooked_gasgn, args1)
 
-          s(:call, firstcall, :set_value, args2)
-        elsif nodetype == :call
+      s(:call, firstcall, :set_value, args2)
 
-          method_name = tree[2]
+    end
 
-          args1 = s(:arglist, s(:lit, method_name), s(:call, nil, :binding, s(:arglist)))
+
+    def process_call(tree)
+
+          tree.shift
+          original_receiver = tree.shift
+
+          receiver = process(original_receiver|| s(:self))
+
+          args1 = s(:arglist, s(:lit, tree.shift), s(:call, nil, :binding, s(:arglist)))
           args2 = s(:arglist, hook_handler_reference)
-
-          receiver = process(tree[1] || s(:self))
 
           firstcall = nil
           secondcall = nil
 
-          if tree[1]
+          if original_receiver
             firstcall = s(:call, receiver, :local_hooked_method, args1)
             secondcall = s(:call, firstcall, :set_hook_handler, args2)
           else
@@ -77,12 +83,15 @@ module EvalHook
             secondcall = s(:call, firstcall, :set_hook_handler, args2)
           end
 
-          s(:call, secondcall, :call, process(tree[3]))
+          s(:call, secondcall, :call, process(tree.shift))
+    end
 
-        elsif nodetype == :cdecl
+    def process_cdecl(tree)
 
-          const_tree = tree[1]
-          value_tree = tree[2]
+        tree.shift
+
+          const_tree = tree.shift
+          value_tree = tree.shift
 
           base_class_tree = nil
           const_id = nil
@@ -108,33 +117,40 @@ module EvalHook
           secondcall = s(:call, firstcall, :set_id, args2)
 
           s(:call, secondcall, :set_value, args3)
-        elsif nodetype == :dxstr
+    end
 
-          dstr_tree = tree.dup
-          dstr_tree[0] = :dstr
+    def process_dxstr(tree)
+       dstr_tree = tree.dup
+       dstr_tree[0] = :dstr
 
-          args = s(:arglist, process(dstr_tree) )
+       while not tree.empty?
+       tree.shift
+       end
 
-          s(:call, hook_handler_reference, :hooked_xstr, args)
+       args = s(:arglist, process(dstr_tree) )
 
-        elsif nodetype == :xstr
+       s(:call, hook_handler_reference, :hooked_xstr, args)
+    end
 
-          args = s(:arglist, s(:lit, tree[1]) )
-          s(:call, hook_handler_reference, :hooked_xstr, args)
+    def process_xstr(tree)
+      tree.shift
+      args = s(:arglist, s(:lit, tree.shift) )
+      s(:call, hook_handler_reference, :hooked_xstr, args)
+    end
 
-        elsif nodetype == :colon3
-          if @hook_handler.base_namespace
-            s(:colon2, const_path_emul(@hook_handler.base_namespace.to_s), tree[1])
-          else
-            tree
-          end
+    def process_colon3(tree)
+      if @hook_handler.base_namespace
+        tree.shift
+        s(:colon2, const_path_emul(@hook_handler.base_namespace.to_s), tree.shift)
+      else
+        ret = s(:colon3, tree[1])
 
-        else
-          tree
-        end
+        tree.shift
+        tree.shift
+
+        ret
+
       end
-
-
     end
   end
 end
