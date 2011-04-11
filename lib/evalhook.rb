@@ -90,12 +90,20 @@ module EvalHook
         recv = ret.recv
       end
 
+      method_object = nil
+
+      begin
+        method_object = klass.instance_method(method_name).bind(recv)
+      rescue
+        method_object = recv.method(method_name)
+      end
+
       if block_given?
-        klass.instance_method(method_name).bind(recv).call(*args) do |*x|
+        method_object.call(*args) do |*x|
           yield(*x)
         end
       else
-        klass.instance_method(method_name).bind(recv).call(*args)
+        method_object.call(*args)
       end
     end
   end
