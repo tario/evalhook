@@ -226,5 +226,22 @@ describe EvalHook::HookHandler, "hook handler defaults" do
     a = 9
     EvalHook::HookHandler.new.evalhook("a").should be == 9
   end
+
+  module TestInheritedClassMethodError
+    class A
+        def self.foo
+            'Foo'
+        end
+    end
+
+    class B < A
+    end
+  end
+
+  it "inherited class method should execute" do
+    hh = EvalHook::HookHandler.new
+    hh.evalhook('TestInheritedClassMethodError::B.foo', binding)
+  end
+
 end
 
