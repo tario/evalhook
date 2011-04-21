@@ -134,5 +134,11 @@ module EvalHook
         s(:colon3, tree[1])
       end
     end
+
+    def process_const(tree)
+      name = tree[1].to_s
+      args = s(:arglist, s(:const, :Object), s(:str, name))
+      s(:call, hook_handler_reference, :hooked_const, args)
+    end
   end
 end
