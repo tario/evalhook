@@ -175,6 +175,15 @@ module EvalHook
       end
     end
 
+    # used internally
+    def hooked_gvar(global_id)
+      ret = handle_gvar(global_id)
+      if ret
+        ret.value
+      else
+        eval(global_id.to_s)
+      end
+    end
 
     # used internally
     def hooked_const(context, name)
@@ -221,8 +230,13 @@ module EvalHook
       nil
     end
 
-    # Overwrite to handle the const read access
+    # Overwrite to handle const read access
     def handle_const(context, name)
+      nil
+    end
+
+    # Overwrite to handle global variable read access
+    def handle_gvar(global_id)
       nil
     end
 

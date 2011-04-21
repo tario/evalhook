@@ -135,6 +135,13 @@ module EvalHook
       end
     end
 
+    def process_gvar(tree)
+      name = tree[1]
+
+      args = s(:arglist, s(:lit, name))
+      s(:call, hook_handler_reference, :hooked_gvar, args)
+    end
+
     def process_const(tree)
       name = tree[1].to_s
       args = s(:arglist, s(:const, :Object), s(:str, name))
