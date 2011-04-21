@@ -230,5 +230,10 @@ describe EvalHook::HookHandler, "hook handler defaults" do
   it "should allow declaring classes with ::" do
     EvalHook::HookHandler.new.evalhook("class Fixnum::TestClass12345; end")
   end
+
+  it "should allow declaring modules with ::" do
+    EvalHook::HookHandler.new.evalhook("module Fixnum::TestModule12345; end")
+  end
+
 end
 
