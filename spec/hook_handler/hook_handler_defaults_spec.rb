@@ -226,5 +226,9 @@ describe EvalHook::HookHandler, "hook handler defaults" do
     a = 9
     EvalHook::HookHandler.new.evalhook("a").should be == 9
   end
+
+  it "should allow declaring classes with ::" do
+    EvalHook::HookHandler.new.evalhook("class Fixnum::TestClass12345; end")
+  end
 end
 
