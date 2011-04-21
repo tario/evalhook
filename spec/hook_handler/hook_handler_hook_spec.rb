@@ -53,6 +53,20 @@ describe EvalHook::HookHandler, "hook handler hooks" do
     hh.evalhook("TEST_CONSTANT_12345").should be == 77
   end
 
+  it "should intercept nested constant access" do
+    hh = EvalHook::HookHandler.new
+    def hh.handle_const(context, name)
+       if (name == "Object")
+         nil
+       else
+         const_value(77)
+       end
+    end
+
+    TEST_CONSTANT_12346 = 8
+    hh.evalhook("Object::TEST_CONSTANT_12346").should be == 77
+  end
+
   it "should intercept global variable access" do
     hh = EvalHook::HookHandler.new
     def hh.handle_gvar(global_id)
