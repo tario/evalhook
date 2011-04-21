@@ -175,6 +175,17 @@ module EvalHook
       end
     end
 
+
+    # used internally
+    def hooked_const(context, name)
+      ret = handle_const(context, name)
+      if ret
+        ret.value
+      else
+         context.const_get(name)
+       end
+    end
+
     # used internally
     def hooked_cdecl(context)
       HookCdecl.new(context,self)
@@ -207,6 +218,11 @@ module EvalHook
 
     # Overwrite to handle the method calls. By default do nothing and the methods are called normally
     def handle_method(klass,recv,method_name)
+      nil
+    end
+
+    # Overwrite to handle the const read access
+    def handle_const(context, name)
       nil
     end
 
