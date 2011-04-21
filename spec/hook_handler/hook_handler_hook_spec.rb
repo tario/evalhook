@@ -43,4 +43,24 @@ describe EvalHook::HookHandler, "hook handler hooks" do
     TEST_CONSTANT.should be == 7
   end
 
+  it "should intercept constant access" do
+    hh = EvalHook::HookHandler.new
+    def hh.handle_const(context, name)
+       const_value(77)
+    end
+
+    TEST_CONSTANT_12345 = 8
+    hh.evalhook("TEST_CONSTANT_12345").should be == 77
+  end
+
+  it "should intercept global variable access" do
+    hh = EvalHook::HookHandler.new
+    def hh.handle_gvar(global_id)
+       global_value(88)
+    end
+
+    $test_global_12345 = 9
+    hh.evalhook("$test_global_12345").should be == 88
+  end
+
 end
