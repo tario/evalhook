@@ -127,12 +127,6 @@ module EvalHook
       s(:call, hook_handler_reference, :hooked_xstr, args)
     end
 
-    def process_colon2(tree)
-      name = tree[2].to_s
-      args = s(:arglist, process(tree[1]), s(:str, name))
-      s(:call, hook_handler_reference, :hooked_const, args)
-    end
-
     def process_colon3(tree)
       if @hook_handler.base_namespace
         s(:colon2, const_path_emul(@hook_handler.base_namespace.to_s), tree[1])
