@@ -127,6 +127,17 @@ module EvalHook
       s(:call, hook_handler_reference, :hooked_xstr, args)
     end
 
+    def process_module(tree)
+      module_name_tree = tree[1]
+      if module_name_tree.instance_of? Sexp
+        if module_name_tree.first == :colon3
+          module_name_tree = process_colon3(module_name_tree)
+        end
+      end
+
+      s(:module, module_name_tree, process(tree[2]))
+    end
+
     def process_class(tree)
       class_name_tree = tree[1]
       if class_name_tree.instance_of? Sexp
