@@ -97,4 +97,13 @@ describe EvalHook::HookHandler, "hook handler hooks" do
     hh.evalhook("TestModule321::B")
   end
 
+  it "should intercept global_variable access" do
+    hh = EvalHook::HookHandler.new
+
+    hh.should_receive(:handle_gvar).with(:$global_variable_test)
+
+    hh.evalhook("$global_variable_test")
+  end
+
+
 end
