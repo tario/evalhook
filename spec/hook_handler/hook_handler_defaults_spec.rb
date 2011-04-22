@@ -235,5 +235,12 @@ describe EvalHook::HookHandler, "hook handler defaults" do
     EvalHook::HookHandler.new.evalhook("module Fixnum::TestModule12345; end")
   end
 
+  module TestModule12347
+  end
+
+  it "should allow assignment of constants nested on modules" do
+    hh.evalhook("TestModule12347::A = 9")
+  end
+
 end
 
