@@ -77,7 +77,7 @@ describe EvalHook::HookHandler, "hook handler hooks" do
     hh.evalhook("$test_global_12345").should be == 88
   end
 
-  it "should intercept global variable access" do
+  it "should intercept constant access" do
     hh = EvalHook::HookHandler.new
 
     hh.should_receive(:handle_const).with(Object,"A")
@@ -88,7 +88,7 @@ describe EvalHook::HookHandler, "hook handler hooks" do
   module TestModule321
   end
 
-  it "should intercept global variable access" do
+  it "should intercept nested constant access" do
     hh = EvalHook::HookHandler.new
 
     hh.should_receive(:handle_const).once.with(Object,"TestModule321")
