@@ -156,7 +156,7 @@ module EvalHook
     def process_colon2(tree)
       name = tree[2].to_s
       args = s(:arglist, process(tree[1]), s(:str, name))
-      s(:call, hook_handler_reference, :hooked_const, args)
+      s(:call, hook_handler_reference, :hooked_colon2, args)
     end
 
     def process_colon3(tree)
@@ -176,7 +176,7 @@ module EvalHook
 
     def process_const(tree)
       name = tree[1].to_s
-      args = s(:arglist, s(:const, :Object), s(:str, name))
+      args = s(:arglist, s(:str, name))
       s(:call, hook_handler_reference, :hooked_const, args)
     end
   end

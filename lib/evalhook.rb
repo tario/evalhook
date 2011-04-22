@@ -186,13 +186,23 @@ module EvalHook
     end
 
     # used internally
-    def hooked_const(context, name)
-      ret = handle_const(context, name)
+    def hooked_const(name)
+      ret = handle_const(name)
+      if ret
+        ret.value
+      else
+         Object.const_get(name)
+       end
+    end
+
+    # used internally
+    def hooked_colon2(context,name)
+      ret = handle_colon2(context, name)
       if ret
         ret.value
       else
          context.const_get(name)
-       end
+      end
     end
 
     # used internally
@@ -231,7 +241,11 @@ module EvalHook
     end
 
     # Overwrite to handle const read access
-    def handle_const(context, name)
+    def handle_const(name)
+      nil
+    end
+
+    def handle_colon2(context,name)
       nil
     end
 
