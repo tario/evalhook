@@ -53,7 +53,7 @@ describe EvalHook::HookHandler, "hook handler hooks" do
     hh.evalhook("TEST_CONSTANT_12345").should be == 77
   end
 
-  it "should intercept nested constant access" do
+  it "should allow change constant values using hooking" do
     hh = EvalHook::HookHandler.new
     def hh.handle_const(context, name)
        if (name == "Object")
@@ -67,7 +67,7 @@ describe EvalHook::HookHandler, "hook handler hooks" do
     hh.evalhook("Object::TEST_CONSTANT_12346").should be == 77
   end
 
-  it "should intercept global variable access" do
+  it "should allow change global variable values using hooking" do
     hh = EvalHook::HookHandler.new
     def hh.handle_gvar(global_id)
        global_value(88)
@@ -75,6 +75,26 @@ describe EvalHook::HookHandler, "hook handler hooks" do
 
     $test_global_12345 = 9
     hh.evalhook("$test_global_12345").should be == 88
+  end
+
+  it "should intercept global variable access" do
+    hh = EvalHook::HookHandler.new
+
+    hh.should_receive(:handle_const).with(Object,"A")
+
+    hh.evalhook("A")
+  end
+
+  module TestModule321
+  end
+
+  it "should intercept global variable access" do
+    hh = EvalHook::HookHandler.new
+
+    hh.should_receive(:handle_const).once.with(Object,"TestModule321")
+    hh.should_receive(:handle_const).once.with(TestModule321,"B")
+
+    hh.evalhook("TestModule321::B")
   end
 
 end
