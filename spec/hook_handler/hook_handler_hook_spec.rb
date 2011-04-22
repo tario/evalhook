@@ -45,7 +45,7 @@ describe EvalHook::HookHandler, "hook handler hooks" do
 
   it "should intercept constant access" do
     hh = EvalHook::HookHandler.new
-    def hh.handle_const(context, name)
+    def hh.handle_const(name)
        const_value(77)
     end
 
@@ -55,12 +55,8 @@ describe EvalHook::HookHandler, "hook handler hooks" do
 
   it "should allow change constant values using hooking" do
     hh = EvalHook::HookHandler.new
-    def hh.handle_const(context, name)
-       if (name == "Object")
-         nil
-       else
-         const_value(77)
-       end
+    def hh.handle_colon2(context, name)
+       const_value(77)
     end
 
     TEST_CONSTANT_12346 = 8
@@ -80,7 +76,7 @@ describe EvalHook::HookHandler, "hook handler hooks" do
   it "should intercept constant access" do
     hh = EvalHook::HookHandler.new
 
-    hh.should_receive(:handle_const).with(Object,"A")
+    hh.should_receive(:handle_const).with("A")
 
     hh.evalhook("A")
   end
