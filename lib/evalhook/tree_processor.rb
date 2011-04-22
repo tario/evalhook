@@ -45,7 +45,15 @@ module EvalHook
     end
 
     def hook_handler_reference
-      s(:call, s(:const, :ObjectSpace), :_id2ref, s(:arglist, s(:lit, @hook_handler.object_id)))
+      # create a global_variable name
+      unless @hh_ref_tree
+        global_variable_name = "$hook_handler_" + rand(10000000000).to_s
+        eval("#{global_variable_name} = @hook_handler")
+
+        @hh_ref_tree = s(:gvar, global_variable_name.to_sym)
+      end
+
+      @hh_ref_tree
     end
 
     def process_gasgn(tree)
