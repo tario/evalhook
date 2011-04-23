@@ -46,14 +46,14 @@ module EvalHook
 
     def hook_handler_reference
       # create a global_variable name
-      unless @hh_ref_tree
+      unless @hh_ref_global_name
         global_variable_name = "$hook_handler_" + rand(10000000000).to_s
         eval("#{global_variable_name} = @hook_handler")
 
-        @hh_ref_tree = s(:gvar, global_variable_name.to_sym)
+        @hh_ref_global_name = global_variable_name.to_sym
       end
 
-      @hh_ref_tree
+      s(:gvar, @hh_ref_global_name)
     end
 
     def process_gasgn(tree)
