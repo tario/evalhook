@@ -190,6 +190,7 @@ module EvalHook
 
     def process_defn(tree)
       @last_args = tree[2]
+      @last_method_name = tree[1]
 
       s(tree[0],tree[1],tree[2],process(tree[3]))
     end
@@ -198,7 +199,7 @@ module EvalHook
 
           receiver = s(:self)
 
-          args1 = s(:arglist, s(:lit, :foo), s(:call, nil, :binding, s(:arglist)))
+          args1 = s(:arglist, s(:lit, @last_method_name), s(:call, nil, :binding, s(:arglist)))
           args2 = s(:arglist, hook_handler_reference)
 
           firstcall = s(:call, receiver, :local_hooked_method, args1)
