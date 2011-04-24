@@ -188,6 +188,12 @@ module EvalHook
       s(:call, hook_handler_reference, :hooked_const, args)
     end
 
+    def process_defn(tree)
+      @last_args = tree[2]
+
+      s(tree[0],tree[1],tree[2],process(tree[3]))
+    end
+
     def process_zsuper(tree)
 
           receiver = s(:self)
@@ -201,7 +207,18 @@ module EvalHook
           superclass_call_tree = s(:call, s(:call, s(:self), :class, s(:arglist)), :superclass, s(:arglist))
           thirdcall = s(:call,secondcall,:set_class,s(:arglist, superclass_call_tree))
 
-          s(:call, thirdcall, :call, s(:arglist))
+          # pass the args of the current defn
+
+          args = s(:arglist)
+          @last_args[1..-1].each do |arg_sym|
+            if arg_sym.to_s[0] == "*"
+              args << s(:splat, s(:lvar, arg_sym.to_s[1..-1].to_sym))
+            else
+              args << s(:lvar, arg_sym)
+            end
+          end
+
+          s(:call, thirdcall, :call, args)
     end
 
 end
