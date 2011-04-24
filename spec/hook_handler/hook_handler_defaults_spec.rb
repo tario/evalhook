@@ -257,5 +257,17 @@ describe EvalHook::HookHandler, "hook handler defaults" do
       YTEST44.new.foo(9)
     ').should be == 10
   end
+
+  it "should pass arguments on super (explicitly)" do
+    EvalHook::HookHandler.new.evalhook('
+      class YTEST45 < XTEST44
+        def foo(a)
+          super(a)
+        end
+      end
+      YTEST45.new.foo(9)
+    ').should be == 10
+  end
+
 end
 
