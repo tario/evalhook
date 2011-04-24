@@ -195,6 +195,24 @@ module EvalHook
       s(tree[0],tree[1],tree[2],process(tree[3]))
     end
 
+    def process_super(tree)
+
+          receiver = s(:self)
+
+          args1 = s(:arglist, s(:lit, @last_method_name), s(:call, nil, :binding, s(:arglist)))
+          args2 = s(:arglist, hook_handler_reference)
+
+          firstcall = s(:call, receiver, :local_hooked_method, args1)
+          secondcall = s(:call, firstcall, :set_hook_handler, args2)
+
+          superclass_call_tree = s(:call, s(:call, s(:self), :class, s(:arglist)), :superclass, s(:arglist))
+          thirdcall = s(:call,secondcall,:set_class,s(:arglist, superclass_call_tree))
+
+          # pass the args passed to super
+          s(:call, thirdcall, :call, s(:arglist, *tree[1..-1]))
+
+    end
+
     def process_zsuper(tree)
 
           receiver = s(:self)
