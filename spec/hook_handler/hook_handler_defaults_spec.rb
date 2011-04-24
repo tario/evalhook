@@ -269,5 +269,23 @@ describe EvalHook::HookHandler, "hook handler defaults" do
     ').should be == 10
   end
 
+  it "should pass arguments on super with three levels" do
+    EvalHook::HookHandler.new.evalhook('
+      class YTEST46 < XTEST44
+        def foo(a)
+          super(a)
+        end
+      end
+
+      class ZTEST46 < YTEST46
+        def foo(a)
+          super(a)
+        end
+      end
+      ZTEST46.new.foo(9)
+    ').should be == 10
+
+  end
+
 end
 
