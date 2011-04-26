@@ -29,6 +29,7 @@ module EvalHook
     def initialize(hook_handler)
       super()
       @hook_handler = hook_handler
+      @def_scope = Array.new
       self.require_empty = false
     end
 
@@ -146,6 +147,13 @@ module EvalHook
       s(:module, module_name_tree, process(tree[2]))
     end
 
+    def class_scope(class_name)
+      @def_scope.push(class_name)
+      ret = yield
+      @def_scope.pop
+      ret
+    end
+
     def process_class(tree)
       class_name_tree = tree[1]
       if class_name_tree.instance_of? Sexp
@@ -155,9 +163,13 @@ module EvalHook
       end
 
       if tree[2]
-        s(:class, class_name_tree, process(tree[2]), process(tree[3]))
+        class_scope(class_name_tree) do
+          s(:class, class_name_tree, process(tree[2]), process(tree[3]))
+        end
       else
-        s(:class, class_name_tree, nil, process(tree[3]))
+        class_scope(class_name_tree) do
+          s(:class, class_name_tree, nil, process(tree[3]))
+        end
       end
     end
 
@@ -205,7 +217,18 @@ module EvalHook
           firstcall = s(:call, receiver, :local_hooked_method, args1)
           secondcall = s(:call, firstcall, :set_hook_handler, args2)
 
-          superclass_call_tree = s(:call, s(:call, s(:self), :class, s(:arglist)), :superclass, s(:arglist))
+
+          current_class_call = s(:call, s(:self), :class, s(:arglist))
+
+          def_class = @def_scope.last
+          if def_class.instance_of? Symbol
+            current_class_call = s(:const, def_class)
+          elsif def_class.instance_of? Sexp
+            cureent_class_call = def_class
+          end
+
+          superclass_call_tree = s(:call, current_class_call, :superclass, s(:arglist))
+
           thirdcall = s(:call,secondcall,:set_class,s(:arglist, superclass_call_tree))
 
           # pass the args passed to super
@@ -223,7 +246,17 @@ module EvalHook
           firstcall = s(:call, receiver, :local_hooked_method, args1)
           secondcall = s(:call, firstcall, :set_hook_handler, args2)
 
-          superclass_call_tree = s(:call, s(:call, s(:self), :class, s(:arglist)), :superclass, s(:arglist))
+          current_class_call = s(:call, s(:self), :class, s(:arglist))
+
+          def_class = @def_scope.last
+          if def_class.instance_of? Symbol
+            current_class_call = s(:const, def_class)
+          elsif def_class.instance_of? Sexp
+            cureent_class_call = def_class
+          end
+
+          superclass_call_tree = s(:call, current_class_call, :superclass, s(:arglist))
+
           thirdcall = s(:call,secondcall,:set_class,s(:arglist, superclass_call_tree))
 
           # pass the args of the current defn
