@@ -224,7 +224,7 @@ module EvalHook
           if def_class.instance_of? Symbol
             current_class_call = s(:const, def_class)
           elsif def_class.instance_of? Sexp
-            cureent_class_call = def_class
+            current_class_call = def_class
           end
 
           superclass_call_tree = s(:call, current_class_call, :superclass, s(:arglist))
