@@ -209,6 +209,24 @@ module EvalHook
       s(tree[0],tree[1],tree[2],process(tree[3]))
     end
 
+    def superclass_call_tree
+      current_class_call = nil
+
+      def_class = @def_scope.last
+      if def_class.instance_of? Symbol
+        current_class_call = s(:const, def_class)
+        s(:call, current_class_call, :superclass, s(:arglist))
+      elsif def_class.instance_of? Sexp
+        current_class_call = def_class
+        s(:call, current_class_call, :superclass, s(:arglist))
+      elsif def_class.instance_of? String
+        s(:call, s(:self), :class, s(:arglist))
+      else
+        current_class_call = s(:call, nil, :raise, s(:arglist, s(:const, :SecurityError)))
+        s(:call, current_class_call, :superclass, s(:arglist))
+      end
+    end
+
     def process_super(tree)
 
           receiver = s(:self)
@@ -218,24 +236,6 @@ module EvalHook
 
           firstcall = s(:call, receiver, :local_hooked_method, args1)
           secondcall = s(:call, firstcall, :set_hook_handler, args2)
-
-          current_class_call = nil
-          superclass_call_tree = nil
-
-          def_class = @def_scope.last
-          if def_class.instance_of? Symbol
-            current_class_call = s(:const, def_class)
-            superclass_call_tree = s(:call, current_class_call, :superclass, s(:arglist))
-          elsif def_class.instance_of? Sexp
-            current_class_call = def_class
-            superclass_call_tree = s(:call, current_class_call, :superclass, s(:arglist))
-          elsif def_class.instance_of? String
-            superclass_call_tree = s(:call, s(:self), :class, s(:arglist))
-          else
-            current_class_call = s(:call, nil, :raise, s(:arglist, s(:const, :SecurityError)))
-            superclass_call_tree = s(:call, current_class_call, :superclass, s(:arglist))
-          end
-
           thirdcall = s(:call,secondcall,:set_class,s(:arglist, superclass_call_tree))
 
           # pass the args passed to super
@@ -259,25 +259,6 @@ module EvalHook
 
           firstcall = s(:call, receiver, :local_hooked_method, args1)
           secondcall = s(:call, firstcall, :set_hook_handler, args2)
-
-          current_class_call = nil
-          superclass_call_tree = nil
-
-          def_class = @def_scope.last
-          if def_class.instance_of? Symbol
-            current_class_call = s(:const, def_class)
-            superclass_call_tree = s(:call, current_class_call, :superclass, s(:arglist))
-          elsif def_class.instance_of? Sexp
-            current_class_call = def_class
-            superclass_call_tree = s(:call, current_class_call, :superclass, s(:arglist))
-          elsif def_class.instance_of? String
-            superclass_call_tree = s(:call, s(:self), :class, s(:arglist))
-          else
-            current_class_call = s(:call, nil, :raise, s(:arglist, s(:const, :SecurityError)))
-            superclass_call_tree = s(:call, current_class_call, :superclass, s(:arglist))
-          end
-
-
           thirdcall = s(:call,secondcall,:set_class,s(:arglist, superclass_call_tree))
 
           # pass the args of the current defn
