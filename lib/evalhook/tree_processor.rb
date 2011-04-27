@@ -163,11 +163,11 @@ module EvalHook
       end
 
       if tree[2]
-        class_scope(class_name_tree) do
+        class_scope(tree[1]) do
           s(:class, class_name_tree, process(tree[2]), process(tree[3]))
         end
       else
-        class_scope(class_name_tree) do
+        class_scope(tree[1]) do
           s(:class, class_name_tree, nil, process(tree[3]))
         end
       end
