@@ -287,5 +287,27 @@ describe EvalHook::HookHandler, "hook handler defaults" do
 
   end
 
+  it "should raise SecurityError when use super outside a class" do
+
+    lambda {
+
+    EvalHook::HookHandler.new.evalhook('
+      module MODULETEST48
+        def foo(a)
+          super(a)
+        end
+      end
+
+      class XTEST48 < XTEST44
+        include MODULETEST48
+      end
+      XTEST48.new.foo(9)
+    ')
+
+    }.should raise_error(SecurityError)
+
+  end
+
+
 end
 
