@@ -395,5 +395,23 @@ describe EvalHook::HookHandler, "hook handler defaults" do
 
   end
 
+  it "should execute super call from singleton methods" do
+    EvalHook::HookHandler.new.evalhook('
+
+      class CLASSTEST53
+        def bar(a)
+            a+1
+        end
+      end
+
+      obj = CLASSTEST53.new
+
+      def obj.bar(a)
+        super(a+1)
+      end
+      obj.bar(10)
+    ').should be == 12
+  end
+
 end
 
