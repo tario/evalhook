@@ -144,7 +144,9 @@ module EvalHook
         end
       end
 
-      s(:module, module_name_tree, process(tree[2]))
+      class_scope(nil) {
+        s(:module, module_name_tree, process(tree[2]))
+      }
     end
 
     def class_scope(class_name)
