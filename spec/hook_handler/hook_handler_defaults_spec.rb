@@ -332,6 +332,68 @@ describe EvalHook::HookHandler, "hook handler defaults" do
 
   end
 
+  it "should pass arguments on super with no arguments throught three levels" do
+    EvalHook::HookHandler.new.evalhook('
+      class YTEST50 < XTEST44
+        def foo(a)
+          super
+        end
+      end
+
+      class ZTEST50 < YTEST50
+        def foo(a)
+          super
+        end
+      end
+      ZTEST50.new.foo(9)
+    ').should be == 10
+
+  end
+
+  it "should raise SecurityError when use super with no arguments outside a class" do
+
+    lambda {
+
+    EvalHook::HookHandler.new.evalhook('
+      module MODULETEST51
+        def foo(a)
+          super
+        end
+      end
+
+      class XTEST51 < XTEST44
+        include MODULETEST51
+      end
+      XTEST51.new.foo(9)
+    ')
+
+    }.should raise_error(SecurityError)
+
+  end
+
+  it "should raise SecurityError when use super with no arguments inside a module nested on class" do
+
+    lambda {
+
+    EvalHook::HookHandler.new.evalhook('
+
+      class CLASSTEST52
+        module MODULETEST52
+          def foo(a)
+            super
+          end
+        end
+      end
+
+      class YTEST52 < XTEST44
+        include CLASSTEST52::MODULETEST52
+      end
+      YTEST52.new.foo(9)
+    ')
+
+    }.should raise_error(SecurityError)
+
+  end
 
 end
 
