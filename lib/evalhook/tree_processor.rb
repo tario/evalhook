@@ -217,14 +217,15 @@ module EvalHook
           firstcall = s(:call, receiver, :local_hooked_method, args1)
           secondcall = s(:call, firstcall, :set_hook_handler, args2)
 
-
-          current_class_call = s(:call, s(:self), :class, s(:arglist))
+          current_class_call = nil
 
           def_class = @def_scope.last
           if def_class.instance_of? Symbol
             current_class_call = s(:const, def_class)
           elsif def_class.instance_of? Sexp
             current_class_call = def_class
+          else
+            current_class_call = s(:call, nil, :raise, s(:arglist, s(:const, :SecurityError)))
           end
 
           superclass_call_tree = s(:call, current_class_call, :superclass, s(:arglist))
