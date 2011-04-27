@@ -220,23 +220,34 @@ module EvalHook
           secondcall = s(:call, firstcall, :set_hook_handler, args2)
 
           current_class_call = nil
+          superclass_call_tree = nil
 
           def_class = @def_scope.last
           if def_class.instance_of? Symbol
             current_class_call = s(:const, def_class)
+            superclass_call_tree = s(:call, current_class_call, :superclass, s(:arglist))
           elsif def_class.instance_of? Sexp
             current_class_call = def_class
+            superclass_call_tree = s(:call, current_class_call, :superclass, s(:arglist))
+          elsif def_class.instance_of? String
+            superclass_call_tree = s(:call, s(:self), :class, s(:arglist))
           else
             current_class_call = s(:call, nil, :raise, s(:arglist, s(:const, :SecurityError)))
+            superclass_call_tree = s(:call, current_class_call, :superclass, s(:arglist))
           end
-
-          superclass_call_tree = s(:call, current_class_call, :superclass, s(:arglist))
 
           thirdcall = s(:call,secondcall,:set_class,s(:arglist, superclass_call_tree))
 
           # pass the args passed to super
           s(:call, thirdcall, :call, s(:arglist, *tree[1..-1]))
 
+    end
+
+    def process_defs(tree)
+      block_tree = class_scope( "" ) {
+        process(tree[4])
+      }
+      s(:defs, process(tree[1]), tree[2], tree[3], block_tree)
     end
 
     def process_zsuper(tree)
@@ -250,17 +261,22 @@ module EvalHook
           secondcall = s(:call, firstcall, :set_hook_handler, args2)
 
           current_class_call = nil
+          superclass_call_tree = nil
 
           def_class = @def_scope.last
           if def_class.instance_of? Symbol
             current_class_call = s(:const, def_class)
+            superclass_call_tree = s(:call, current_class_call, :superclass, s(:arglist))
           elsif def_class.instance_of? Sexp
             current_class_call = def_class
+            superclass_call_tree = s(:call, current_class_call, :superclass, s(:arglist))
+          elsif def_class.instance_of? String
+            superclass_call_tree = s(:call, s(:self), :class, s(:arglist))
           else
             current_class_call = s(:call, nil, :raise, s(:arglist, s(:const, :SecurityError)))
+            superclass_call_tree = s(:call, current_class_call, :superclass, s(:arglist))
           end
 
-          superclass_call_tree = s(:call, current_class_call, :superclass, s(:arglist))
 
           thirdcall = s(:call,secondcall,:set_class,s(:arglist, superclass_call_tree))
 
