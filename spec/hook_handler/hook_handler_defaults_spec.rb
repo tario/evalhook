@@ -23,7 +23,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
       hook_handler = EvalHook::HookHandler.new
 
       expected = eval(expr)
-      hook_handler.evalhook(expr).should be == expected
+      hook_handler.evalhook(expr, binding).should be == expected
 
     end
   end
@@ -32,14 +32,14 @@ describe EvalHook::HookHandler, "hook handler defaults" do
      hook_handler = EvalHook::HookHandler.new
 
      $global_variable_test = 5
-     hook_handler.evalhook("$global_variable_test").should be == $global_variable_test
+     hook_handler.evalhook("$global_variable_test", binding).should be == $global_variable_test
   end
 
   it "should allow reference to constants" do
      hook_handler = EvalHook::HookHandler.new
 
      CONSTANTTEST = 5
-     hook_handler.evalhook("CONSTANTTEST").should be == CONSTANTTEST
+     hook_handler.evalhook("CONSTANTTEST", binding).should be == CONSTANTTEST
   end
 
   it "should allow reference to local variables" do
@@ -220,11 +220,6 @@ describe EvalHook::HookHandler, "hook handler defaults" do
 
     C1.new.foo.should be == "C1#foo" # C1#foo class remains unchanged
     A1::A2::C1.new.foo.should be == "A1::A2::C1#foo at evalhook" # A1::C1#foo changes
-  end
-
-  it "should use current binding when not specified" do
-    a = 9
-    EvalHook::HookHandler.new.evalhook("a").should be == 9
   end
 
   it "should allow declaring classes with ::" do
