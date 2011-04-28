@@ -137,7 +137,7 @@ describe EvalHook::HookHandler, "hook handler hooks" do
       end
       Y.new.foo
 
-    ')
+    ', binding)
   end
 
   class X2
@@ -176,7 +176,7 @@ describe EvalHook::HookHandler, "hook handler hooks" do
       end
       Y2.new.foo(9)
 
-    ').should be == 10
+    ', binding).should be == 10
    end
 
 end
