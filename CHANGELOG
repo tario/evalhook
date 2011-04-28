@@ -1,4 +1,6 @@
-0.4.0	Added hooking for colon2 namespace access (handle_colon2)
+0.4.0	Implemented hooking of super as methods calls
+
+		Added hooking for colon2 namespace access (handle_colon2)
 
 		Added hooking for global variable read acess (handle_gvar)
 
