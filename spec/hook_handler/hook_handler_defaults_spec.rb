@@ -71,7 +71,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
 
   it "should allow method calls" do
     hook_handler = EvalHook::HookHandler.new
-    hook_handler.evalhook("X.new.foo").should be X.new.foo
+    hook_handler.evalhook("X.new.foo", binding).should be X.new.foo
   end
 
   it "should capture method calls" do
@@ -80,14 +80,14 @@ describe EvalHook::HookHandler, "hook handler defaults" do
     hook_handler.should_receive(:handle_method).with(X.class,X,:new)
     hook_handler.should_receive(:handle_method).with(X,anything(),:foo)
 
-    hook_handler.evalhook("X.new.foo")
+    hook_handler.evalhook("X.new.foo", binding)
   end
 
   it "should capture constant assignment" do
     hook_handler = EvalHook::HookHandler.new
 
     hook_handler.should_receive(:handle_cdecl).with(Object,:TEST_CONSTANT,4)
-    hook_handler.evalhook("TEST_CONSTANT = 4")
+    hook_handler.evalhook("TEST_CONSTANT = 4", binding)
 
   end
 
@@ -95,7 +95,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
     hook_handler = EvalHook::HookHandler.new
 
     hook_handler.should_receive(:handle_gasgn).with(:$test_global_variable,4)
-    hook_handler.evalhook("$test_global_variable = 4")
+    hook_handler.evalhook("$test_global_variable = 4", binding)
 
   end
 
@@ -103,7 +103,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
     hook_handler = EvalHook::HookHandler.new
 
     hook_handler.should_receive(:handle_xstr).with("echo test")
-    hook_handler.evalhook("`echo test`")
+    hook_handler.evalhook("`echo test`", binding)
 
   end
 
@@ -111,7 +111,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
     hook_handler = EvalHook::HookHandler.new
 
     hook_handler.should_receive(:handle_xstr).with("echo test")
-    hook_handler.evalhook("`echo \#{}test`")
+    hook_handler.evalhook("`echo \#{}test`", binding)
 
   end
 
@@ -119,7 +119,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
     hook_handler = EvalHook::HookHandler.new
 
     hook_handler.should_receive(:handle_xstr).with("echo test")
-    hook_handler.evalhook("%x[echo test]")
+    hook_handler.evalhook("%x[echo test]", binding)
   end
 
 
@@ -139,14 +139,14 @@ describe EvalHook::HookHandler, "hook handler defaults" do
     hook_handler = EvalHook::HookHandler.new
 
     hook_handler.base_namespace = :A
-    hook_handler.evalhook("::B").should be == A::B
+    hook_handler.evalhook("::B", binding).should be == A::B
   end
 
   it "should allow define base_namespace (const)" do
     hook_handler = EvalHook::HookHandler.new
 
     hook_handler.base_namespace = A
-    hook_handler.evalhook("::B").should be == A::B
+    hook_handler.evalhook("::B", binding).should be == A::B
   end
 
   class C1
@@ -170,7 +170,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
             def foo
               'A1::C1#foo at evalhook'
             end
-        end")
+        end" , binding)
 
     C1.new.foo.should be == "C1#foo" # C1#foo class remains unchanged
     A1::C1.new.foo.should be == "A1::C1#foo at evalhook" # A1::C1#foo changes
@@ -196,7 +196,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
           end
 
         end
-    ")
+    ", binding)
 
     C2.new.foo.should be == "::C2#foo at evalhook"
   end
@@ -216,7 +216,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
             def foo
               'A1::A2::C1#foo at evalhook'
             end
-        end")
+        end", binding)
 
     C1.new.foo.should be == "C1#foo" # C1#foo class remains unchanged
     A1::A2::C1.new.foo.should be == "A1::A2::C1#foo at evalhook" # A1::C1#foo changes
@@ -228,18 +228,18 @@ describe EvalHook::HookHandler, "hook handler defaults" do
   end
 
   it "should allow declaring classes with ::" do
-    EvalHook::HookHandler.new.evalhook("class Fixnum::TestClass12345; end")
+    EvalHook::HookHandler.new.evalhook("class Fixnum::TestClass12345; end", binding)
   end
 
   it "should allow declaring modules with ::" do
-    EvalHook::HookHandler.new.evalhook("module Fixnum::TestModule12345; end")
+    EvalHook::HookHandler.new.evalhook("module Fixnum::TestModule12345; end", binding)
   end
 
   module TestModule12347
   end
 
   it "should allow assignment of constants nested on modules" do
-    EvalHook::HookHandler.new.evalhook("TestModule12347::A = 9")
+    EvalHook::HookHandler.new.evalhook("TestModule12347::A = 9", binding)
   end
 
   class XTEST44
@@ -255,7 +255,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
         end
       end
       YTEST44.new.foo(9)
-    ').should be == 10
+    ', binding).should be == 10
   end
 
   it "should pass arguments on super (explicitly)" do
@@ -266,7 +266,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
         end
       end
       YTEST45.new.foo(9)
-    ').should be == 10
+    ', binding).should be == 10
   end
 
   it "should pass arguments on super with three levels" do
@@ -283,7 +283,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
         end
       end
       ZTEST46.new.foo(9)
-    ').should be == 10
+    ', binding).should be == 10
 
   end
 
@@ -302,7 +302,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
         include MODULETEST48
       end
       XTEST48.new.foo(9)
-    ')
+    ', binding)
 
     }.should raise_error(SecurityError)
 
@@ -326,7 +326,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
         include CLASSTEST49::MODULETEST49
       end
       YTEST49.new.foo(9)
-    ')
+    ', binding)
 
     }.should raise_error(SecurityError)
 
@@ -346,7 +346,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
         end
       end
       ZTEST50.new.foo(9)
-    ').should be == 10
+    ', binding).should be == 10
 
   end
 
@@ -365,7 +365,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
         include MODULETEST51
       end
       XTEST51.new.foo(9)
-    ')
+    ', binding)
 
     }.should raise_error(SecurityError)
 
@@ -389,7 +389,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
         include CLASSTEST52::MODULETEST52
       end
       YTEST52.new.foo(9)
-    ')
+    ', binding)
 
     }.should raise_error(SecurityError)
 
@@ -410,7 +410,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
         super(a+1)
       end
       obj.bar(10)
-    ').should be == 12
+    ', binding).should be == 12
   end
 
 end
