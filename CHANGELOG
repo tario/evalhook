@@ -1,4 +1,6 @@
-0.4.0	Implemented hooking of super as methods calls
+0.4.0	Removed evalmimic dependency
+
+		Implemented hooking of super as methods calls
 
 		Added hooking for colon2 namespace access (handle_colon2)
 
