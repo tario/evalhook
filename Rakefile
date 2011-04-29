@@ -6,13 +6,13 @@ require 'rake/gempackagetask'
 
 spec = Gem::Specification.new do |s|
   s.name = 'evalhook'
-  s.version = '0.3.1'
+  s.version = '0.4.0'
   s.author = 'Dario Seminara'
   s.email = 'robertodarioseminara@gmail.com'
   s.platform = Gem::Platform::RUBY
   s.summary = 'Alternate eval which hook all methods executed in the evaluated code'
   s.homepage = "http://github.com/tario/evalhook"
-  s.add_dependency "partialruby", ">= 0.1.0"
+  s.add_dependency "partialruby", ">= 0.2.0"
   s.add_dependency "ruby_parser", ">= 2.0.6"
   s.has_rdoc = true
   s.extra_rdoc_files = [ 'README' ]
