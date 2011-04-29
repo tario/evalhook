@@ -22,7 +22,8 @@ require "partialruby"
 require "evalhook/redirect_helper"
 require "evalhook/multi_hook_handler"
 require "evalhook/hook_handler"
-require "evalhook/hook_context"
+require "evalhook/tree_processor"
+
 begin
 require "evalmimic"
 $evalmimic_defined = true
@@ -183,6 +184,36 @@ module EvalHook
     end
 
     # used internally
+    def hooked_gvar(global_id)
+      ret = handle_gvar(global_id)
+      if ret
+        ret.value
+      else
+        eval(global_id.to_s)
+      end
+    end
+
+    # used internally
+    def hooked_const(name)
+      ret = handle_const(name)
+      if ret
+        ret.value
+      else
+         Object.const_get(name)
+       end
+    end
+
+    # used internally
+    def hooked_colon2(context,name)
+      ret = handle_colon2(context, name)
+      if ret
+        ret.value
+      else
+         context.const_get(name)
+      end
+    end
+
+    # used internally
     def hooked_cdecl(context)
       HookCdecl.new(context,self)
     end
@@ -217,6 +248,20 @@ module EvalHook
       nil
     end
 
+    # Overwrite to handle const read access
+    def handle_const(name)
+      nil
+    end
+
+    def handle_colon2(context,name)
+      nil
+    end
+
+    # Overwrite to handle global variable read access
+    def handle_gvar(global_id)
+      nil
+    end
+
     # used internally
     def hooked_super(*args)
       hm = caller_obj(2).hooked_method(caller_method(2))
@@ -243,7 +288,10 @@ module EvalHook
 
       tree = RubyParser.new.parse code
 
-      context = EvalHook::HookContext.new(self)
+      context = PartialRuby::PureRubyContext.new
+
+      tree = EvalHook::TreeProcessor.new(self).process(tree)
+
       emulationcode = context.emul tree
 
       eval emulationcode, b_, name, line

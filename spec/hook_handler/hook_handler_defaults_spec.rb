@@ -23,7 +23,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
       hook_handler = EvalHook::HookHandler.new
 
       expected = eval(expr)
-      hook_handler.evalhook(expr).should be == expected
+      hook_handler.evalhook(expr, binding).should be == expected
 
     end
   end
@@ -32,14 +32,14 @@ describe EvalHook::HookHandler, "hook handler defaults" do
      hook_handler = EvalHook::HookHandler.new
 
      $global_variable_test = 5
-     hook_handler.evalhook("$global_variable_test").should be == $global_variable_test
+     hook_handler.evalhook("$global_variable_test", binding).should be == $global_variable_test
   end
 
   it "should allow reference to constants" do
      hook_handler = EvalHook::HookHandler.new
 
      CONSTANTTEST = 5
-     hook_handler.evalhook("CONSTANTTEST").should be == CONSTANTTEST
+     hook_handler.evalhook("CONSTANTTEST", binding).should be == CONSTANTTEST
   end
 
   it "should allow reference to local variables" do
@@ -71,7 +71,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
 
   it "should allow method calls" do
     hook_handler = EvalHook::HookHandler.new
-    hook_handler.evalhook("X.new.foo").should be X.new.foo
+    hook_handler.evalhook("X.new.foo", binding).should be X.new.foo
   end
 
   it "should capture method calls" do
@@ -80,14 +80,14 @@ describe EvalHook::HookHandler, "hook handler defaults" do
     hook_handler.should_receive(:handle_method).with(X.class,X,:new)
     hook_handler.should_receive(:handle_method).with(X,anything(),:foo)
 
-    hook_handler.evalhook("X.new.foo")
+    hook_handler.evalhook("X.new.foo", binding)
   end
 
   it "should capture constant assignment" do
     hook_handler = EvalHook::HookHandler.new
 
     hook_handler.should_receive(:handle_cdecl).with(Object,:TEST_CONSTANT,4)
-    hook_handler.evalhook("TEST_CONSTANT = 4")
+    hook_handler.evalhook("TEST_CONSTANT = 4", binding)
 
   end
 
@@ -95,7 +95,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
     hook_handler = EvalHook::HookHandler.new
 
     hook_handler.should_receive(:handle_gasgn).with(:$test_global_variable,4)
-    hook_handler.evalhook("$test_global_variable = 4")
+    hook_handler.evalhook("$test_global_variable = 4", binding)
 
   end
 
@@ -103,7 +103,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
     hook_handler = EvalHook::HookHandler.new
 
     hook_handler.should_receive(:handle_xstr).with("echo test")
-    hook_handler.evalhook("`echo test`")
+    hook_handler.evalhook("`echo test`", binding)
 
   end
 
@@ -111,7 +111,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
     hook_handler = EvalHook::HookHandler.new
 
     hook_handler.should_receive(:handle_xstr).with("echo test")
-    hook_handler.evalhook("`echo \#{}test`")
+    hook_handler.evalhook("`echo \#{}test`", binding)
 
   end
 
@@ -119,7 +119,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
     hook_handler = EvalHook::HookHandler.new
 
     hook_handler.should_receive(:handle_xstr).with("echo test")
-    hook_handler.evalhook("%x[echo test]")
+    hook_handler.evalhook("%x[echo test]", binding)
   end
 
 
@@ -139,14 +139,14 @@ describe EvalHook::HookHandler, "hook handler defaults" do
     hook_handler = EvalHook::HookHandler.new
 
     hook_handler.base_namespace = :A
-    hook_handler.evalhook("::B").should be == A::B
+    hook_handler.evalhook("::B", binding).should be == A::B
   end
 
   it "should allow define base_namespace (const)" do
     hook_handler = EvalHook::HookHandler.new
 
     hook_handler.base_namespace = A
-    hook_handler.evalhook("::B").should be == A::B
+    hook_handler.evalhook("::B", binding).should be == A::B
   end
 
   class C1
@@ -170,7 +170,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
             def foo
               'A1::C1#foo at evalhook'
             end
-        end")
+        end" , binding)
 
     C1.new.foo.should be == "C1#foo" # C1#foo class remains unchanged
     A1::C1.new.foo.should be == "A1::C1#foo at evalhook" # A1::C1#foo changes
@@ -196,7 +196,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
           end
 
         end
-    ")
+    ", binding)
 
     C2.new.foo.should be == "::C2#foo at evalhook"
   end
@@ -216,15 +216,14 @@ describe EvalHook::HookHandler, "hook handler defaults" do
             def foo
               'A1::A2::C1#foo at evalhook'
             end
-        end")
+        end", binding)
 
     C1.new.foo.should be == "C1#foo" # C1#foo class remains unchanged
     A1::A2::C1.new.foo.should be == "A1::A2::C1#foo at evalhook" # A1::C1#foo changes
   end
 
-  it "should use current binding when not specified" do
-    a = 9
-    EvalHook::HookHandler.new.evalhook("a").should be == 9
+  it "should allow declaring classes with ::" do
+    EvalHook::HookHandler.new.evalhook("class Fixnum::TestClass12345; end", binding)
   end
 
   module TestInheritedClassMethodError
@@ -241,6 +240,188 @@ describe EvalHook::HookHandler, "hook handler defaults" do
   it "inherited class method should execute" do
     hh = EvalHook::HookHandler.new
     hh.evalhook('TestInheritedClassMethodError::B.foo', binding)
+  end
+
+  it "should allow declaring modules with ::" do
+    EvalHook::HookHandler.new.evalhook("module Fixnum::TestModule12345; end", binding)
+  end
+
+  module TestModule12347
+  end
+
+  it "should allow assignment of constants nested on modules" do
+    EvalHook::HookHandler.new.evalhook("TestModule12347::A = 9", binding)
+  end
+
+  class XTEST44
+    def foo(a)
+      a+1
+    end
+  end
+  it "should pass arguments on super" do
+    EvalHook::HookHandler.new.evalhook('
+      class YTEST44 < XTEST44
+        def foo(a)
+          super
+        end
+      end
+      YTEST44.new.foo(9)
+    ', binding).should be == 10
+  end
+
+  it "should pass arguments on super (explicitly)" do
+    EvalHook::HookHandler.new.evalhook('
+      class YTEST45 < XTEST44
+        def foo(a)
+          super(a)
+        end
+      end
+      YTEST45.new.foo(9)
+    ', binding).should be == 10
+  end
+
+  it "should pass arguments on super with three levels" do
+    EvalHook::HookHandler.new.evalhook('
+      class YTEST46 < XTEST44
+        def foo(a)
+          super(a)
+        end
+      end
+
+      class ZTEST46 < YTEST46
+        def foo(a)
+          super(a)
+        end
+      end
+      ZTEST46.new.foo(9)
+    ', binding).should be == 10
+
+  end
+
+  it "should raise SecurityError when use super outside a class" do
+
+    lambda {
+
+    EvalHook::HookHandler.new.evalhook('
+      module MODULETEST48
+        def foo(a)
+          super(a)
+        end
+      end
+
+      class XTEST48 < XTEST44
+        include MODULETEST48
+      end
+      XTEST48.new.foo(9)
+    ', binding)
+
+    }.should raise_error(SecurityError)
+
+  end
+
+  it "should raise SecurityError when use super inside a module nested on class" do
+
+    lambda {
+
+    EvalHook::HookHandler.new.evalhook('
+
+      class CLASSTEST49
+        module MODULETEST49
+          def foo(a)
+            super(a)
+          end
+        end
+      end
+
+      class YTEST49 < XTEST44
+        include CLASSTEST49::MODULETEST49
+      end
+      YTEST49.new.foo(9)
+    ', binding)
+
+    }.should raise_error(SecurityError)
+
+  end
+
+  it "should pass arguments on super with no arguments throught three levels" do
+    EvalHook::HookHandler.new.evalhook('
+      class YTEST50 < XTEST44
+        def foo(a)
+          super
+        end
+      end
+
+      class ZTEST50 < YTEST50
+        def foo(a)
+          super
+        end
+      end
+      ZTEST50.new.foo(9)
+    ', binding).should be == 10
+
+  end
+
+  it "should raise SecurityError when use super with no arguments outside a class" do
+
+    lambda {
+
+    EvalHook::HookHandler.new.evalhook('
+      module MODULETEST51
+        def foo(a)
+          super
+        end
+      end
+
+      class XTEST51 < XTEST44
+        include MODULETEST51
+      end
+      XTEST51.new.foo(9)
+    ', binding)
+
+    }.should raise_error(SecurityError)
+
+  end
+
+  it "should raise SecurityError when use super with no arguments inside a module nested on class" do
+
+    lambda {
+
+    EvalHook::HookHandler.new.evalhook('
+
+      class CLASSTEST52
+        module MODULETEST52
+          def foo(a)
+            super
+          end
+        end
+      end
+
+      class YTEST52 < XTEST44
+        include CLASSTEST52::MODULETEST52
+      end
+      YTEST52.new.foo(9)
+    ', binding)
+
+    }.should raise_error(SecurityError)
+
+  end
+
+  it "should execute super call from singleton methods" do
+    EvalHook::HookHandler.new.evalhook('
+
+      class CLASSTEST53
+        def bar(a)
+            a+1
+        end
+      end
+
+      obj = CLASSTEST53.new
+
+      def obj.bar(a)
+        super(a+1)
+      end
+      obj.bar(10)
+    ', binding).should be == 12
   end
 
 end

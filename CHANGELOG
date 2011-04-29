@@ -1,3 +1,15 @@
+0.4.0	Removed evalmimic dependency
+
+		Implemented hooking of super as methods calls
+
+		Added hooking for colon2 namespace access (handle_colon2)
+
+		Added hooking for global variable read acess (handle_gvar)
+
+		Added hooking for constant read access (handle_const)
+		
+		Refactor of AST processing code (using SexpProcessor)
+
 0.3.1	Fixed bug when use reflection on call handler (thanks jembezmamy for the feedback!)
 
 0.3.0	Refactor: removed C extension for hooking and use partialruby instead

@@ -73,6 +73,21 @@ module RedirectHelper
     end
   end
 
+  class Value
+    attr_reader :value
+    def initialize(value)
+      @value = value
+    end
+  end
+
+  def global_value(value)
+    Value.new(value)
+  end
+
+  def const_value(value)
+    Value.new(value)
+  end
+
   def redirect_method(*args)
     Redirect.new(*args)
   end

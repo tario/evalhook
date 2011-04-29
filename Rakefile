@@ -17,7 +17,7 @@ spec = Gem::Specification.new do |s|
   s.has_rdoc = true
   s.extra_rdoc_files = [ 'README' ]
   s.rdoc_options << '--main' << 'README'
-  s.files = Dir.glob("{examples,lib,spec}/**/*.rb") + Dir.glob("ext/**/*.c") + Dir.glob("ext/**/*.h") + Dir.glob("ext/**/extconf.rb") +
+  s.files = Dir.glob("{examples,lib,spec}/**/*.rb") +
     [ 'LICENSE', 'AUTHORS', 'CHANGELOG', 'README', 'Rakefile', 'TODO' ]
 end
 
@@ -33,7 +33,7 @@ end
 desc 'Generate RDoc'
 Rake::RDocTask.new :rdoc do |rd|
   rd.rdoc_dir = 'doc'
-  rd.rdoc_files.add 'lib', 'ext', 'README'
+  rd.rdoc_files.add 'lib', 'README'
   rd.main = 'README'
 end
 
