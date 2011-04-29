@@ -55,12 +55,12 @@
         <tr class="top-aligned-row">
             <td><strong>In:</strong></td>
             <td>
-                <a href="../../files/lib/evalhook_rb.html">
-                lib/evalhook.rb
+                <a href="../../files/lib/evalhook/hook_handler_rb.html">
+                lib/evalhook/hook_handler.rb
                 </a>
         <br />
-                <a href="../../files/ext/evalhook_base/evalhook_base_c.html">
-                ext/evalhook_base/evalhook_base.c
+                <a href="../../files/lib/evalhook_rb.html">
+                lib/evalhook.rb
                 </a>
         <br />
             </td>
@@ -84,34 +84,6 @@
 
   <div id="contextContent">
 
-    <div id="description">
-      <p>
-Class to create hook instances for specific handling of method calls and/or
-const and global assignment
-</p>
-<h3>Example:</h3>
-<p>
-Hook of method calls
-</p>
-<pre>
-        require &quot;rubygems&quot;
-        require &quot;evalhook&quot;
-
-        class Hook &lt; EvalHook::HookHandler
-                def handle_method(klass, recv, method_name)
-                        print &quot;called #{klass}##{method_name} over #{recv}\n&quot;
-                        nil
-                end
-        end
-
-        h = Hook.new
-        h.evalhook('print &quot;hello world\n&quot;')
-</pre>
-<p>
-See README for more examples
-</p>
-
-    </div>
 
 
    </div>
@@ -120,13 +92,26 @@ See README for more examples
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000017">evalhook</a>&nbsp;&nbsp;
-      <a href="#M000014">handle_cdecl</a>&nbsp;&nbsp;
-      <a href="#M000013">handle_gasgn</a>&nbsp;&nbsp;
-      <a href="#M000015">handle_method</a>&nbsp;&nbsp;
-      <a href="#M000011">hooked_cdecl</a>&nbsp;&nbsp;
-      <a href="#M000012">hooked_gasgn</a>&nbsp;&nbsp;
-      <a href="#M000016">hooked_super</a>&nbsp;&nbsp;
+      <a href="#M000047">base_namespace=</a>&nbsp;&nbsp;
+      <a href="#M000065">evalhook</a>&nbsp;&nbsp;
+      <a href="#M000063">evalhook_i</a>&nbsp;&nbsp;
+      <a href="#M000054">handle_cdecl</a>&nbsp;&nbsp;
+      <a href="#M000059">handle_colon2</a>&nbsp;&nbsp;
+      <a href="#M000055">handle_colon3</a>&nbsp;&nbsp;
+      <a href="#M000058">handle_const</a>&nbsp;&nbsp;
+      <a href="#M000053">handle_gasgn</a>&nbsp;&nbsp;
+      <a href="#M000060">handle_gvar</a>&nbsp;&nbsp;
+      <a href="#M000057">handle_method</a>&nbsp;&nbsp;
+      <a href="#M000056">handle_xstr</a>&nbsp;&nbsp;
+      <a href="#M000051">hooked_cdecl</a>&nbsp;&nbsp;
+      <a href="#M000050">hooked_colon2</a>&nbsp;&nbsp;
+      <a href="#M000049">hooked_const</a>&nbsp;&nbsp;
+      <a href="#M000052">hooked_gasgn</a>&nbsp;&nbsp;
+      <a href="#M000048">hooked_gvar</a>&nbsp;&nbsp;
+      <a href="#M000061">hooked_super</a>&nbsp;&nbsp;
+      <a href="#M000062">hooked_xstr</a>&nbsp;&nbsp;
+      <a href="#M000064">internal_eval</a>&nbsp;&nbsp;
+      <a href="#M000046">new</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -134,6 +119,13 @@ See README for more examples
 
 
     <!-- if includes -->
+    <div id="includes">
+      <h3 class="section-bar">Included Modules</h3>
+
+      <div id="includes-list">
+        <span class="include-name"><a href="../RedirectHelper.html">RedirectHelper</a></span>
+      </div>
+    </div>
 
     <div id="section">
 
@@ -148,47 +140,130 @@ Class <a href="HookHandler/HookGasgn.html" class="link">EvalHook::HookHandler::H
 
 
 
+    <div id="attribute-list">
+      <h3 class="section-bar">Attributes</h3>
+
+      <div class="name-list">
+        <table>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">base_namespace</td>
+          <td class="context-item-value">&nbsp;[RW]&nbsp;</td>
+          <td class="context-item-desc"></td>
+        </tr>
+        </table>
+      </div>
+    </div>
       
 
 
     <!-- if method_list -->
     <div id="methods">
-      <h3 class="section-bar">Public Instance methods</h3>
+      <h3 class="section-bar">Public Class methods</h3>
 
-      <div id="method-M000017" class="method-detail">
-        <a name="M000017"></a>
+      <div id="method-M000046" class="method-detail">
+        <a name="M000046"></a>
 
         <div class="method-heading">
-          <a href="#M000017" class="method-signature">
+          <a href="#M000046" class="method-signature">
+          <span class="method-name">new</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000046-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000046-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/evalhook.rb, line 124</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>
+      <span class="ruby-keyword kw">super</span>
+      <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">base_namespace</span> = <span class="ruby-constant">Object</span>
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="section-bar">Public Instance methods</h3>
+
+      <div id="method-M000047" class="method-detail">
+        <a name="M000047"></a>
+
+        <div class="method-heading">
+          <a href="#M000047" class="method-signature">
+          <span class="method-name">base_namespace=</span><span class="method-args">( obj )</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000047-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000047-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/evalhook.rb, line 129</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">base_namespace=</span>( <span class="ruby-identifier">obj</span> )
+      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">obj</span>.<span class="ruby-identifier">instance_of?</span> <span class="ruby-constant">Symbol</span>
+        <span class="ruby-ivar">@base_namespace</span> = <span class="ruby-identifier">obj</span>
+      <span class="ruby-keyword kw">else</span>
+        <span class="ruby-ivar">@base_namespace</span> = <span class="ruby-identifier">obj</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">to_sym</span>
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000065" class="method-detail">
+        <a name="M000065"></a>
+
+        <div class="method-heading">
+          <a href="#M000065" class="method-signature">
           <span class="method-name">evalhook</span><span class="method-args">(*args)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000017-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000017-source">
+            onclick="toggleCode('M000065-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000065-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook.rb, line 183</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">evalhook</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+<span class="ruby-comment cmt"># File lib/evalhook.rb, line 312</span>
+      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">evalhook</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+        <span class="ruby-identifier">evalhook_i</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+      <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
 
-      <span class="ruby-constant">EvalHook</span>.<span class="ruby-identifier">method_handler</span> = <span class="ruby-keyword kw">self</span>
+      <div id="method-M000063" class="method-detail">
+        <a name="M000063"></a>
 
-      <span class="ruby-identifier">args</span>[<span class="ruby-value">0</span>] = <span class="ruby-node">&quot;
-        retvalue = nil
-        EvalHook.double_run do |run|
-          ( if (run)
-            retvalue = begin
-              #{args[0]}
-            end
-            EvalHook::FakeEvalHook
-          else
-            EvalHook
-          end ).hook_block(ObjectSpace._id2ref(#{object_id}))
-        end
-        retvalue
-       &quot;</span>
-      <span class="ruby-identifier">eval</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+        <div class="method-heading">
+          <a href="#M000063" class="method-signature">
+          <span class="method-name">evalhook_i</span><span class="method-args">(code, b_ = nil, name = &quot;(eval)&quot;, line = 1)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000063-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000063-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/evalhook.rb, line 285</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">evalhook_i</span>(<span class="ruby-identifier">code</span>, <span class="ruby-identifier">b_</span> = <span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">name</span> = <span class="ruby-value str">&quot;(eval)&quot;</span>, <span class="ruby-identifier">line</span> = <span class="ruby-value">1</span>)
+
+      <span class="ruby-constant">EvalHook</span>.<span class="ruby-identifier">validate_syntax</span> <span class="ruby-identifier">code</span>
+
+      <span class="ruby-identifier">tree</span> = <span class="ruby-constant">RubyParser</span>.<span class="ruby-identifier">new</span>.<span class="ruby-identifier">parse</span> <span class="ruby-identifier">code</span>
+
+      <span class="ruby-identifier">context</span> = <span class="ruby-constant">PartialRuby</span><span class="ruby-operator">::</span><span class="ruby-constant">PureRubyContext</span>.<span class="ruby-identifier">new</span>
+
+      <span class="ruby-identifier">tree</span> = <span class="ruby-constant">EvalHook</span><span class="ruby-operator">::</span><span class="ruby-constant">TreeProcessor</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span>).<span class="ruby-identifier">process</span>(<span class="ruby-identifier">tree</span>)
+
+      <span class="ruby-identifier">emulationcode</span> = <span class="ruby-identifier">context</span>.<span class="ruby-identifier">emul</span> <span class="ruby-identifier">tree</span>
+
+      <span class="ruby-identifier">eval</span> <span class="ruby-identifier">emulationcode</span>, <span class="ruby-identifier">b_</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">line</span>
 
     <span class="ruby-keyword kw">end</span>
 </pre>
@@ -196,11 +271,11 @@ Class <a href="HookHandler/HookGasgn.html" class="link">EvalHook::HookHandler::H
         </div>
       </div>
 
-      <div id="method-M000014" class="method-detail">
-        <a name="M000014"></a>
+      <div id="method-M000054" class="method-detail">
+        <a name="M000054"></a>
 
         <div class="method-heading">
-          <a href="#M000014" class="method-signature">
+          <a href="#M000054" class="method-signature">
           <span class="method-name">handle_cdecl</span><span class="method-args">(*args)</span>
           </a>
         </div>
@@ -211,10 +286,10 @@ Overwrite to handle the assignment/creation of constants. By default do
 nothing but assign the variable. See examples
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000014-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000014-source">
+            onclick="toggleCode('M000054-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000054-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook.rb, line 160</span>
+<span class="ruby-comment cmt"># File lib/evalhook.rb, line 232</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">handle_cdecl</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
       <span class="ruby-keyword kw">nil</span>
     <span class="ruby-keyword kw">end</span>
@@ -223,11 +298,87 @@ nothing but assign the variable. See examples
         </div>
       </div>
 
-      <div id="method-M000013" class="method-detail">
-        <a name="M000013"></a>
+      <div id="method-M000059" class="method-detail">
+        <a name="M000059"></a>
 
         <div class="method-heading">
-          <a href="#M000013" class="method-signature">
+          <a href="#M000059" class="method-signature">
+          <span class="method-name">handle_colon2</span><span class="method-args">(context,name)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000059-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000059-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/evalhook.rb, line 256</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">handle_colon2</span>(<span class="ruby-identifier">context</span>,<span class="ruby-identifier">name</span>)
+      <span class="ruby-keyword kw">nil</span>
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000055" class="method-detail">
+        <a name="M000055"></a>
+
+        <div class="method-heading">
+          <a href="#M000055" class="method-signature">
+          <span class="method-name">handle_colon3</span><span class="method-args">(*args)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Overwrite to handle the evaluation o colon3 nodes (access to global
+namespace)
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000055-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000055-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/evalhook.rb, line 237</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">handle_colon3</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+      <span class="ruby-keyword kw">nil</span>
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000058" class="method-detail">
+        <a name="M000058"></a>
+
+        <div class="method-heading">
+          <a href="#M000058" class="method-signature">
+          <span class="method-name">handle_const</span><span class="method-args">(name)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Overwrite to handle const read access
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000058-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000058-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/evalhook.rb, line 252</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">handle_const</span>(<span class="ruby-identifier">name</span>)
+      <span class="ruby-keyword kw">nil</span>
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000053" class="method-detail">
+        <a name="M000053"></a>
+
+        <div class="method-heading">
+          <a href="#M000053" class="method-signature">
           <span class="method-name">handle_gasgn</span><span class="method-args">(*args)</span>
           </a>
         </div>
@@ -238,10 +389,10 @@ Overwrite to handle the assignment/creation of global variables. By default
 do nothing but assign the variable. See examples
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000013-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000013-source">
+            onclick="toggleCode('M000053-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000053-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook.rb, line 155</span>
+<span class="ruby-comment cmt"># File lib/evalhook.rb, line 227</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">handle_gasgn</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
       <span class="ruby-keyword kw">nil</span>
     <span class="ruby-keyword kw">end</span>
@@ -250,11 +401,37 @@ do nothing but assign the variable. See examples
         </div>
       </div>
 
-      <div id="method-M000015" class="method-detail">
-        <a name="M000015"></a>
+      <div id="method-M000060" class="method-detail">
+        <a name="M000060"></a>
 
         <div class="method-heading">
-          <a href="#M000015" class="method-signature">
+          <a href="#M000060" class="method-signature">
+          <span class="method-name">handle_gvar</span><span class="method-args">(global_id)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Overwrite to handle global variable read access
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000060-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000060-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/evalhook.rb, line 261</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">handle_gvar</span>(<span class="ruby-identifier">global_id</span>)
+      <span class="ruby-keyword kw">nil</span>
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000057" class="method-detail">
+        <a name="M000057"></a>
+
+        <div class="method-heading">
+          <a href="#M000057" class="method-signature">
           <span class="method-name">handle_method</span><span class="method-args">(klass,recv,method_name)</span>
           </a>
         </div>
@@ -265,10 +442,10 @@ Overwrite to handle the method calls. By default do nothing and the methods
 are called normally
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000015-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000015-source">
+            onclick="toggleCode('M000057-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000057-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook.rb, line 165</span>
+<span class="ruby-comment cmt"># File lib/evalhook.rb, line 247</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">handle_method</span>(<span class="ruby-identifier">klass</span>,<span class="ruby-identifier">recv</span>,<span class="ruby-identifier">method_name</span>)
       <span class="ruby-keyword kw">nil</span>
     <span class="ruby-keyword kw">end</span>
@@ -277,11 +454,38 @@ are called normally
         </div>
       </div>
 
-      <div id="method-M000011" class="method-detail">
-        <a name="M000011"></a>
+      <div id="method-M000056" class="method-detail">
+        <a name="M000056"></a>
 
         <div class="method-heading">
-          <a href="#M000011" class="method-signature">
+          <a href="#M000056" class="method-signature">
+          <span class="method-name">handle_xstr</span><span class="method-args">(*args)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Overwrite to handle the evaluation o xstr nodes (execution of shell
+commands)
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000056-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000056-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/evalhook.rb, line 242</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">handle_xstr</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+      <span class="ruby-keyword kw">nil</span>
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000051" class="method-detail">
+        <a name="M000051"></a>
+
+        <div class="method-heading">
+          <a href="#M000051" class="method-signature">
           <span class="method-name">hooked_cdecl</span><span class="method-args">(context)</span>
           </a>
         </div>
@@ -291,10 +495,10 @@ are called normally
 used internally
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000011-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000011-source">
+            onclick="toggleCode('M000051-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000051-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook.rb, line 145</span>
+<span class="ruby-comment cmt"># File lib/evalhook.rb, line 217</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">hooked_cdecl</span>(<span class="ruby-identifier">context</span>)
       <span class="ruby-constant">HookCdecl</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">context</span>,<span class="ruby-keyword kw">self</span>)
     <span class="ruby-keyword kw">end</span>
@@ -303,11 +507,73 @@ used internally
         </div>
       </div>
 
-      <div id="method-M000012" class="method-detail">
-        <a name="M000012"></a>
+      <div id="method-M000050" class="method-detail">
+        <a name="M000050"></a>
 
         <div class="method-heading">
-          <a href="#M000012" class="method-signature">
+          <a href="#M000050" class="method-signature">
+          <span class="method-name">hooked_colon2</span><span class="method-args">(context,name)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+used internally
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000050-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000050-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/evalhook.rb, line 207</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">hooked_colon2</span>(<span class="ruby-identifier">context</span>,<span class="ruby-identifier">name</span>)
+      <span class="ruby-identifier">ret</span> = <span class="ruby-identifier">handle_colon2</span>(<span class="ruby-identifier">context</span>, <span class="ruby-identifier">name</span>)
+      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">ret</span>
+        <span class="ruby-identifier">ret</span>.<span class="ruby-identifier">value</span>
+      <span class="ruby-keyword kw">else</span>
+         <span class="ruby-identifier">context</span>.<span class="ruby-identifier">const_get</span>(<span class="ruby-identifier">name</span>)
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000049" class="method-detail">
+        <a name="M000049"></a>
+
+        <div class="method-heading">
+          <a href="#M000049" class="method-signature">
+          <span class="method-name">hooked_const</span><span class="method-args">(name)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+used internally
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000049-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000049-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/evalhook.rb, line 197</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">hooked_const</span>(<span class="ruby-identifier">name</span>)
+      <span class="ruby-identifier">ret</span> = <span class="ruby-identifier">handle_const</span>(<span class="ruby-identifier">name</span>)
+      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">ret</span>
+        <span class="ruby-identifier">ret</span>.<span class="ruby-identifier">value</span>
+      <span class="ruby-keyword kw">else</span>
+         <span class="ruby-constant">Object</span>.<span class="ruby-identifier">const_get</span>(<span class="ruby-identifier">name</span>)
+       <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000052" class="method-detail">
+        <a name="M000052"></a>
+
+        <div class="method-heading">
+          <a href="#M000052" class="method-signature">
           <span class="method-name">hooked_gasgn</span><span class="method-args">(global_id)</span>
           </a>
         </div>
@@ -317,10 +583,10 @@ used internally
 used internally
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000012-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000012-source">
+            onclick="toggleCode('M000052-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000052-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook.rb, line 150</span>
+<span class="ruby-comment cmt"># File lib/evalhook.rb, line 222</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">hooked_gasgn</span>(<span class="ruby-identifier">global_id</span>)
       <span class="ruby-constant">HookGasgn</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">global_id</span>,<span class="ruby-keyword kw">self</span>)
     <span class="ruby-keyword kw">end</span>
@@ -329,21 +595,55 @@ used internally
         </div>
       </div>
 
-      <div id="method-M000016" class="method-detail">
-        <a name="M000016"></a>
+      <div id="method-M000048" class="method-detail">
+        <a name="M000048"></a>
 
         <div class="method-heading">
-          <a href="#M000016" class="method-signature">
+          <a href="#M000048" class="method-signature">
+          <span class="method-name">hooked_gvar</span><span class="method-args">(global_id)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+used internally
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000048-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000048-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/evalhook.rb, line 187</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">hooked_gvar</span>(<span class="ruby-identifier">global_id</span>)
+      <span class="ruby-identifier">ret</span> = <span class="ruby-identifier">handle_gvar</span>(<span class="ruby-identifier">global_id</span>)
+      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">ret</span>
+        <span class="ruby-identifier">ret</span>.<span class="ruby-identifier">value</span>
+      <span class="ruby-keyword kw">else</span>
+        <span class="ruby-identifier">eval</span>(<span class="ruby-identifier">global_id</span>.<span class="ruby-identifier">to_s</span>)
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000061" class="method-detail">
+        <a name="M000061"></a>
+
+        <div class="method-heading">
+          <a href="#M000061" class="method-signature">
           <span class="method-name">hooked_super</span><span class="method-args">(*args) {|*x| ...}</span>
           </a>
         </div>
       
         <div class="method-description">
+          <p>
+used internally
+</p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000016-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000016-source">
+            onclick="toggleCode('M000061-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000061-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook.rb, line 169</span>
+<span class="ruby-comment cmt"># File lib/evalhook.rb, line 266</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">hooked_super</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
       <span class="ruby-identifier">hm</span> = <span class="ruby-identifier">caller_obj</span>(<span class="ruby-value">2</span>).<span class="ruby-identifier">hooked_method</span>(<span class="ruby-identifier">caller_method</span>(<span class="ruby-value">2</span>))
       <span class="ruby-identifier">hm</span>.<span class="ruby-identifier">set_class</span>(<span class="ruby-identifier">caller_class</span>(<span class="ruby-value">2</span>).<span class="ruby-identifier">superclass</span>)
@@ -357,6 +657,59 @@ used internally
         <span class="ruby-identifier">hm</span>.<span class="ruby-identifier">call</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
       <span class="ruby-keyword kw">end</span>
     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000062" class="method-detail">
+        <a name="M000062"></a>
+
+        <div class="method-heading">
+          <a href="#M000062" class="method-signature">
+          <span class="method-name">hooked_xstr</span><span class="method-args">(str)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+used internally
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000062-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000062-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/evalhook.rb, line 281</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">hooked_xstr</span>(<span class="ruby-identifier">str</span>)
+      <span class="ruby-identifier">runstr</span> = <span class="ruby-identifier">handle_xstr</span>(<span class="ruby-identifier">str</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">str</span>
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000064" class="method-detail">
+        <a name="M000064"></a>
+
+        <div class="method-heading">
+          <a href="#M000064" class="method-signature">
+          <span class="method-name">internal_eval</span><span class="method-args">(b_, original_args)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+used internally
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000064-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000064-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/evalhook.rb, line 306</span>
+      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">internal_eval</span>(<span class="ruby-identifier">b_</span>, <span class="ruby-identifier">original_args</span>)
+        <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">original_args</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+        <span class="ruby-identifier">evalhook_i</span>(<span class="ruby-identifier">original_args</span>[<span class="ruby-value">0</span>], <span class="ruby-identifier">original_args</span>[<span class="ruby-value">1</span>] <span class="ruby-operator">||</span> <span class="ruby-identifier">b_</span>, <span class="ruby-identifier">original_args</span>[<span class="ruby-value">2</span>] <span class="ruby-operator">||</span> <span class="ruby-value str">&quot;(eval)&quot;</span>, <span class="ruby-identifier">original_args</span>[<span class="ruby-value">3</span>] <span class="ruby-operator">||</span> <span class="ruby-value">0</span>)
+      <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>

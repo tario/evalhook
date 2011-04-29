@@ -56,7 +56,7 @@
     </tr>
     <tr class="top-aligned-row">
       <td><strong>Last Update:</strong></td>
-      <td>Sat Oct 30 12:50:11 -0300 2010</td>
+      <td>Fri Apr 22 21:33:19 -0300 2011</td>
     </tr>
     </table>
   </div>
@@ -181,9 +181,120 @@ Redirect of method calls
         h = Hook.new
         h.evalhook('print &quot;hello world\n&quot;')
 </pre>
+<h3>MultiHookHandler Example (new feature since 0.2.0)</h3>
+<pre>
+        require &quot;rubygems&quot;
+        require &quot;evalhook&quot;
+
+        include EvalHook
+
+        class Hook1 &lt; HookHandler
+                def handle_method(klass,recv,method_name)
+
+                        if method_name == :foo
+                                redirect_method(klass,recv,:bar)
+                        else
+                                nil
+                        end
+                end
+        end
+
+        class Hook2 &lt; HookHandler
+                def handle_method(klass,recv,method_name)
+
+                        if method_name == :bar
+                                redirect_method(klass,recv,:test1)
+                        else
+                                nil
+                        end
+                end
+        end
+
+        class X
+                def foo
+                        print &quot;foo\n&quot;
+                end
+
+                def bar
+                        print &quot;bar\n&quot;
+                end
+
+                def test1
+                        print &quot;test1\n&quot;
+                end
+        end
+
+        x = X.new
+        x.foo # foo
+
+        mmh = MultiHookHandler.new
+        mmh.add( Hook1.new )   # :foo =&gt; :bar
+        mmh.add( Hook2.new )   # :bar =&gt; :test1
+
+        mmh.evalhook(&quot;x.foo&quot;) # test1
+        mmh.evalhook(&quot;x.bar&quot;) # test1
+</pre>
+<h3>MultiHookHandler Example 2</h3>
+<pre>
+        require &quot;rubygems&quot;
+        require &quot;evalhook&quot;
+
+        include EvalHook
+
+        class DenyFooFilter &lt; HookHandler
+                def handle_method(klass,recv,method_name)
+
+                        if method_name == :foo
+                                raise SecurityError
+                        else
+                                nil
+                        end
+                end
+        end
+
+        class RedirectFooToBar &lt; HookHandler
+                def handle_method(klass,recv,method_name)
+
+                        if method_name == :foo
+                                redirect_method(klass,recv,:bar)
+                        else
+                                nil
+                        end
+                end
+        end
+
+        class X
+                def foo
+                        print &quot;foo\n&quot;
+                end
+
+                def bar
+                        print &quot;bar\n&quot;
+                end
+        end
+
+        x = X.new
+        x.foo # foo
+
+        mmh = MultiHookHandler.new
+        mmh.add( DenyFooFilter.new )
+        mmh.add( RedirectFooToBar.new )
+
+        begin
+        mmh.evalhook(&quot;x.foo&quot;)
+        rescue SecurityError
+        print &quot;foo method filtered by a SecurityError exception\n&quot;
+        end
+
+        mmh = MultiHookHandler.new
+        mmh.add( RedirectFooToBar.new )
+        mmh.add( DenyFooFilter.new )
+
+        mmh.evalhook(&quot;x.foo&quot;)
+</pre>
 <h2>Copying</h2>
 <p>
-Copyright (c) 2010 Dario Seminara, released under the GPL License (see
+Copyright (c) 2010-2011 Dario Seminara, released under the GPL License (see
 LICENSE)
 </p>
 

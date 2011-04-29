@@ -94,10 +94,10 @@ used internally
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000010">call</a>&nbsp;&nbsp;
-      <a href="#M000007">new</a>&nbsp;&nbsp;
-      <a href="#M000009">set_class</a>&nbsp;&nbsp;
-      <a href="#M000008">set_hook_handler</a>&nbsp;&nbsp;
+      <a href="#M000039">call</a>&nbsp;&nbsp;
+      <a href="#M000036">new</a>&nbsp;&nbsp;
+      <a href="#M000038">set_class</a>&nbsp;&nbsp;
+      <a href="#M000037">set_hook_handler</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -119,25 +119,26 @@ used internally
     <div id="methods">
       <h3 class="section-bar">Public Class methods</h3>
 
-      <div id="method-M000007" class="method-detail">
-        <a name="M000007"></a>
+      <div id="method-M000036" class="method-detail">
+        <a name="M000036"></a>
 
         <div class="method-heading">
-          <a href="#M000007" class="method-signature">
-          <span class="method-name">new</span><span class="method-args">(recv, m,localcall)</span>
+          <a href="#M000036" class="method-signature">
+          <span class="method-name">new</span><span class="method-args">(recv, m,localcall,_binding)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000007-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000007-source">
+            onclick="toggleCode('M000036-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000036-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook.rb, line 40</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">recv</span>, <span class="ruby-identifier">m</span>,<span class="ruby-identifier">localcall</span>)
+<span class="ruby-comment cmt"># File lib/evalhook.rb, line 49</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">recv</span>, <span class="ruby-identifier">m</span>,<span class="ruby-identifier">localcall</span>,<span class="ruby-identifier">_binding</span>)
       <span class="ruby-ivar">@recv</span> = <span class="ruby-identifier">recv</span>
       <span class="ruby-ivar">@m</span> = <span class="ruby-identifier">m</span>
       <span class="ruby-ivar">@localcall</span> = <span class="ruby-identifier">localcall</span>
+      <span class="ruby-ivar">@_binding</span> = <span class="ruby-identifier">_binding</span>
     <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
@@ -146,11 +147,11 @@ used internally
 
       <h3 class="section-bar">Public Instance methods</h3>
 
-      <div id="method-M000010" class="method-detail">
-        <a name="M000010"></a>
+      <div id="method-M000039" class="method-detail">
+        <a name="M000039"></a>
 
         <div class="method-heading">
-          <a href="#M000010" class="method-signature">
+          <a href="#M000039" class="method-signature">
           <span class="method-name">call</span><span class="method-args">(*args) {|*x| ...}</span>
           </a>
         </div>
@@ -160,16 +161,23 @@ used internally
 used internally
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000010-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000010-source">
+            onclick="toggleCode('M000039-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000039-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook.rb, line 59</span>
+<span class="ruby-comment cmt"># File lib/evalhook.rb, line 69</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">call</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
       <span class="ruby-identifier">method_handler</span> = <span class="ruby-ivar">@method_handler</span>
       <span class="ruby-identifier">ret</span> = <span class="ruby-keyword kw">nil</span>
 
-      <span class="ruby-identifier">klass</span> = <span class="ruby-ivar">@klass</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@recv</span>.<span class="ruby-identifier">method</span>(<span class="ruby-ivar">@m</span>).<span class="ruby-identifier">owner</span>
       <span class="ruby-identifier">method_name</span> = <span class="ruby-ivar">@m</span>
+      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+        <span class="ruby-identifier">local_vars</span> = <span class="ruby-ivar">@_binding</span>.<span class="ruby-identifier">eval</span>(<span class="ruby-value str">&quot;local_variables&quot;</span>).<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">:to_s</span>)
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">local_vars</span>.<span class="ruby-identifier">include?</span> <span class="ruby-identifier">method_name</span>.<span class="ruby-identifier">to_s</span>
+          <span class="ruby-keyword kw">return</span> <span class="ruby-ivar">@_binding</span>.<span class="ruby-identifier">eval</span>(<span class="ruby-identifier">method_name</span>.<span class="ruby-identifier">to_s</span>)
+        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">end</span>
+
+      <span class="ruby-identifier">klass</span> = <span class="ruby-ivar">@klass</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@recv</span>.<span class="ruby-identifier">method</span>(<span class="ruby-ivar">@m</span>).<span class="ruby-identifier">owner</span>
       <span class="ruby-identifier">recv</span> = <span class="ruby-ivar">@recv</span>
 
       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">method_handler</span>
@@ -182,12 +190,20 @@ used internally
         <span class="ruby-identifier">recv</span> = <span class="ruby-identifier">ret</span>.<span class="ruby-identifier">recv</span>
       <span class="ruby-keyword kw">end</span>
 
+      <span class="ruby-identifier">method_object</span> = <span class="ruby-keyword kw">nil</span>
+
+      <span class="ruby-keyword kw">begin</span>
+        <span class="ruby-identifier">method_object</span> = <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">instance_method</span>(<span class="ruby-identifier">method_name</span>).<span class="ruby-identifier">bind</span>(<span class="ruby-identifier">recv</span>)
+      <span class="ruby-keyword kw">rescue</span>
+        <span class="ruby-identifier">method_object</span> = <span class="ruby-identifier">recv</span>.<span class="ruby-identifier">method</span>(<span class="ruby-identifier">method_name</span>)
+      <span class="ruby-keyword kw">end</span>
+
       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
-        <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">instance_method</span>(<span class="ruby-identifier">method_name</span>).<span class="ruby-identifier">bind</span>(<span class="ruby-identifier">recv</span>).<span class="ruby-identifier">call</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-operator">*</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">method_object</span>.<span class="ruby-identifier">call</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-operator">*</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span>
           <span class="ruby-keyword kw">yield</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">x</span>)
         <span class="ruby-keyword kw">end</span>
       <span class="ruby-keyword kw">else</span>
-        <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">instance_method</span>(<span class="ruby-identifier">method_name</span>).<span class="ruby-identifier">bind</span>(<span class="ruby-identifier">recv</span>).<span class="ruby-identifier">call</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+        <span class="ruby-identifier">method_object</span>.<span class="ruby-identifier">call</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
       <span class="ruby-keyword kw">end</span>
     <span class="ruby-keyword kw">end</span>
 </pre>
@@ -195,11 +211,11 @@ used internally
         </div>
       </div>
 
-      <div id="method-M000009" class="method-detail">
-        <a name="M000009"></a>
+      <div id="method-M000038" class="method-detail">
+        <a name="M000038"></a>
 
         <div class="method-heading">
-          <a href="#M000009" class="method-signature">
+          <a href="#M000038" class="method-signature">
           <span class="method-name">set_class</span><span class="method-args">(klass)</span>
           </a>
         </div>
@@ -209,10 +225,10 @@ used internally
 used internally
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000009-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000009-source">
+            onclick="toggleCode('M000038-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000038-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook.rb, line 53</span>
+<span class="ruby-comment cmt"># File lib/evalhook.rb, line 63</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">set_class</span>(<span class="ruby-identifier">klass</span>)
       <span class="ruby-ivar">@klass</span> = <span class="ruby-identifier">klass</span>
       <span class="ruby-keyword kw">self</span>
@@ -222,11 +238,11 @@ used internally
         </div>
       </div>
 
-      <div id="method-M000008" class="method-detail">
-        <a name="M000008"></a>
+      <div id="method-M000037" class="method-detail">
+        <a name="M000037"></a>
 
         <div class="method-heading">
-          <a href="#M000008" class="method-signature">
+          <a href="#M000037" class="method-signature">
           <span class="method-name">set_hook_handler</span><span class="method-args">(method_handler)</span>
           </a>
         </div>
@@ -236,10 +252,10 @@ used internally
 used internally
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000008-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000008-source">
+            onclick="toggleCode('M000037-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000037-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook.rb, line 47</span>
+<span class="ruby-comment cmt"># File lib/evalhook.rb, line 57</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">set_hook_handler</span>(<span class="ruby-identifier">method_handler</span>)
       <span class="ruby-ivar">@method_handler</span> = <span class="ruby-identifier">method_handler</span>
       <span class="ruby-keyword kw">self</span>

@@ -76,6 +76,17 @@
 
    </div>
 
+    <div id="method-list">
+      <h3 class="section-bar">Methods</h3>
+
+      <div class="name-list">
+      <a href="#M000004">const_value</a>&nbsp;&nbsp;
+      <a href="#M000003">global_value</a>&nbsp;&nbsp;
+      <a href="#M000007">redirect_cdecl</a>&nbsp;&nbsp;
+      <a href="#M000006">redirect_gasgn</a>&nbsp;&nbsp;
+      <a href="#M000005">redirect_method</a>&nbsp;&nbsp;
+      </div>
+    </div>
 
   </div>
 
@@ -89,6 +100,9 @@
 
       Module <a href="RedirectHelper/MethodRedirect.html" class="link">RedirectHelper::MethodRedirect</a><br />
 Class <a href="RedirectHelper/Redirect.html" class="link">RedirectHelper::Redirect</a><br />
+Class <a href="RedirectHelper/RedirectCdecl.html" class="link">RedirectHelper::RedirectCdecl</a><br />
+Class <a href="RedirectHelper/RedirectGasgn.html" class="link">RedirectHelper::RedirectGasgn</a><br />
+Class <a href="RedirectHelper/Value.html" class="link">RedirectHelper::Value</a><br />
 
     </div>
 
@@ -99,6 +113,126 @@ Class <a href="RedirectHelper/Redirect.html" class="link">RedirectHelper::Redire
 
 
     <!-- if method_list -->
+    <div id="methods">
+      <h3 class="section-bar">Public Instance methods</h3>
+
+      <div id="method-M000004" class="method-detail">
+        <a name="M000004"></a>
+
+        <div class="method-heading">
+          <a href="#M000004" class="method-signature">
+          <span class="method-name">const_value</span><span class="method-args">(value)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000004-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000004-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/evalhook/redirect_helper.rb, line 87</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">const_value</span>(<span class="ruby-identifier">value</span>)
+    <span class="ruby-constant">Value</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">value</span>)
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000003" class="method-detail">
+        <a name="M000003"></a>
+
+        <div class="method-heading">
+          <a href="#M000003" class="method-signature">
+          <span class="method-name">global_value</span><span class="method-args">(value)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000003-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000003-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/evalhook/redirect_helper.rb, line 83</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">global_value</span>(<span class="ruby-identifier">value</span>)
+    <span class="ruby-constant">Value</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">value</span>)
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000007" class="method-detail">
+        <a name="M000007"></a>
+
+        <div class="method-heading">
+          <a href="#M000007" class="method-signature">
+          <span class="method-name">redirect_cdecl</span><span class="method-args">(*args)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000007-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000007-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/evalhook/redirect_helper.rb, line 99</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">redirect_cdecl</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+    <span class="ruby-constant">RedirectCdecl</span>.<span class="ruby-identifier">new</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000006" class="method-detail">
+        <a name="M000006"></a>
+
+        <div class="method-heading">
+          <a href="#M000006" class="method-signature">
+          <span class="method-name">redirect_gasgn</span><span class="method-args">(*args)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000006-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000006-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/evalhook/redirect_helper.rb, line 95</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">redirect_gasgn</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+    <span class="ruby-constant">RedirectGasgn</span>.<span class="ruby-identifier">new</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000005" class="method-detail">
+        <a name="M000005"></a>
+
+        <div class="method-heading">
+          <a href="#M000005" class="method-signature">
+          <span class="method-name">redirect_method</span><span class="method-args">(*args)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000005-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000005-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/evalhook/redirect_helper.rb, line 91</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">redirect_method</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+    <span class="ruby-constant">Redirect</span>.<span class="ruby-identifier">new</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
 
 
   </div>

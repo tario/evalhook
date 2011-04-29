@@ -116,7 +116,7 @@
 
         <div class="method-heading">
           <a href="#M000002" class="method-signature">
-          <span class="method-name">hooked_method</span><span class="method-args">(mname)</span>
+          <span class="method-name">hooked_method</span><span class="method-args">(mname,_binding)</span>
           </a>
         </div>
       
@@ -125,9 +125,9 @@
             onclick="toggleCode('M000002-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="M000002-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook.rb, line 30</span>
-  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">hooked_method</span>(<span class="ruby-identifier">mname</span>)
-    <span class="ruby-constant">EvalHook</span><span class="ruby-operator">::</span><span class="ruby-constant">HookedMethod</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span>,<span class="ruby-identifier">mname</span>,<span class="ruby-keyword kw">false</span>)
+<span class="ruby-comment cmt"># File lib/evalhook.rb, line 39</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">hooked_method</span>(<span class="ruby-identifier">mname</span>,<span class="ruby-identifier">_binding</span>)
+    <span class="ruby-constant">EvalHook</span><span class="ruby-operator">::</span><span class="ruby-constant">HookedMethod</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span>,<span class="ruby-identifier">mname</span>,<span class="ruby-keyword kw">false</span>,<span class="ruby-identifier">_binding</span>)
   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
@@ -139,7 +139,7 @@
 
         <div class="method-heading">
           <a href="#M000001" class="method-signature">
-          <span class="method-name">local_hooked_method</span><span class="method-args">(mname)</span>
+          <span class="method-name">local_hooked_method</span><span class="method-args">(mname,_binding)</span>
           </a>
         </div>
       
@@ -148,9 +148,9 @@
             onclick="toggleCode('M000001-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="M000001-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook.rb, line 27</span>
-  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">local_hooked_method</span>(<span class="ruby-identifier">mname</span>)
-    <span class="ruby-constant">EvalHook</span><span class="ruby-operator">::</span><span class="ruby-constant">HookedMethod</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span>,<span class="ruby-identifier">mname</span>,<span class="ruby-keyword kw">true</span>)
+<span class="ruby-comment cmt"># File lib/evalhook.rb, line 36</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">local_hooked_method</span>(<span class="ruby-identifier">mname</span>,<span class="ruby-identifier">_binding</span>)
+    <span class="ruby-constant">EvalHook</span><span class="ruby-operator">::</span><span class="ruby-constant">HookedMethod</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span>,<span class="ruby-identifier">mname</span>,<span class="ruby-keyword kw">true</span>,<span class="ruby-identifier">_binding</span>)
   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
