@@ -89,8 +89,13 @@ describe EvalHook::HookHandler, "hook handler hooks" do
   it "should intercept nested constant access" do
     hh = EvalHook::HookHandler.new
 
-    hh.should_receive(:handle_const).once.with("TestModule321")
-    hh.should_receive(:handle_colon2).once.with(TestModule321,"B")
+    hh.should_receive(:handle_const).once.with("TestModule321") {
+	RedirectHelper::Value.new(TestModule321)
+    }
+    
+    hh.should_receive(:handle_colon2).once.with(TestModule321,"B") {
+	RedirectHelper::Value.new(0)
+    }
 
     hh.evalhook("TestModule321::B")
   end
