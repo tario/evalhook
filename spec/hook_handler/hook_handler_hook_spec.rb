@@ -76,7 +76,9 @@ describe EvalHook::HookHandler, "hook handler hooks" do
   it "should intercept constant access" do
     hh = EvalHook::HookHandler.new
 
-    hh.should_receive(:handle_const).with("A")
+   hh.should_receive(:handle_const).with("A") {
+	RedirectHelper::Value.new(0)
+   }
 
     hh.evalhook("A")
   end
