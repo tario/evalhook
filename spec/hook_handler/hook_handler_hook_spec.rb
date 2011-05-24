@@ -121,19 +121,53 @@ describe EvalHook::HookHandler, "hook handler hooks" do
     h = EvalHook::HookHandler.new
 
     # reference to X for inheritance
-    h.should_receive(:handle_const).with("X")
+    h.should_receive(:handle_const).with("X") {
+    	RedirectHelper::Value.new(X)
+    }
 
     # reference to Y
-    h.should_receive(:handle_const).with("Y")
+    h.should_receive(:handle_const).with("Y") {
+    	RedirectHelper::Value.new(Y)
+    }
+    
+    
+    h.instance_eval {
+    @called1 = 0
+    @called2 = 0
+    @called3 = 0
+    }
 
+    def h.handle_method(klass,recv,method_name)
+	    
+	if klass == Y.class
+	  unless method_name == :new
+          raise Rspec::Mocks::MockExpectationError,  "#{recv} received :handle_method with unexpected arguments"
+	  end
+	  @called1 = @called1 + 1
+	elsif klass == Y
+	  unless method_name == :foo
+          raise Rspec::Mocks::MockExpectationError,  "#{recv} received :handle_method with unexpected arguments"
+	  end
+	  @called2 = @called2 + 1
+	elsif klass == X
+	  unless method_name == :foo
+          raise Rspec::Mocks::MockExpectationError,  "#{recv} received :handle_method with unexpected arguments"
+	  end
+  	  @called3 = @called3 + 1
+        else
+          raise Rspec::Mocks::MockExpectationError,  "#{recv} received unexpected :handle_method"
+	end
+    end
+
+    # rspec doesn't work for ruby1.9 in that way
     # call to new
-    h.should_receive(:handle_method).with(Y.class,Y,:new)
+    #h.should_receive(:handle_method).with(Y.class,anything(),:new) 
 
     # first Y#foo call
-    h.should_receive(:handle_method).with(Y,anything(),:foo)
+    #h.should_receive(:handle_method).with(Y,anything(),:foo)
 
     # super call
-    h.should_receive(:handle_method).with(X,anything(),:foo)
+    #h.should_receive(:handle_method).with(X,anything(),:foo)
 
     h.evalhook('
 
@@ -145,6 +179,10 @@ describe EvalHook::HookHandler, "hook handler hooks" do
       Y.new.foo
 
     ', binding)
+    
+    h.instance_eval{@called1}.should be == 1
+    h.instance_eval{@called2}.should be == 1
+    h.instance_eval{@called3}.should be == 1
   end
 
   class X2
