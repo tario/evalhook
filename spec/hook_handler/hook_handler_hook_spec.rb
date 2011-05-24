@@ -198,19 +198,54 @@ describe EvalHook::HookHandler, "hook handler hooks" do
     h = EvalHook::HookHandler.new
 
     # reference to X for inheritance
-    h.should_receive(:handle_const).with("X2")
+    h.should_receive(:handle_const).with("X2") {
+    	RedirectHelper::Value.new(X2)
+    }
 
     # reference to Y
-    h.should_receive(:handle_const).with("Y2")
+    h.should_receive(:handle_const).with("Y2") {
+    	RedirectHelper::Value.new(Y2)
+    }
+
+    h.instance_eval {
+    @called1 = 0
+    @called2 = 0
+    @called3 = 0
+    }
+
+    def h.handle_method(klass,recv,method_name)
+	    
+	if klass == Y2.class
+	  unless method_name == :new
+          raise Rspec::Mocks::MockExpectationError,  "#{recv} received :handle_method with unexpected arguments"
+	  end
+	  @called1 = @called1 + 1
+	  super(klass,recv,method_name)
+	elsif klass == Y2
+	  unless method_name == :foo
+          raise Rspec::Mocks::MockExpectationError,  "#{recv} received :handle_method with unexpected arguments"
+	  end
+	  @called2 = @called2 + 1
+	  super(klass,recv,method_name)
+	elsif klass == X2
+	  unless method_name == :foo
+          raise Rspec::Mocks::MockExpectationError,  "#{recv} received :handle_method with unexpected arguments"
+	  end
+  	  @called3 = @called3 + 1
+	  super(klass,recv,method_name)
+        else
+          raise Rspec::Mocks::MockExpectationError,  "#{recv} received unexpected :handle_method"
+	end
+    end
 
     # call to new
-    h.should_receive(:handle_method).with(Y2.class,Y2,:new)
+    #h.should_receive(:handle_method).with(Y2.class,Y2,:new)
 
     # first Y#foo call
-    h.should_receive(:handle_method).with(Y2,anything(),:foo)
+    #h.should_receive(:handle_method).with(Y2,anything(),:foo)
 
     # super call
-    h.should_receive(:handle_method).with(X2,anything(),:foo)
+    #h.should_receive(:handle_method).with(X2,anything(),:foo)
 
     h.evalhook('
 
@@ -222,6 +257,11 @@ describe EvalHook::HookHandler, "hook handler hooks" do
       Y2.new.foo(9)
 
     ', binding).should be == 10
+    
+    h.instance_eval{@called1}.should be == 1
+    h.instance_eval{@called2}.should be == 1
+    h.instance_eval{@called3}.should be == 1
+    
    end
 
 end
