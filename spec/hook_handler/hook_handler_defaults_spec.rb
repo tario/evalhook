@@ -63,7 +63,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
      N.new.foo(hook_handler).should be == 5
   end
 
-  class X
+  class ::X
     def foo
       3
     end
@@ -71,7 +71,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
 
   it "should allow method calls" do
     hook_handler = EvalHook::HookHandler.new
-    hook_handler.evalhook("X.new.foo", binding).should be X.new.foo
+    hook_handler.evalhook("X.new.foo", binding).should be(X.new.foo)
   end
 
   it "should capture method calls" do
