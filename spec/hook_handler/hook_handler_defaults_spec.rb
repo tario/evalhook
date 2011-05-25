@@ -38,7 +38,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
   it "should allow reference to constants" do
      hook_handler = EvalHook::HookHandler.new
 
-     CONSTANTTEST = 5
+     ::CONSTANTTEST = 5
      hook_handler.evalhook("CONSTANTTEST", binding).should be == CONSTANTTEST
   end
 
