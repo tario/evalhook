@@ -149,12 +149,12 @@ describe EvalHook::HookHandler, "hook handler defaults" do
     hook_handler.evalhook("::B", binding).should be == ::A::B
   end
 
-  class C1
+  class ::C1
     def foo
       "C1#foo"
     end
   end
-  module A1
+  module ::A1
     class C1
       def foo
         "A1::C1#foo"
@@ -165,7 +165,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
   it "should allow define base_namespace (class)" do
     hook_handler = EvalHook::HookHandler.new
 
-    hook_handler.base_namespace = A1
+    hook_handler.base_namespace = ::A1
     hook_handler.evalhook("class ::C1
             def foo
               'A1::C1#foo at evalhook'
@@ -177,7 +177,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
   end
 
 
-  class C2
+  class ::C2
     def foo
       "C2#foo"
     end
@@ -201,7 +201,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
     C2.new.foo.should be == "::C2#foo at evalhook"
   end
 
-  module A1
+  module ::A1
     module A2
 
     end
@@ -211,7 +211,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
   it "should allow define base_namespace (3 levels)" do
     hook_handler = EvalHook::HookHandler.new
 
-    hook_handler.base_namespace = A1::A2
+    hook_handler.base_namespace = ::A1::A2
     hook_handler.evalhook("class ::C1
             def foo
               'A1::A2::C1#foo at evalhook'
@@ -226,7 +226,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
     EvalHook::HookHandler.new.evalhook("class Fixnum::TestClass12345; end", binding)
   end
 
-  module TestInheritedClassMethodError
+  module ::TestInheritedClassMethodError
     class A
         def self.foo
             'Foo'
@@ -246,54 +246,54 @@ describe EvalHook::HookHandler, "hook handler defaults" do
     EvalHook::HookHandler.new.evalhook("module Fixnum::TestModule12345; end", binding)
   end
 
-  module TestModule12347
+  module ::TestModule12347
   end
 
   it "should allow assignment of constants nested on modules" do
     EvalHook::HookHandler.new.evalhook("TestModule12347::A = 9", binding)
   end
 
-  class XTEST44
+  class ::XTEST44
     def foo(a)
       a+1
     end
   end
   it "should pass arguments on super" do
     EvalHook::HookHandler.new.evalhook('
-      class YTEST44 < XTEST44
+      class ::YTEST44 < XTEST44
         def foo(a)
           super
         end
       end
-      YTEST44.new.foo(9)
+      ::YTEST44.new.foo(9)
     ', binding).should be == 10
   end
 
   it "should pass arguments on super (explicitly)" do
     EvalHook::HookHandler.new.evalhook('
-      class YTEST45 < XTEST44
+      class ::YTEST45 < XTEST44
         def foo(a)
           super(a)
         end
       end
-      YTEST45.new.foo(9)
+      ::YTEST45.new.foo(9)
     ', binding).should be == 10
   end
 
   it "should pass arguments on super with three levels" do
     EvalHook::HookHandler.new.evalhook('
-      class YTEST46 < XTEST44
+      class ::YTEST46 < XTEST44
         def foo(a)
           super(a)
         end
       end
 
-      class ZTEST46 < YTEST46
+      class ::ZTEST46 < ::YTEST46
         def foo(a)
           super(a)
         end
       end
-      ZTEST46.new.foo(9)
+      ::ZTEST46.new.foo(9)
     ', binding).should be == 10
 
   end
@@ -303,16 +303,16 @@ describe EvalHook::HookHandler, "hook handler defaults" do
     lambda {
 
     EvalHook::HookHandler.new.evalhook('
-      module MODULETEST48
+      module ::MODULETEST48
         def foo(a)
           super(a)
         end
       end
 
-      class XTEST48 < XTEST44
-        include MODULETEST48
+      class ::XTEST48 < XTEST44
+        include ::MODULETEST48
       end
-      XTEST48.new.foo(9)
+      ::XTEST48.new.foo(9)
     ', binding)
 
     }.should raise_error(SecurityError)
@@ -325,7 +325,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
 
     EvalHook::HookHandler.new.evalhook('
 
-      class CLASSTEST49
+      class ::CLASSTEST49
         module MODULETEST49
           def foo(a)
             super(a)
@@ -333,10 +333,10 @@ describe EvalHook::HookHandler, "hook handler defaults" do
         end
       end
 
-      class YTEST49 < XTEST44
+      class ::YTEST49 < XTEST44
         include CLASSTEST49::MODULETEST49
       end
-      YTEST49.new.foo(9)
+      ::YTEST49.new.foo(9)
     ', binding)
 
     }.should raise_error(SecurityError)
@@ -345,18 +345,18 @@ describe EvalHook::HookHandler, "hook handler defaults" do
 
   it "should pass arguments on super with no arguments throught three levels" do
     EvalHook::HookHandler.new.evalhook('
-      class YTEST50 < XTEST44
+      class ::YTEST50 < XTEST44
         def foo(a)
           super
         end
       end
 
-      class ZTEST50 < YTEST50
+      class ::ZTEST50 < ::YTEST50
         def foo(a)
           super
         end
       end
-      ZTEST50.new.foo(9)
+      ::ZTEST50.new.foo(9)
     ', binding).should be == 10
 
   end
@@ -366,16 +366,16 @@ describe EvalHook::HookHandler, "hook handler defaults" do
     lambda {
 
     EvalHook::HookHandler.new.evalhook('
-      module MODULETEST51
+      module ::MODULETEST51
         def foo(a)
           super
         end
       end
 
-      class XTEST51 < XTEST44
-        include MODULETEST51
+      class ::XTEST51 < ::XTEST44
+        include ::MODULETEST51
       end
-      XTEST51.new.foo(9)
+      ::XTEST51.new.foo(9)
     ', binding)
 
     }.should raise_error(SecurityError)
@@ -388,7 +388,7 @@ describe EvalHook::HookHandler, "hook handler defaults" do
 
     EvalHook::HookHandler.new.evalhook('
 
-      class CLASSTEST52
+      class ::CLASSTEST52
         module MODULETEST52
           def foo(a)
             super
@@ -396,10 +396,10 @@ describe EvalHook::HookHandler, "hook handler defaults" do
         end
       end
 
-      class YTEST52 < XTEST44
-        include CLASSTEST52::MODULETEST52
+      class ::YTEST52 < ::XTEST44
+        include ::CLASSTEST52::MODULETEST52
       end
-      YTEST52.new.foo(9)
+      ::YTEST52.new.foo(9)
     ', binding)
 
     }.should raise_error(SecurityError)
@@ -409,13 +409,13 @@ describe EvalHook::HookHandler, "hook handler defaults" do
   it "should execute super call from singleton methods" do
     EvalHook::HookHandler.new.evalhook('
 
-      class CLASSTEST53
+      class ::CLASSTEST53
         def bar(a)
             a+1
         end
       end
 
-      obj = CLASSTEST53.new
+      obj = ::CLASSTEST53.new
 
       def obj.bar(a)
         super(a+1)
