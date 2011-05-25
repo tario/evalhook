@@ -123,10 +123,10 @@ describe EvalHook::HookHandler, "hook handler defaults" do
   end
 
 
-  module B
+  module ::B
 
   end
-  module A
+  module ::A
     module B
       class C
 
@@ -138,15 +138,15 @@ describe EvalHook::HookHandler, "hook handler defaults" do
   it "should allow define base_namespace" do
     hook_handler = EvalHook::HookHandler.new
 
-    hook_handler.base_namespace = :A
-    hook_handler.evalhook("::B", binding).should be == A::B
+    hook_handler.base_namespace = ::A
+    hook_handler.evalhook("::B", binding).should be == ::A::B
   end
 
   it "should allow define base_namespace (const)" do
     hook_handler = EvalHook::HookHandler.new
 
-    hook_handler.base_namespace = A
-    hook_handler.evalhook("::B", binding).should be == A::B
+    hook_handler.base_namespace = ::A
+    hook_handler.evalhook("::B", binding).should be == ::A::B
   end
 
   class C1
