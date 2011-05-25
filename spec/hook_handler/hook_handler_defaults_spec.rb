@@ -424,5 +424,17 @@ describe EvalHook::HookHandler, "hook handler defaults" do
     ', binding).should be == 12
   end
 
+  it "should reference constants in same context" do
+    EvalHook::HookHandler.new.evalhook("XCONSTANT=9; XCONSTANT", binding).should be == 9
+  end
+
+  it "should reference classes in same context" do
+    EvalHook::HookHandler.new.evalhook("class XCLASS; end; XCLASS", binding)
+  end
+
+  it "should reference modules in same context" do
+    EvalHook::HookHandler.new.evalhook("module XMODULE; end; XMODULE", binding)
+  end
+
 end
 
