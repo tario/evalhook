@@ -7,6 +7,8 @@ class NilClass
   end
 end
 
+$top_level_binding = binding
+
 describe EvalHook::HookHandler, "hook handler defaults" do
    it "should throw exception when call evalhook with no parameters" do
   		hook_handler = EvalHook::HookHandler.new
@@ -429,11 +431,11 @@ describe EvalHook::HookHandler, "hook handler defaults" do
   end
 
   it "should reference classes in same context" do
-    EvalHook::HookHandler.new.evalhook("class XCLASS; end; XCLASS", binding)
+    EvalHook::HookHandler.new.evalhook("class XCLASS; end; XCLASS", $top_level_binding)
   end
 
   it "should reference modules in same context" do
-    EvalHook::HookHandler.new.evalhook("module XMODULE; end; XMODULE", binding)
+    EvalHook::HookHandler.new.evalhook("module XMODULE; end; XMODULE", $top_level_binding)
   end
 
 end
