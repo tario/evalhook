@@ -33,10 +33,10 @@ end
 
 
 class Object
-  def local_hooked_method(mname,_binding)
+  def _local_hooked_method(mname,_binding)
     EvalHook::HookedMethod.new(self,mname,true,_binding)
   end
-  def hooked_method(mname,_binding)
+  def _hooked_method(mname,_binding)
     EvalHook::HookedMethod.new(self,mname,false,_binding)
   end
 end
