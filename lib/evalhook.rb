@@ -135,34 +135,6 @@ module EvalHook
     end
 
     # used internally
-    class HookCdecl
-      def initialize(klass, hook_handler)
-        @klass = klass
-        @hook_handler = hook_handler
-      end
-
-      def set_id(const_id)
-        @const_id = const_id
-        self
-      end
-
-      def set_value(value)
-        klass = @klass
-        const_id = @const_id
-
-        ret = @hook_handler.handle_cdecl( @klass, @const_id, value )
-
-        if ret then
-          klass = ret.klass
-          const_id = ret.const_id
-          value = ret.value
-        end
-
-        klass.const_set(const_id, value)
-      end
-    end
-
-    # used internally
     def hooked_gvar(global_id)
       ret = handle_gvar(global_id)
       if ret
@@ -193,8 +165,16 @@ module EvalHook
     end
 
     # used internally
-    def hooked_cdecl(context)
-      HookCdecl.new(context,self)
+    def hooked_cdecl(klass, const_id, value)
+      ret = handle_cdecl( klass, const_id, value )
+
+      if ret then
+        klass = ret.klass
+        const_id = ret.const_id
+        value = ret.value
+      end
+
+      klass.const_set(const_id, value)
     end
 
     # used internally
