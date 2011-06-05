@@ -71,21 +71,26 @@ module EvalHook
 
           receiver = process(original_receiver|| s(:self))
 
-          args1 = s(:arglist, s(:lit, tree[2]), s(:call, nil, :binding, s(:arglist)))
-          args2 = s(:arglist, hook_handler_reference)
+          args1 = s(:arglist, receiver, s(:lit, tree[2]), s(:call, nil, :binding, s(:arglist)))
 
           firstcall = nil
-          secondcall = nil
 
           if original_receiver
-            firstcall = s(:call, receiver, :local_hooked_method, args1)
-            secondcall = s(:call, firstcall, :set_hook_handler, args2)
+            firstcall = s(:call, hook_handler_reference, :local_hooked_method, args1)
           else
-            firstcall = s(:call, receiver, :hooked_method, args1)
-            secondcall = s(:call, firstcall, :set_hook_handler, args2)
+            firstcall = s(:call, hook_handler_reference, :hooked_method, args1)
           end
 
-          s(:call, secondcall, :call, process(tree[3]))
+
+#          if original_receiver
+ #           firstcall = s(:call, receiver, :local_hooked_method, args1)
+  #          secondcall = s(:call, firstcall, :set_hook_handler, args2)
+   #       else
+    #        firstcall = s(:call, receiver, :hooked_method, args1)
+     #       secondcall = s(:call, firstcall, :set_hook_handler, args2)
+      #    end
+
+          s(:call, firstcall, :call, process(tree[3]))
     end
 
     def process_cdecl(tree)
