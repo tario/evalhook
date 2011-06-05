@@ -46,10 +46,11 @@ module EvalHook
   # used internally
   class HookedMethod
 
-    def initialize(recv, m,_binding)
+    def initialize(recv, m,_binding, method_handler = nil)
       @recv = recv
       @m = m
       @_binding = _binding
+      @method_handler = method_handler
     end
 
     # used internally
@@ -188,15 +189,11 @@ module EvalHook
     end
 
     def hooked_method(receiver, mname, _binding)
-      hm = EvalHook::HookedMethod.new(receiver,mname,_binding)
-      hm.set_hook_handler(self)
-      hm
+      EvalHook::HookedMethod.new(receiver,mname,_binding,self)
     end
 
     def local_hooked_method(receiver, mname, _binding)
-      hm = EvalHook::HookedMethod.new(receiver,mname,_binding)
-      hm.set_hook_handler(self)
-      hm
+      EvalHook::HookedMethod.new(receiver,mname,_binding,self)
     end
 
     # Overwrite to handle the assignment/creation of global variables. By default do nothing but assign the variable. See examples
