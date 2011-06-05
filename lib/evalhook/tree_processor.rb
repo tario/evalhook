@@ -59,13 +59,9 @@ module EvalHook
 
     def process_gasgn(tree)
 
-      args1 = s(:arglist, s(:lit, tree[1]))
-      args2 = s(:arglist, process(tree[2]))
+      args1 = s(:arglist, s(:lit, tree[1]), process(tree[2]))
 
-      firstcall = s(:call, hook_handler_reference, :hooked_gasgn, args1)
-
-      s(:call, firstcall, :set_value, args2)
-
+      s(:call, hook_handler_reference, :hooked_gasgn, args1)
     end
 
 
