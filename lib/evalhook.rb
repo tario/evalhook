@@ -188,12 +188,37 @@ module EvalHook
       eval("#{global_id} = value")
     end
 
+    class HookedCallValue
+      def initialize(value)
+        @value = value
+      end
+      def call(*args)
+        @value
+      end
+    end
+
     def hooked_method(receiver, mname, _binding)
-      EvalHook::HookedMethod.new(receiver,mname,_binding,self)
+      local_vars = _binding.eval("local_variables").map(&:to_s)
+      if local_vars.include? mname.to_s
+        HookedCallValue.new( _binding.eval(mname.to_s) )
+      else
+        m = receiver.method(mname)
+        klass = m.owner
+        ret = handle_method(klass, receiver, mname )
+
+        if ret.kind_of? RedirectHelper::MethodRedirect
+          klass = ret.klass
+          mname = ret.method_name
+          receiver = ret.recv
+          receiver.method(mname)
+        else
+          m
+        end
+      end
     end
 
     def local_hooked_method(receiver, mname, _binding)
-      EvalHook::HookedMethod.new(receiver,mname,_binding,self)
+      hooked_method(receiver,mname,_binding)
     end
 
     # Overwrite to handle the assignment/creation of global variables. By default do nothing but assign the variable. See examples
