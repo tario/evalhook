@@ -210,10 +210,15 @@ module EvalHook
           klass = ret.klass
           mname = ret.method_name
           receiver = ret.recv
-          receiver.method(mname)
-        else
-          m
+
+          begin
+            m = ret.klass.instance_method(ret.method_name).bind(ret.recv)
+          rescue
+            m = ret.recv.method(ret.method_name)
+          end
         end
+
+        m
       end
     end
 
