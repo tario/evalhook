@@ -34,10 +34,10 @@ end
 
 class Object
   def _local_hooked_method(mname,_binding)
-    EvalHook::HookedMethod.new(self,mname,true,_binding)
+    EvalHook::HookedMethod.new(self,mname,_binding)
   end
   def _hooked_method(mname,_binding)
-    EvalHook::HookedMethod.new(self,mname,false,_binding)
+    EvalHook::HookedMethod.new(self,mname,_binding)
   end
 end
 
@@ -46,10 +46,9 @@ module EvalHook
   # used internally
   class HookedMethod
 
-    def initialize(recv, m,localcall,_binding)
+    def initialize(recv, m,_binding)
       @recv = recv
       @m = m
-      @localcall = localcall
       @_binding = _binding
     end
 
@@ -189,13 +188,13 @@ module EvalHook
     end
 
     def hooked_method(receiver, mname, _binding)
-      hm = EvalHook::HookedMethod.new(receiver,mname,false,_binding)
+      hm = EvalHook::HookedMethod.new(receiver,mname,_binding)
       hm.set_hook_handler(self)
       hm
     end
 
     def local_hooked_method(receiver, mname, _binding)
-      hm = EvalHook::HookedMethod.new(receiver,mname,true,_binding)
+      hm = EvalHook::HookedMethod.new(receiver,mname,_binding)
       hm.set_hook_handler(self)
       hm
     end
