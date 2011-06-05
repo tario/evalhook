@@ -188,6 +188,18 @@ module EvalHook
       eval("#{global_id} = value")
     end
 
+    def hooked_method(receiver, mname, _binding)
+      hm = EvalHook::HookedMethod.new(receiver,mname,false,_binding)
+      hm.set_hook_handler(self)
+      hm
+    end
+
+    def local_hooked_method(receiver, mname, _binding)
+      hm = EvalHook::HookedMethod.new(receiver,mname,true,_binding)
+      hm.set_hook_handler(self)
+      hm
+    end
+
     # Overwrite to handle the assignment/creation of global variables. By default do nothing but assign the variable. See examples
     def handle_gasgn(*args)
       nil
