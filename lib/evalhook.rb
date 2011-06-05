@@ -163,27 +163,6 @@ module EvalHook
     end
 
     # used internally
-    class HookGasgn
-      def initialize(global_id, hook_handler)
-        @global_id = global_id
-        @hook_handler = hook_handler
-      end
-
-      def set_value(value)
-        global_id = @global_id
-
-        ret = @hook_handler.handle_gasgn(@global_id, value)
-
-        if ret then
-          global_id = ret.global_id
-          value = ret.value
-        end
-
-        eval("#{global_id} = value")
-      end
-    end
-
-    # used internally
     def hooked_gvar(global_id)
       ret = handle_gvar(global_id)
       if ret
@@ -219,8 +198,14 @@ module EvalHook
     end
 
     # used internally
-    def hooked_gasgn(global_id)
-      HookGasgn.new(global_id,self)
+    def hooked_gasgn(global_id, value)
+      ret = handle_gasgn(global_id, value)
+
+      if ret then
+        global_id = ret.global_id
+        value = ret.value
+      end
+      eval("#{global_id} = value")
     end
 
     # Overwrite to handle the assignment/creation of global variables. By default do nothing but assign the variable. See examples
