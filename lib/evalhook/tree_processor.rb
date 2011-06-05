@@ -109,14 +109,9 @@ module EvalHook
             const_id = const_tree
           end
 
-          args1 = s(:arglist, base_class_tree)
-          args2 = s(:arglist, s(:lit, const_id))
-          args3 = s(:arglist, process(value_tree))
+          args1 = s(:arglist, base_class_tree, s(:lit, const_id), process(value_tree))
 
-          firstcall = s(:call, hook_handler_reference, :hooked_cdecl, args1 )
-          secondcall = s(:call, firstcall, :set_id, args2)
-
-          s(:call, secondcall, :set_value, args3)
+          s(:call, hook_handler_reference, :hooked_cdecl, args1 )
     end
 
     def process_dxstr(tree)
