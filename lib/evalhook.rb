@@ -217,10 +217,6 @@ module EvalHook
       end
     end
 
-    def local_hooked_method(receiver, mname, _binding)
-      hooked_method(receiver,mname,_binding)
-    end
-
     # Overwrite to handle the assignment/creation of global variables. By default do nothing but assign the variable. See examples
     def handle_gasgn(*args)
       nil
