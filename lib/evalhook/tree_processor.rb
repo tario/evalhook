@@ -70,9 +70,22 @@ module EvalHook
 
       receiver = process(original_receiver|| s(:self))
 
-      args1 = s(:arglist, receiver, s(:lit, tree[2]), s(:call, nil, :binding, s(:arglist)))
+      firstcall = nil
 
-      firstcall = s(:call, hook_handler_reference, :hooked_method, args1)
+      if tree[3] == s(:arglist)
+        firstcall = s(:call,
+            hook_handler_reference,
+            :hooked_variable_method,
+            s(:arglist, receiver, s(:lit, tree[2]), s(:call, nil, :binding, s(:arglist)))
+            )
+      else
+        firstcall = s(:call,
+            hook_handler_reference,
+            :hooked_method,
+            s(:arglist, receiver, s(:lit, tree[2]))
+            )
+      end
+
       s(:call, firstcall, :call, process(tree[3]))
     end
 

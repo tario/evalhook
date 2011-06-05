@@ -197,28 +197,32 @@ module EvalHook
       end
     end
 
-    def hooked_method(receiver, mname, _binding)
+    def hooked_method(receiver, mname)
+      m = receiver.method(mname)
+      klass = m.owner
+      ret = handle_method(klass, receiver, mname )
+
+      if ret.kind_of? RedirectHelper::MethodRedirect
+        klass = ret.klass
+        mname = ret.method_name
+        receiver = ret.recv
+
+        begin
+          m = ret.klass.instance_method(ret.method_name).bind(ret.recv)
+        rescue
+          m = ret.recv.method(ret.method_name)
+        end
+      end
+
+      m
+    end
+
+    def hooked_variable_method(receiver, mname, _binding)
       local_vars = _binding.eval("local_variables").map(&:to_s)
       if local_vars.include? mname.to_s
         HookedCallValue.new( _binding.eval(mname.to_s) )
       else
-        m = receiver.method(mname)
-        klass = m.owner
-        ret = handle_method(klass, receiver, mname )
-
-        if ret.kind_of? RedirectHelper::MethodRedirect
-          klass = ret.klass
-          mname = ret.method_name
-          receiver = ret.recv
-
-          begin
-            m = ret.klass.instance_method(ret.method_name).bind(ret.recv)
-          rescue
-            m = ret.recv.method(ret.method_name)
-          end
-        end
-
-        m
+        hooked_method(receiver, mname)
       end
     end
 
