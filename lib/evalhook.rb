@@ -21,7 +21,6 @@ along with evalhook.  if not, see <http://www.gnu.org/licenses/>.
 require "partialruby"
 require "evalhook/redirect_helper"
 require "evalhook/multi_hook_handler"
-require "evalhook/hook_handler"
 require "evalhook/tree_processor"
 
 begin
@@ -316,9 +315,14 @@ module EvalHook
     end
 
     def packet(code)
-      EvalHook.validate_syntax code
 
-      tree = RubyParser.new.parse code
+      tree = nil
+
+      begin
+        tree = RubyParser.new.parse code
+      rescue
+        raise SyntaxError
+      end
 
       context = PartialRuby::PureRubyContext.new
 
