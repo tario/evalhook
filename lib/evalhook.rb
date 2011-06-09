@@ -115,6 +115,16 @@ module EvalHook
     end
   end
 
+  class Packet
+    def initialize(emulationcode)
+      @emulationcode = emulationcode
+    end
+
+    def run(b_, name = "(eval)", line = 1)
+      eval(@emulationcode, b_, name, line)
+    end
+  end
+
   class HookHandler
 
     include RedirectHelper
@@ -315,6 +325,20 @@ module EvalHook
 
       eval emulationcode, b_, name, line
 
+    end
+
+    def packet(code)
+      EvalHook.validate_syntax code
+
+      tree = RubyParser.new.parse code
+
+      context = PartialRuby::PureRubyContext.new
+
+      tree = EvalHook::TreeProcessor.new(self).process(tree)
+
+      emulationcode = context.emul tree
+
+      EvalHook::Packet.new(emulationcode)
     end
 
     if ($evalmimic_defined)
