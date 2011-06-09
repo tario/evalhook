@@ -312,19 +312,7 @@ module EvalHook
     end
 
     def evalhook_i(code, b_ = nil, name = "(eval)", line = 1)
-
-      EvalHook.validate_syntax code
-
-      tree = RubyParser.new.parse code
-
-      context = PartialRuby::PureRubyContext.new
-
-      tree = EvalHook::TreeProcessor.new(self).process(tree)
-
-      emulationcode = context.emul tree
-
-      eval emulationcode, b_, name, line
-
+      packet(code).run(b_,name,line)
     end
 
     def packet(code)
