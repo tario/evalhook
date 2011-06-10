@@ -242,15 +242,11 @@ module EvalHook
 
           receiver = s(:self)
 
-          args1 = s(:arglist, s(:lit, @last_method_name), s(:call, nil, :binding, s(:arglist)))
-          args2 = s(:arglist, hook_handler_reference)
-
-          firstcall = s(:call, receiver, :_local_hooked_method, args1)
-          secondcall = s(:call, firstcall, :set_hook_handler, args2)
-          thirdcall = s(:call,secondcall,:set_class,s(:arglist, superclass_call_tree))
+          firstcall = s(:call, hook_handler_reference,
+                :hooked_method,
+                s(:arglist, receiver, s(:lit,@last_method_name), superclass_call_tree))
 
           # pass the args of the current defn
-
           args = s(:arglist)
           @last_args[1..-1].each do |arg_sym|
             if arg_sym.to_s[0] == "*"
@@ -260,7 +256,7 @@ module EvalHook
             end
           end
 
-          s(:call, thirdcall, :call, args)
+          s(:call, firstcall, :call, args)
     end
 
 end
