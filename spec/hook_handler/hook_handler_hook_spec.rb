@@ -179,4 +179,43 @@ describe EvalHook::HookHandler, "hook handler hooks" do
     ', binding).should be == 10
    end
 
+  class Y9 < X2
+
+  end
+  it "should intercept call on arguments of super" do
+    h = EvalHook::HookHandler.new
+
+    # reference to X for inheritance
+    h.should_receive(:handle_const).with("X2")
+
+    # reference to Y
+    h.should_receive(:handle_const).with("Y2")
+
+    # call to new
+    h.should_receive(:handle_method).with(Y2.class,Y2,:new)
+
+    # first Y#foo call
+    h.should_receive(:handle_method).with(Y2,anything(),:foo)
+
+    # call Y#bar
+    h.should_receive(:handle_method).with(Y2,anything(),:foo)
+
+    # super call
+    h.should_receive(:handle_method).with(X2,anything(),:foo)
+
+    h.evalhook('
+
+      class Y2 < X2
+        def bar
+          9
+        end
+        def foo(a)
+          super(bar)
+        end
+      end
+      Y2.new.foo(9)
+
+    ', binding).should be == 10
+
+   end
 end
