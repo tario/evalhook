@@ -1,3 +1,5 @@
+0.4.1	Fixed bug on hooking of node type super (lack of hooking for arguments)
+
 0.4.0	Removed evalmimic dependency
 
 		Implemented hooking of super as methods calls
