@@ -206,9 +206,15 @@ module EvalHook
       end
     end
 
-    def hooked_method(receiver, mname)
-      m = receiver.method(mname)
-      klass = m.owner
+    def hooked_method(receiver, mname, klass = nil)
+      m = nil
+      unless klass
+        m = receiver.method(mname)
+        klass = m.owner
+      else
+        m = klass.instance_method(mname).bind(receiver)
+      end
+
       ret = handle_method(klass, receiver, mname )
 
       if ret.kind_of? RedirectHelper::MethodRedirect
