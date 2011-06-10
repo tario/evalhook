@@ -239,7 +239,7 @@ module EvalHook
           thirdcall = s(:call,secondcall,:set_class,s(:arglist, superclass_call_tree))
 
           # pass the args passed to super
-          s(:call, thirdcall, :call, s(:arglist, *tree[1..-1]))
+          s(:call, thirdcall, :call, process(s(:arglist, *tree[1..-1])))
 
     end
 

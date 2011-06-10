@@ -198,7 +198,7 @@ describe EvalHook::HookHandler, "hook handler hooks" do
     h.should_receive(:handle_method).with(Y2,anything(),:foo)
 
     # call Y#bar
-    h.should_receive(:handle_method).with(Y2,anything(),:foo)
+    h.should_receive(:handle_method).with(Y2,anything(),:bar)
 
     # super call
     h.should_receive(:handle_method).with(X2,anything(),:foo)
