@@ -227,20 +227,6 @@ module EvalHook
       nil
     end
 
-    def hooked_super(*args) #:nodoc:
-      hm = caller_obj(2).hooked_method(caller_method(2))
-      hm.set_class(caller_class(2).superclass)
-      hm.set_hook_handler(self)
-
-      if block_given?
-        hm.call(*args) do |*x|
-          yield(*x)
-        end
-      else
-        hm.call(*args)
-      end
-    end
-
     def hooked_xstr(str) #:nodoc:
       runstr = handle_xstr(str) || str
     end
