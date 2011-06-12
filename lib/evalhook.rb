@@ -244,6 +244,20 @@ module EvalHook
       packet(code).run(b_,name,line)
     end
 
+    # Creates a packet of preprocessed ruby code to run it later
+    # , useful to execute the same code repeatedly and avoid heavy
+    # preprocessing of ruby code all the times.
+    #
+    # See EvalHook::Packet for more information
+    #
+    # Example:
+    #
+    #   hook_handler = HookHandler.new
+    #
+    #   pack = hook_handler.packet('print "hello world\n"')
+    #   10.times do
+    #     pack.run
+    #   end
     def packet(code)
 
       tree = nil
