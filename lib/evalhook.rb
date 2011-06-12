@@ -39,12 +39,24 @@ module EvalHook
   end
 
   class Packet
-    def initialize(emulationcode)
+    def initialize(emulationcode) #:nodoc:
       @emulationcode = emulationcode
     end
 
-    def run(b_, name = "(eval)", line = 1)
-      eval(@emulationcode, b_, name, line)
+    # Executes the code with a given binding, source name (optional) and line (optional)
+    #
+    # See EvalHook::HookHandler#packet for more info
+    #
+    # Example:
+    #
+    #   hook_handler = HookHandler.new
+    #
+    #   pack = hook_handler.packet('print "hello world\n"')
+    #   10.times do
+    #     pack.run
+    #   end
+    def run(binding_, name = "(eval)", line = 1)
+      eval(@emulationcode, binding_, name, line)
     end
   end
 
