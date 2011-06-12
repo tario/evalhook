@@ -79,8 +79,7 @@ module EvalHook
       end
     end
 
-    # used internally
-    def hooked_gvar(global_id)
+    def hooked_gvar(global_id) #:nodoc:
       ret = handle_gvar(global_id)
       if ret
         ret.value
@@ -89,8 +88,7 @@ module EvalHook
       end
     end
 
-    # used internally
-    def hooked_const(name)
+    def hooked_const(name) #:nodoc:
       ret = handle_const(name)
       if ret
         ret.value
@@ -99,8 +97,7 @@ module EvalHook
        end
     end
 
-    # used internally
-    def hooked_colon2(context,name)
+    def hooked_colon2(context,name) #:nodoc:
       ret = handle_colon2(context, name)
       if ret
         ret.value
@@ -109,8 +106,7 @@ module EvalHook
       end
     end
 
-    # used internally
-    def hooked_cdecl(klass, const_id, value)
+    def hooked_cdecl(klass, const_id, value) #:nodoc:
       ret = handle_cdecl( klass, const_id, value )
 
       if ret then
@@ -122,8 +118,7 @@ module EvalHook
       klass.const_set(const_id, value)
     end
 
-    # used internally
-    def hooked_gasgn(global_id, value)
+    def hooked_gasgn(global_id, value) #:nodoc:
       ret = handle_gasgn(global_id, value)
 
       if ret then
@@ -142,7 +137,7 @@ module EvalHook
       end
     end
 
-    def hooked_method(receiver, mname, klass = nil)
+    def hooked_method(receiver, mname, klass = nil) #:nodoc:
       m = nil
       unless klass
         m = receiver.method(mname)
@@ -168,7 +163,7 @@ module EvalHook
       m
     end
 
-    def hooked_variable_method(receiver, mname, _binding)
+    def hooked_variable_method(receiver, mname, _binding) #:nodoc:
       local_vars = _binding.eval("local_variables").map(&:to_s)
       if local_vars.include? mname.to_s
         HookedCallValue.new( _binding.eval(mname.to_s) )
@@ -232,8 +227,7 @@ module EvalHook
       nil
     end
 
-    # used internally
-    def hooked_super(*args)
+    def hooked_super(*args) #:nodoc:
       hm = caller_obj(2).hooked_method(caller_method(2))
       hm.set_class(caller_class(2).superclass)
       hm.set_hook_handler(self)
@@ -247,8 +241,7 @@ module EvalHook
       end
     end
 
-    # used internally
-    def hooked_xstr(str)
+    def hooked_xstr(str) #:nodoc:
       runstr = handle_xstr(str) || str
     end
 
