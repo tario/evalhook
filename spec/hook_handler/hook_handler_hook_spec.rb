@@ -92,7 +92,7 @@ describe EvalHook::HookHandler, "hook handler hooks" do
     hh.should_receive(:handle_const).once.with("TestModule321") {
 	RedirectHelper::Value.new(TestModule321)
     }
-    
+
     hh.should_receive(:handle_colon2).once.with(TestModule321,"B") {
 	RedirectHelper::Value.new(0)
     }
@@ -129,8 +129,8 @@ describe EvalHook::HookHandler, "hook handler hooks" do
     h.should_receive(:handle_const).with("Y") {
     	RedirectHelper::Value.new(Y)
     }
-    
-    
+
+
     h.instance_eval {
     @called1 = 0
     @called2 = 0
@@ -138,7 +138,7 @@ describe EvalHook::HookHandler, "hook handler hooks" do
     }
 
     def h.handle_method(klass,recv,method_name)
-	    
+
 	if klass == Y.class
 	  unless method_name == :new
           raise Rspec::Mocks::MockExpectationError,  "#{recv} received :handle_method with unexpected arguments"
@@ -161,7 +161,7 @@ describe EvalHook::HookHandler, "hook handler hooks" do
 
     # rspec doesn't work for ruby1.9 in that way
     # call to new
-    #h.should_receive(:handle_method).with(Y.class,anything(),:new) 
+    #h.should_receive(:handle_method).with(Y.class,anything(),:new)
 
     # first Y#foo call
     #h.should_receive(:handle_method).with(Y,anything(),:foo)
@@ -179,7 +179,7 @@ describe EvalHook::HookHandler, "hook handler hooks" do
       Y.new.foo
 
     ', binding)
-    
+
     h.instance_eval{@called1}.should be == 1
     h.instance_eval{@called2}.should be == 1
     h.instance_eval{@called3}.should be == 1
@@ -214,7 +214,7 @@ describe EvalHook::HookHandler, "hook handler hooks" do
     }
 
     def h.handle_method(klass,recv,method_name)
-	    
+
 	if klass == Y2.class
 	  unless method_name == :new
           raise Rspec::Mocks::MockExpectationError,  "#{recv} received :handle_method with unexpected arguments"
@@ -257,11 +257,11 @@ describe EvalHook::HookHandler, "hook handler hooks" do
       Y2.new.foo(9)
 
     ', binding).should be == 10
-    
+
     h.instance_eval{@called1}.should be == 1
     h.instance_eval{@called2}.should be == 1
     h.instance_eval{@called3}.should be == 1
-    
+
    end
 
   class Y9 < X2
@@ -271,22 +271,32 @@ describe EvalHook::HookHandler, "hook handler hooks" do
     h = EvalHook::HookHandler.new
 
     # reference to X for inheritance
-    h.should_receive(:handle_const).with("X2")
+    h.should_receive(:handle_const).with("X2"){
+      RedirectHelper::Value.new(X2)
+    }
 
     # reference to Y
-    h.should_receive(:handle_const).with("Y2")
+    h.should_receive(:handle_const).with("Y2") {
+      RedirectHelper::Value.new(Y2)
+    }
 
-    # call to new
-    h.should_receive(:handle_method).with(Y2.class,Y2,:new)
+    h.instance_eval {
+    @called1 = 0
+    @called2 = 0
+    @called3 = 0
+    }
 
-    # first Y#foo call
-    h.should_receive(:handle_method).with(Y2,anything(),:foo)
-
-    # call Y#bar
-    h.should_receive(:handle_method).with(Y2,anything(),:bar)
-
-    # super call
-    h.should_receive(:handle_method).with(X2,anything(),:foo)
+    def h.handle_method(klass,recv,mname)
+      if recv == Y2 and mname == :new
+        @called1 = 1
+      end
+      if mname == :foo
+        @called2 = @called2 + 1
+      end
+      if klass == Y2 and mname == :bar
+        @called3 = 1
+      end
+    end
 
     h.evalhook('
 
@@ -301,6 +311,10 @@ describe EvalHook::HookHandler, "hook handler hooks" do
       Y2.new.foo(9)
 
     ', binding).should be == 10
+
+    h.instance_eval{@called1}.should be == 1
+    h.instance_eval{@called2}.should be == 2
+    h.instance_eval{@called3}.should be == 1
 
    end
 end
