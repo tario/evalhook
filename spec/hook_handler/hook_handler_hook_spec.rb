@@ -76,7 +76,9 @@ describe EvalHook::HookHandler, "hook handler hooks" do
   it "should intercept constant access" do
     hh = EvalHook::HookHandler.new
 
-    hh.should_receive(:handle_const).with("A")
+   hh.should_receive(:handle_const).with("A") {
+	RedirectHelper::Value.new(0)
+   }
 
     hh.evalhook("A")
   end
@@ -87,8 +89,13 @@ describe EvalHook::HookHandler, "hook handler hooks" do
   it "should intercept nested constant access" do
     hh = EvalHook::HookHandler.new
 
-    hh.should_receive(:handle_const).once.with("TestModule321")
-    hh.should_receive(:handle_colon2).once.with(TestModule321,"B")
+    hh.should_receive(:handle_const).once.with("TestModule321") {
+	RedirectHelper::Value.new(TestModule321)
+    }
+    
+    hh.should_receive(:handle_colon2).once.with(TestModule321,"B") {
+	RedirectHelper::Value.new(0)
+    }
 
     hh.evalhook("TestModule321::B")
   end
@@ -114,19 +121,53 @@ describe EvalHook::HookHandler, "hook handler hooks" do
     h = EvalHook::HookHandler.new
 
     # reference to X for inheritance
-    h.should_receive(:handle_const).with("X")
+    h.should_receive(:handle_const).with("X") {
+    	RedirectHelper::Value.new(X)
+    }
 
     # reference to Y
-    h.should_receive(:handle_const).with("Y")
+    h.should_receive(:handle_const).with("Y") {
+    	RedirectHelper::Value.new(Y)
+    }
+    
+    
+    h.instance_eval {
+    @called1 = 0
+    @called2 = 0
+    @called3 = 0
+    }
 
+    def h.handle_method(klass,recv,method_name)
+	    
+	if klass == Y.class
+	  unless method_name == :new
+          raise Rspec::Mocks::MockExpectationError,  "#{recv} received :handle_method with unexpected arguments"
+	  end
+	  @called1 = @called1 + 1
+	elsif klass == Y
+	  unless method_name == :foo
+          raise Rspec::Mocks::MockExpectationError,  "#{recv} received :handle_method with unexpected arguments"
+	  end
+	  @called2 = @called2 + 1
+	elsif klass == X
+	  unless method_name == :foo
+          raise Rspec::Mocks::MockExpectationError,  "#{recv} received :handle_method with unexpected arguments"
+	  end
+  	  @called3 = @called3 + 1
+        else
+          raise Rspec::Mocks::MockExpectationError,  "#{recv} received unexpected :handle_method"
+	end
+    end
+
+    # rspec doesn't work for ruby1.9 in that way
     # call to new
-    h.should_receive(:handle_method).with(Y.class,Y,:new)
+    #h.should_receive(:handle_method).with(Y.class,anything(),:new) 
 
     # first Y#foo call
-    h.should_receive(:handle_method).with(Y,anything(),:foo)
+    #h.should_receive(:handle_method).with(Y,anything(),:foo)
 
     # super call
-    h.should_receive(:handle_method).with(X,anything(),:foo)
+    #h.should_receive(:handle_method).with(X,anything(),:foo)
 
     h.evalhook('
 
@@ -138,6 +179,10 @@ describe EvalHook::HookHandler, "hook handler hooks" do
       Y.new.foo
 
     ', binding)
+    
+    h.instance_eval{@called1}.should be == 1
+    h.instance_eval{@called2}.should be == 1
+    h.instance_eval{@called3}.should be == 1
   end
 
   class X2
@@ -153,19 +198,54 @@ describe EvalHook::HookHandler, "hook handler hooks" do
     h = EvalHook::HookHandler.new
 
     # reference to X for inheritance
-    h.should_receive(:handle_const).with("X2")
+    h.should_receive(:handle_const).with("X2") {
+    	RedirectHelper::Value.new(X2)
+    }
 
     # reference to Y
-    h.should_receive(:handle_const).with("Y2")
+    h.should_receive(:handle_const).with("Y2") {
+    	RedirectHelper::Value.new(Y2)
+    }
+
+    h.instance_eval {
+    @called1 = 0
+    @called2 = 0
+    @called3 = 0
+    }
+
+    def h.handle_method(klass,recv,method_name)
+	    
+	if klass == Y2.class
+	  unless method_name == :new
+          raise Rspec::Mocks::MockExpectationError,  "#{recv} received :handle_method with unexpected arguments"
+	  end
+	  @called1 = @called1 + 1
+	  super(klass,recv,method_name)
+	elsif klass == Y2
+	  unless method_name == :foo
+          raise Rspec::Mocks::MockExpectationError,  "#{recv} received :handle_method with unexpected arguments"
+	  end
+	  @called2 = @called2 + 1
+	  super(klass,recv,method_name)
+	elsif klass == X2
+	  unless method_name == :foo
+          raise Rspec::Mocks::MockExpectationError,  "#{recv} received :handle_method with unexpected arguments"
+	  end
+  	  @called3 = @called3 + 1
+	  super(klass,recv,method_name)
+        else
+          raise Rspec::Mocks::MockExpectationError,  "#{recv} received unexpected :handle_method"
+	end
+    end
 
     # call to new
-    h.should_receive(:handle_method).with(Y2.class,Y2,:new)
+    #h.should_receive(:handle_method).with(Y2.class,Y2,:new)
 
     # first Y#foo call
-    h.should_receive(:handle_method).with(Y2,anything(),:foo)
+    #h.should_receive(:handle_method).with(Y2,anything(),:foo)
 
     # super call
-    h.should_receive(:handle_method).with(X2,anything(),:foo)
+    #h.should_receive(:handle_method).with(X2,anything(),:foo)
 
     h.evalhook('
 
@@ -177,6 +257,11 @@ describe EvalHook::HookHandler, "hook handler hooks" do
       Y2.new.foo(9)
 
     ', binding).should be == 10
+    
+    h.instance_eval{@called1}.should be == 1
+    h.instance_eval{@called2}.should be == 1
+    h.instance_eval{@called3}.should be == 1
+    
    end
 
   class Y9 < X2

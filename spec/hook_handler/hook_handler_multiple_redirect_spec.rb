@@ -3,7 +3,7 @@ require "evalhook"
 
 describe EvalHook::MultiHookHandler, "multiple hook handler redirect" do
 
-   class X
+   class ::X
      def self.foo
 
      end

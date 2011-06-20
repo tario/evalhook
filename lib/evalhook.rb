@@ -21,7 +21,6 @@ along with evalhook.  if not, see <http://www.gnu.org/licenses/>.
 require "partialruby"
 require "evalhook/redirect_helper"
 require "evalhook/multi_hook_handler"
-require "evalhook/hook_handler"
 require "evalhook/tree_processor"
 
 begin
@@ -31,87 +30,33 @@ rescue LoadError
 $evalmimic_defined = false
 end
 
-
-class Object
-  def local_hooked_method(mname,_binding)
-    EvalHook::HookedMethod.new(self,mname,true,_binding)
-  end
-  def hooked_method(mname,_binding)
-    EvalHook::HookedMethod.new(self,mname,false,_binding)
-  end
-end
-
 module EvalHook
-
-  # used internally
-  class HookedMethod
-
-    def initialize(recv, m,localcall,_binding)
-      @recv = recv
-      @m = m
-      @localcall = localcall
-      @_binding = _binding
-    end
-
-    # used internally
-    def set_hook_handler(method_handler)
-      @method_handler = method_handler
-      self
-    end
-
-    # used internally
-    def set_class(klass)
-      @klass = klass
-      self
-    end
-
-    # used internally
-    def call(*args)
-      method_handler = @method_handler
-      ret = nil
-
-      method_name = @m
-      if args.length == 0
-        local_vars = @_binding.eval("local_variables").map(&:to_s)
-        if local_vars.include? method_name.to_s
-          return @_binding.eval(method_name.to_s)
-        end
-      end
-
-      klass = @klass || @recv.method(@m).owner
-      recv = @recv
-
-      if method_handler
-      ret = method_handler.handle_method(klass, recv, method_name )
-      end
-
-      if ret.kind_of? RedirectHelper::MethodRedirect
-        klass = ret.klass
-        method_name = ret.method_name
-        recv = ret.recv
-      end
-
-      method_object = nil
-
-      begin
-        method_object = klass.instance_method(method_name).bind(recv)
-      rescue
-        method_object = recv.method(method_name)
-      end
-
-      if block_given?
-        method_object.call(*args) do |*x|
-          yield(*x)
-        end
-      else
-        method_object.call(*args)
-      end
-    end
-  end
 
   # used internally
   class FakeEvalHook
     def self.hook_block(*args)
+    end
+  end
+
+  class Packet
+    def initialize(emulationcode) #:nodoc:
+      @emulationcode = emulationcode
+    end
+
+    # Executes the code with a given binding, source name (optional) and line (optional)
+    #
+    # See EvalHook::HookHandler#packet for more info
+    #
+    # Example:
+    #
+    #   hook_handler = HookHandler.new
+    #
+    #   pack = hook_handler.packet('print "hello world\n"')
+    #   10.times do
+    #     pack.run
+    #   end
+    def run(binding_, name = "(eval)", line = 1)
+      eval(@emulationcode, binding_, name, line)
     end
   end
 
@@ -134,57 +79,7 @@ module EvalHook
       end
     end
 
-    # used internally
-    class HookCdecl
-      def initialize(klass, hook_handler)
-        @klass = klass
-        @hook_handler = hook_handler
-      end
-
-      def set_id(const_id)
-        @const_id = const_id
-        self
-      end
-
-      def set_value(value)
-        klass = @klass
-        const_id = @const_id
-
-        ret = @hook_handler.handle_cdecl( @klass, @const_id, value )
-
-        if ret then
-          klass = ret.klass
-          const_id = ret.const_id
-          value = ret.value
-        end
-
-        klass.const_set(const_id, value)
-      end
-    end
-
-    # used internally
-    class HookGasgn
-      def initialize(global_id, hook_handler)
-        @global_id = global_id
-        @hook_handler = hook_handler
-      end
-
-      def set_value(value)
-        global_id = @global_id
-
-        ret = @hook_handler.handle_gasgn(@global_id, value)
-
-        if ret then
-          global_id = ret.global_id
-          value = ret.value
-        end
-
-        eval("#{global_id} = value")
-      end
-    end
-
-    # used internally
-    def hooked_gvar(global_id)
+    def hooked_gvar(global_id) #:nodoc:
       ret = handle_gvar(global_id)
       if ret
         ret.value
@@ -193,8 +88,7 @@ module EvalHook
       end
     end
 
-    # used internally
-    def hooked_const(name)
+    def hooked_const(name) #:nodoc:
       ret = handle_const(name)
       if ret
         ret.value
@@ -203,8 +97,7 @@ module EvalHook
        end
     end
 
-    # used internally
-    def hooked_colon2(context,name)
+    def hooked_colon2(context,name) #:nodoc:
       ret = handle_colon2(context, name)
       if ret
         ret.value
@@ -213,14 +106,86 @@ module EvalHook
       end
     end
 
-    # used internally
-    def hooked_cdecl(context)
-      HookCdecl.new(context,self)
+    def hooked_cdecl(klass, const_id, value) #:nodoc:
+      ret = handle_cdecl( klass, const_id, value )
+
+      if ret then
+        klass = ret.klass
+        const_id = ret.const_id
+        value = ret.value
+      end
+
+      klass.const_set(const_id, value)
     end
 
-    # used internally
-    def hooked_gasgn(global_id)
-      HookGasgn.new(global_id,self)
+    def hooked_gasgn(global_id, value) #:nodoc:
+      ret = handle_gasgn(global_id, value)
+
+      if ret then
+        global_id = ret.global_id
+        value = ret.value
+      end
+      eval("#{global_id} = value")
+    end
+
+    class HookedCallValue
+      def initialize(value)
+        @value = value
+      end
+      def call(*args)
+        @value
+      end
+    end
+
+    def hooked_method(receiver, mname, klass = nil) #:nodoc:
+      m = nil
+      unless klass
+        m = receiver.method(mname)
+        klass = m.owner
+      else
+        m = klass.instance_method(mname).bind(receiver)
+      end
+
+      ret = handle_method(klass, receiver, mname )
+
+      if ret.kind_of? RedirectHelper::MethodRedirect
+        klass = ret.klass
+        mname = ret.method_name
+        receiver = ret.recv
+
+        begin
+          m = ret.klass.instance_method(ret.method_name).bind(ret.recv)
+        rescue
+          m = ret.recv.method(ret.method_name)
+        end
+      end
+
+      m
+    end
+
+    def hooked_variable_method(receiver, mname, _binding) #:nodoc:
+      local_vars = _binding.eval("local_variables").map(&:to_s)
+      if local_vars.include? mname.to_s
+        HookedCallValue.new( _binding.eval(mname.to_s) )
+      else
+        m = receiver.method(mname)
+        klass = m.owner
+        ret = handle_method(klass, receiver, mname )
+
+        if ret.kind_of? RedirectHelper::MethodRedirect
+          klass = ret.klass
+          mname = ret.method_name
+          receiver = ret.recv
+
+          begin
+            m = ret.klass.instance_method(ret.method_name).bind(ret.recv)
+          rescue
+            m = ret.recv.method(ret.method_name)
+          end
+        end
+
+        m
+      end
     end
 
     # Overwrite to handle the assignment/creation of global variables. By default do nothing but assign the variable. See examples
@@ -262,31 +227,37 @@ module EvalHook
       nil
     end
 
-    # used internally
-    def hooked_super(*args)
-      hm = caller_obj(2).hooked_method(caller_method(2))
-      hm.set_class(caller_class(2).superclass)
-      hm.set_hook_handler(self)
-
-      if block_given?
-        hm.call(*args) do |*x|
-          yield(*x)
-        end
-      else
-        hm.call(*args)
-      end
-    end
-
-    # used internally
-    def hooked_xstr(str)
+    def hooked_xstr(str) #:nodoc:
       runstr = handle_xstr(str) || str
     end
 
     def evalhook_i(code, b_ = nil, name = "(eval)", line = 1)
+      packet(code).run(b_,name,line)
+    end
 
-      EvalHook.validate_syntax code
+    # Creates a packet of preprocessed ruby code to run it later
+    # , useful to execute the same code repeatedly and avoid heavy
+    # preprocessing of ruby code all the times.
+    #
+    # See EvalHook::Packet for more information
+    #
+    # Example:
+    #
+    #   hook_handler = HookHandler.new
+    #
+    #   pack = hook_handler.packet('print "hello world\n"')
+    #   10.times do
+    #     pack.run
+    #   end
+    def packet(code)
 
-      tree = RubyParser.new.parse code
+      tree = nil
+
+      begin
+        tree = RubyParser.new.parse code
+      rescue
+        raise SyntaxError
+      end
 
       context = PartialRuby::PureRubyContext.new
 
@@ -294,8 +265,7 @@ module EvalHook
 
       emulationcode = context.emul tree
 
-      eval emulationcode, b_, name, line
-
+      EvalHook::Packet.new(emulationcode)
     end
 
     if ($evalmimic_defined)

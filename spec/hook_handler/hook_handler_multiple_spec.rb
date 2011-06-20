@@ -19,7 +19,7 @@ describe EvalHook::MultiHookHandler, "multiple hook handler" do
     end
   end
 
-  class X
+  class ::X
     def foo
 
     end
@@ -27,7 +27,7 @@ describe EvalHook::MultiHookHandler, "multiple hook handler" do
 
   it "should allow method calls" do
     hook_handler = EvalHook::HookHandler.new
-    hook_handler.evalhook("X.new.foo").should be X.new.foo
+    hook_handler.evalhook("X.new.foo").should be(X.new.foo)
   end
 
   it "should capture method calls" do

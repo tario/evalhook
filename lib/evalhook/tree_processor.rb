@@ -59,37 +59,34 @@ module EvalHook
 
     def process_gasgn(tree)
 
-      args1 = s(:arglist, s(:lit, tree[1]))
-      args2 = s(:arglist, process(tree[2]))
+      args1 = s(:arglist, s(:lit, tree[1]), process(tree[2]))
 
-      firstcall = s(:call, hook_handler_reference, :hooked_gasgn, args1)
-
-      s(:call, firstcall, :set_value, args2)
-
+      s(:call, hook_handler_reference, :hooked_gasgn, args1)
     end
 
 
     def process_call(tree)
+      original_receiver = tree[1]
 
-          original_receiver = tree[1]
+      receiver = process(original_receiver|| s(:self))
 
-          receiver = process(original_receiver|| s(:self))
+      firstcall = nil
 
-          args1 = s(:arglist, s(:lit, tree[2]), s(:call, nil, :binding, s(:arglist)))
-          args2 = s(:arglist, hook_handler_reference)
+      if tree[3] == s(:arglist)
+        firstcall = s(:call,
+            hook_handler_reference,
+            :hooked_variable_method,
+            s(:arglist, receiver, s(:lit, tree[2]), s(:call, nil, :binding, s(:arglist)))
+            )
+      else
+        firstcall = s(:call,
+            hook_handler_reference,
+            :hooked_method,
+            s(:arglist, receiver, s(:lit, tree[2]))
+            )
+      end
 
-          firstcall = nil
-          secondcall = nil
-
-          if original_receiver
-            firstcall = s(:call, receiver, :local_hooked_method, args1)
-            secondcall = s(:call, firstcall, :set_hook_handler, args2)
-          else
-            firstcall = s(:call, receiver, :hooked_method, args1)
-            secondcall = s(:call, firstcall, :set_hook_handler, args2)
-          end
-
-          s(:call, secondcall, :call, process(tree[3]))
+      s(:call, firstcall, :call, process(tree[3]))
     end
 
     def process_cdecl(tree)
@@ -113,14 +110,9 @@ module EvalHook
             const_id = const_tree
           end
 
-          args1 = s(:arglist, base_class_tree)
-          args2 = s(:arglist, s(:lit, const_id))
-          args3 = s(:arglist, process(value_tree))
+          args1 = s(:arglist, base_class_tree, s(:lit, const_id), process(value_tree))
 
-          firstcall = s(:call, hook_handler_reference, :hooked_cdecl, args1 )
-          secondcall = s(:call, firstcall, :set_id, args2)
-
-          s(:call, secondcall, :set_value, args3)
+          s(:call, hook_handler_reference, :hooked_cdecl, args1 )
     end
 
     def process_dxstr(tree)
@@ -231,16 +223,12 @@ module EvalHook
 
           receiver = s(:self)
 
-          args1 = s(:arglist, s(:lit, @last_method_name), s(:call, nil, :binding, s(:arglist)))
-          args2 = s(:arglist, hook_handler_reference)
-
-          firstcall = s(:call, receiver, :local_hooked_method, args1)
-          secondcall = s(:call, firstcall, :set_hook_handler, args2)
-          thirdcall = s(:call,secondcall,:set_class,s(:arglist, superclass_call_tree))
+          firstcall = s(:call, hook_handler_reference,
+                :hooked_method,
+                s(:arglist, receiver, s(:lit,@last_method_name), superclass_call_tree))
 
           # pass the args passed to super
-          s(:call, thirdcall, :call, process(s(:arglist, *tree[1..-1])))
-
+          s(:call, firstcall, :call, process(s(:arglist, *tree[1..-1])))
     end
 
     def process_defs(tree)
@@ -254,15 +242,11 @@ module EvalHook
 
           receiver = s(:self)
 
-          args1 = s(:arglist, s(:lit, @last_method_name), s(:call, nil, :binding, s(:arglist)))
-          args2 = s(:arglist, hook_handler_reference)
-
-          firstcall = s(:call, receiver, :local_hooked_method, args1)
-          secondcall = s(:call, firstcall, :set_hook_handler, args2)
-          thirdcall = s(:call,secondcall,:set_class,s(:arglist, superclass_call_tree))
+          firstcall = s(:call, hook_handler_reference,
+                :hooked_method,
+                s(:arglist, receiver, s(:lit,@last_method_name), superclass_call_tree))
 
           # pass the args of the current defn
-
           args = s(:arglist)
           @last_args[1..-1].each do |arg_sym|
             if arg_sym.to_s[0] == "*"
@@ -272,7 +256,7 @@ module EvalHook
             end
           end
 
-          s(:call, thirdcall, :call, args)
+          s(:call, firstcall, :call, args)
     end
 
 end

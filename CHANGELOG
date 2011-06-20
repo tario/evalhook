@@ -1,3 +1,9 @@
+0.5.0	Implemented code packets (see documentation)
+
+		Refactor of hooking of call, super and zsuper nodes to improve performance
+
+		Refactor of spec to be compatible with ruby 1.9
+ 
 0.4.1	Fixed bug on hooking of node type super (lack of hooking for arguments)
 
 0.4.0	Removed evalmimic dependency

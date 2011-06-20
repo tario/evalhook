@@ -9,7 +9,7 @@ describe EvalHook::HookHandler, "hook handler" do
     begin
       hh.evalhook("raise '0'",binding, "sourcename", 1)
     rescue Exception => e
-      e.backtrace.join.include? ("sourcename").should be == true
+      e.backtrace.join.include?("sourcename").should be == true
     end
   end
 end
