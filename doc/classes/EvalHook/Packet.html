@@ -5,7 +5,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-  <title>Class: RedirectHelper::Value</title>
+  <title>Class: EvalHook::Packet</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <meta http-equiv="Content-Script-Type" content="text/javascript" />
   <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
@@ -50,13 +50,13 @@
         <table class="header-table">
         <tr class="top-aligned-row">
           <td><strong>Class</strong></td>
-          <td class="class-name-in-header">RedirectHelper::Value</td>
+          <td class="class-name-in-header">EvalHook::Packet</td>
         </tr>
         <tr class="top-aligned-row">
             <td><strong>In:</strong></td>
             <td>
-                <a href="../../files/lib/evalhook/redirect_helper_rb.html">
-                lib/evalhook/redirect_helper.rb
+                <a href="../../files/lib/evalhook_rb.html">
+                lib/evalhook.rb
                 </a>
         <br />
             </td>
@@ -86,7 +86,7 @@
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000009">new</a>&nbsp;&nbsp;
+      <a href="#M000032">run</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -101,43 +101,49 @@
 
 
 
-    <div id="attribute-list">
-      <h3 class="section-bar">Attributes</h3>
-
-      <div class="name-list">
-        <table>
-        <tr class="top-aligned-row context-row">
-          <td class="context-item-name">value</td>
-          <td class="context-item-value">&nbsp;[R]&nbsp;</td>
-          <td class="context-item-desc"></td>
-        </tr>
-        </table>
-      </div>
-    </div>
       
 
 
     <!-- if method_list -->
     <div id="methods">
-      <h3 class="section-bar">Public Class methods</h3>
+      <h3 class="section-bar">Public Instance methods</h3>
 
-      <div id="method-M000009" class="method-detail">
-        <a name="M000009"></a>
+      <div id="method-M000032" class="method-detail">
+        <a name="M000032"></a>
 
         <div class="method-heading">
-          <a href="#M000009" class="method-signature">
-          <span class="method-name">new</span><span class="method-args">(value)</span>
+          <a href="#M000032" class="method-signature">
+          <span class="method-name">run</span><span class="method-args">(binding_, name = &quot;(eval)&quot;, line = 1)</span>
           </a>
         </div>
       
         <div class="method-description">
-          <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000009-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000009-source">
+          <p>
+Executes the code with a given binding, source name (optional) and line
+(optional)
+</p>
+<p>
+See <a href="HookHandler.html#M000051">EvalHook::HookHandler#packet</a> for
+more info
+</p>
+<p>
+Example:
+</p>
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook/redirect_helper.rb, line 78</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">value</span>)
-      <span class="ruby-ivar">@value</span> = <span class="ruby-identifier">value</span>
+  hook_handler = HookHandler.new
+
+  pack = hook_handler.packet('print &quot;hello world\n&quot;')
+  10.times do
+    pack.run
+  end
+</pre>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000032-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000032-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/evalhook.rb, line 58</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">run</span>(<span class="ruby-identifier">binding_</span>, <span class="ruby-identifier">name</span> = <span class="ruby-value str">&quot;(eval)&quot;</span>, <span class="ruby-identifier">line</span> = <span class="ruby-value">1</span>)
+      <span class="ruby-identifier">eval</span>(<span class="ruby-ivar">@emulationcode</span>, <span class="ruby-identifier">binding_</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">line</span>)
     <span class="ruby-keyword kw">end</span>
 </pre>
           </div>

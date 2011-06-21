@@ -86,26 +86,26 @@
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000024">class_scope</a>&nbsp;&nbsp;
-      <a href="#M000016">const_path_emul</a>&nbsp;&nbsp;
-      <a href="#M000017">hook_handler_reference</a>&nbsp;&nbsp;
-      <a href="#M000015">new</a>&nbsp;&nbsp;
-      <a href="#M000019">process_call</a>&nbsp;&nbsp;
-      <a href="#M000020">process_cdecl</a>&nbsp;&nbsp;
-      <a href="#M000025">process_class</a>&nbsp;&nbsp;
-      <a href="#M000026">process_colon2</a>&nbsp;&nbsp;
-      <a href="#M000027">process_colon3</a>&nbsp;&nbsp;
-      <a href="#M000029">process_const</a>&nbsp;&nbsp;
-      <a href="#M000030">process_defn</a>&nbsp;&nbsp;
-      <a href="#M000033">process_defs</a>&nbsp;&nbsp;
-      <a href="#M000021">process_dxstr</a>&nbsp;&nbsp;
-      <a href="#M000018">process_gasgn</a>&nbsp;&nbsp;
-      <a href="#M000028">process_gvar</a>&nbsp;&nbsp;
-      <a href="#M000023">process_module</a>&nbsp;&nbsp;
-      <a href="#M000032">process_super</a>&nbsp;&nbsp;
-      <a href="#M000022">process_xstr</a>&nbsp;&nbsp;
-      <a href="#M000034">process_zsuper</a>&nbsp;&nbsp;
-      <a href="#M000031">superclass_call_tree</a>&nbsp;&nbsp;
+      <a href="#M000021">class_scope</a>&nbsp;&nbsp;
+      <a href="#M000013">const_path_emul</a>&nbsp;&nbsp;
+      <a href="#M000014">hook_handler_reference</a>&nbsp;&nbsp;
+      <a href="#M000012">new</a>&nbsp;&nbsp;
+      <a href="#M000016">process_call</a>&nbsp;&nbsp;
+      <a href="#M000017">process_cdecl</a>&nbsp;&nbsp;
+      <a href="#M000022">process_class</a>&nbsp;&nbsp;
+      <a href="#M000023">process_colon2</a>&nbsp;&nbsp;
+      <a href="#M000024">process_colon3</a>&nbsp;&nbsp;
+      <a href="#M000026">process_const</a>&nbsp;&nbsp;
+      <a href="#M000027">process_defn</a>&nbsp;&nbsp;
+      <a href="#M000030">process_defs</a>&nbsp;&nbsp;
+      <a href="#M000018">process_dxstr</a>&nbsp;&nbsp;
+      <a href="#M000015">process_gasgn</a>&nbsp;&nbsp;
+      <a href="#M000025">process_gvar</a>&nbsp;&nbsp;
+      <a href="#M000020">process_module</a>&nbsp;&nbsp;
+      <a href="#M000029">process_super</a>&nbsp;&nbsp;
+      <a href="#M000019">process_xstr</a>&nbsp;&nbsp;
+      <a href="#M000031">process_zsuper</a>&nbsp;&nbsp;
+      <a href="#M000028">superclass_call_tree</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -127,19 +127,19 @@
     <div id="methods">
       <h3 class="section-bar">Public Class methods</h3>
 
-      <div id="method-M000015" class="method-detail">
-        <a name="M000015"></a>
+      <div id="method-M000012" class="method-detail">
+        <a name="M000012"></a>
 
         <div class="method-heading">
-          <a href="#M000015" class="method-signature">
+          <a href="#M000012" class="method-signature">
           <span class="method-name">new</span><span class="method-args">(hook_handler)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000015-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000015-source">
+            onclick="toggleCode('M000012-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000012-source">
 <pre>
 <span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 29</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">hook_handler</span>)
@@ -155,21 +155,21 @@
 
       <h3 class="section-bar">Public Instance methods</h3>
 
-      <div id="method-M000024" class="method-detail">
-        <a name="M000024"></a>
+      <div id="method-M000021" class="method-detail">
+        <a name="M000021"></a>
 
         <div class="method-heading">
-          <a href="#M000024" class="method-signature">
+          <a href="#M000021" class="method-signature">
           <span class="method-name">class_scope</span><span class="method-args">(class_name) {|| ...}</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000024-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000024-source">
+            onclick="toggleCode('M000021-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000021-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 152</span>
+<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 144</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">class_scope</span>(<span class="ruby-identifier">class_name</span>)
       <span class="ruby-ivar">@def_scope</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">class_name</span>)
       <span class="ruby-identifier">ret</span> = <span class="ruby-keyword kw">yield</span>
@@ -181,19 +181,19 @@
         </div>
       </div>
 
-      <div id="method-M000016" class="method-detail">
-        <a name="M000016"></a>
+      <div id="method-M000013" class="method-detail">
+        <a name="M000013"></a>
 
         <div class="method-heading">
-          <a href="#M000016" class="method-signature">
+          <a href="#M000013" class="method-signature">
           <span class="method-name">const_path_emul</span><span class="method-args">(code)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000016-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000016-source">
+            onclick="toggleCode('M000013-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000013-source">
 <pre>
 <span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 36</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">const_path_emul</span>(<span class="ruby-identifier">code</span>)
@@ -212,19 +212,19 @@
         </div>
       </div>
 
-      <div id="method-M000017" class="method-detail">
-        <a name="M000017"></a>
+      <div id="method-M000014" class="method-detail">
+        <a name="M000014"></a>
 
         <div class="method-heading">
-          <a href="#M000017" class="method-signature">
+          <a href="#M000014" class="method-signature">
           <span class="method-name">hook_handler_reference</span><span class="method-args">()</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000017-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000017-source">
+            onclick="toggleCode('M000014-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000014-source">
 <pre>
 <span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 48</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">hook_handler_reference</span>
@@ -243,63 +243,64 @@
         </div>
       </div>
 
-      <div id="method-M000019" class="method-detail">
-        <a name="M000019"></a>
+      <div id="method-M000016" class="method-detail">
+        <a name="M000016"></a>
 
         <div class="method-heading">
-          <a href="#M000019" class="method-signature">
+          <a href="#M000016" class="method-signature">
           <span class="method-name">process_call</span><span class="method-args">(tree)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000019-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000019-source">
+            onclick="toggleCode('M000016-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000016-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 72</span>
+<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 68</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">process_call</span>(<span class="ruby-identifier">tree</span>)
+      <span class="ruby-identifier">original_receiver</span> = <span class="ruby-identifier">tree</span>[<span class="ruby-value">1</span>]
 
-          <span class="ruby-identifier">original_receiver</span> = <span class="ruby-identifier">tree</span>[<span class="ruby-value">1</span>]
+      <span class="ruby-identifier">receiver</span> = <span class="ruby-identifier">process</span>(<span class="ruby-identifier">original_receiver</span><span class="ruby-operator">||</span> <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:self</span>))
 
-          <span class="ruby-identifier">receiver</span> = <span class="ruby-identifier">process</span>(<span class="ruby-identifier">original_receiver</span><span class="ruby-operator">||</span> <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:self</span>))
+      <span class="ruby-identifier">firstcall</span> = <span class="ruby-keyword kw">nil</span>
 
-          <span class="ruby-identifier">args1</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:arglist</span>, <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:lit</span>, <span class="ruby-identifier">tree</span>[<span class="ruby-value">2</span>]), <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>, <span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">:binding</span>, <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:arglist</span>)))
-          <span class="ruby-identifier">args2</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:arglist</span>, <span class="ruby-identifier">hook_handler_reference</span>)
+      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">tree</span>[<span class="ruby-value">3</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:arglist</span>)
+        <span class="ruby-identifier">firstcall</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>,
+            <span class="ruby-identifier">hook_handler_reference</span>,
+            <span class="ruby-identifier">:hooked_variable_method</span>,
+            <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:arglist</span>, <span class="ruby-identifier">receiver</span>, <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:lit</span>, <span class="ruby-identifier">tree</span>[<span class="ruby-value">2</span>]), <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>, <span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">:binding</span>, <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:arglist</span>)))
+            )
+      <span class="ruby-keyword kw">else</span>
+        <span class="ruby-identifier">firstcall</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>,
+            <span class="ruby-identifier">hook_handler_reference</span>,
+            <span class="ruby-identifier">:hooked_method</span>,
+            <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:arglist</span>, <span class="ruby-identifier">receiver</span>, <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:lit</span>, <span class="ruby-identifier">tree</span>[<span class="ruby-value">2</span>]))
+            )
+      <span class="ruby-keyword kw">end</span>
 
-          <span class="ruby-identifier">firstcall</span> = <span class="ruby-keyword kw">nil</span>
-          <span class="ruby-identifier">secondcall</span> = <span class="ruby-keyword kw">nil</span>
-
-          <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">original_receiver</span>
-            <span class="ruby-identifier">firstcall</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>, <span class="ruby-identifier">receiver</span>, <span class="ruby-identifier">:local_hooked_method</span>, <span class="ruby-identifier">args1</span>)
-            <span class="ruby-identifier">secondcall</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>, <span class="ruby-identifier">firstcall</span>, <span class="ruby-identifier">:set_hook_handler</span>, <span class="ruby-identifier">args2</span>)
-          <span class="ruby-keyword kw">else</span>
-            <span class="ruby-identifier">firstcall</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>, <span class="ruby-identifier">receiver</span>, <span class="ruby-identifier">:hooked_method</span>, <span class="ruby-identifier">args1</span>)
-            <span class="ruby-identifier">secondcall</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>, <span class="ruby-identifier">firstcall</span>, <span class="ruby-identifier">:set_hook_handler</span>, <span class="ruby-identifier">args2</span>)
-          <span class="ruby-keyword kw">end</span>
-
-          <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>, <span class="ruby-identifier">secondcall</span>, <span class="ruby-identifier">:call</span>, <span class="ruby-identifier">process</span>(<span class="ruby-identifier">tree</span>[<span class="ruby-value">3</span>]))
+      <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>, <span class="ruby-identifier">firstcall</span>, <span class="ruby-identifier">:call</span>, <span class="ruby-identifier">process</span>(<span class="ruby-identifier">tree</span>[<span class="ruby-value">3</span>]))
     <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
       </div>
 
-      <div id="method-M000020" class="method-detail">
-        <a name="M000020"></a>
+      <div id="method-M000017" class="method-detail">
+        <a name="M000017"></a>
 
         <div class="method-heading">
-          <a href="#M000020" class="method-signature">
+          <a href="#M000017" class="method-signature">
           <span class="method-name">process_cdecl</span><span class="method-args">(tree)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000020-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000020-source">
+            onclick="toggleCode('M000017-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000017-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 95</span>
+<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 92</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">process_cdecl</span>(<span class="ruby-identifier">tree</span>)
 
           <span class="ruby-identifier">const_tree</span> = <span class="ruby-identifier">tree</span>[<span class="ruby-value">1</span>]
@@ -321,35 +322,30 @@
             <span class="ruby-identifier">const_id</span> = <span class="ruby-identifier">const_tree</span>
           <span class="ruby-keyword kw">end</span>
 
-          <span class="ruby-identifier">args1</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:arglist</span>, <span class="ruby-identifier">base_class_tree</span>)
-          <span class="ruby-identifier">args2</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:arglist</span>, <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:lit</span>, <span class="ruby-identifier">const_id</span>))
-          <span class="ruby-identifier">args3</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:arglist</span>, <span class="ruby-identifier">process</span>(<span class="ruby-identifier">value_tree</span>))
+          <span class="ruby-identifier">args1</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:arglist</span>, <span class="ruby-identifier">base_class_tree</span>, <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:lit</span>, <span class="ruby-identifier">const_id</span>), <span class="ruby-identifier">process</span>(<span class="ruby-identifier">value_tree</span>))
 
-          <span class="ruby-identifier">firstcall</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>, <span class="ruby-identifier">hook_handler_reference</span>, <span class="ruby-identifier">:hooked_cdecl</span>, <span class="ruby-identifier">args1</span> )
-          <span class="ruby-identifier">secondcall</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>, <span class="ruby-identifier">firstcall</span>, <span class="ruby-identifier">:set_id</span>, <span class="ruby-identifier">args2</span>)
-
-          <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>, <span class="ruby-identifier">secondcall</span>, <span class="ruby-identifier">:set_value</span>, <span class="ruby-identifier">args3</span>)
+          <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>, <span class="ruby-identifier">hook_handler_reference</span>, <span class="ruby-identifier">:hooked_cdecl</span>, <span class="ruby-identifier">args1</span> )
     <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
       </div>
 
-      <div id="method-M000025" class="method-detail">
-        <a name="M000025"></a>
+      <div id="method-M000022" class="method-detail">
+        <a name="M000022"></a>
 
         <div class="method-heading">
-          <a href="#M000025" class="method-signature">
+          <a href="#M000022" class="method-signature">
           <span class="method-name">process_class</span><span class="method-args">(tree)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000025-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000025-source">
+            onclick="toggleCode('M000022-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000022-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 159</span>
+<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 151</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">process_class</span>(<span class="ruby-identifier">tree</span>)
       <span class="ruby-identifier">class_name_tree</span> = <span class="ruby-identifier">tree</span>[<span class="ruby-value">1</span>]
       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">class_name_tree</span>.<span class="ruby-identifier">instance_of?</span> <span class="ruby-constant">Sexp</span>
@@ -373,21 +369,21 @@
         </div>
       </div>
 
-      <div id="method-M000026" class="method-detail">
-        <a name="M000026"></a>
+      <div id="method-M000023" class="method-detail">
+        <a name="M000023"></a>
 
         <div class="method-heading">
-          <a href="#M000026" class="method-signature">
+          <a href="#M000023" class="method-signature">
           <span class="method-name">process_colon2</span><span class="method-args">(tree)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000026-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000026-source">
+            onclick="toggleCode('M000023-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000023-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 178</span>
+<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 170</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">process_colon2</span>(<span class="ruby-identifier">tree</span>)
       <span class="ruby-identifier">name</span> = <span class="ruby-identifier">tree</span>[<span class="ruby-value">2</span>].<span class="ruby-identifier">to_s</span>
       <span class="ruby-identifier">args</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:arglist</span>, <span class="ruby-identifier">process</span>(<span class="ruby-identifier">tree</span>[<span class="ruby-value">1</span>]), <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:str</span>, <span class="ruby-identifier">name</span>))
@@ -398,21 +394,21 @@
         </div>
       </div>
 
-      <div id="method-M000027" class="method-detail">
-        <a name="M000027"></a>
+      <div id="method-M000024" class="method-detail">
+        <a name="M000024"></a>
 
         <div class="method-heading">
-          <a href="#M000027" class="method-signature">
+          <a href="#M000024" class="method-signature">
           <span class="method-name">process_colon3</span><span class="method-args">(tree)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000027-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000027-source">
+            onclick="toggleCode('M000024-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000024-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 184</span>
+<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 176</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">process_colon3</span>(<span class="ruby-identifier">tree</span>)
       <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@hook_handler</span>.<span class="ruby-identifier">base_namespace</span>
         <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:colon2</span>, <span class="ruby-identifier">const_path_emul</span>(<span class="ruby-ivar">@hook_handler</span>.<span class="ruby-identifier">base_namespace</span>.<span class="ruby-identifier">to_s</span>), <span class="ruby-identifier">tree</span>[<span class="ruby-value">1</span>])
@@ -425,21 +421,21 @@
         </div>
       </div>
 
-      <div id="method-M000029" class="method-detail">
-        <a name="M000029"></a>
+      <div id="method-M000026" class="method-detail">
+        <a name="M000026"></a>
 
         <div class="method-heading">
-          <a href="#M000029" class="method-signature">
+          <a href="#M000026" class="method-signature">
           <span class="method-name">process_const</span><span class="method-args">(tree)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000029-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000029-source">
+            onclick="toggleCode('M000026-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000026-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 199</span>
+<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 191</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">process_const</span>(<span class="ruby-identifier">tree</span>)
       <span class="ruby-identifier">name</span> = <span class="ruby-identifier">tree</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">to_s</span>
       <span class="ruby-identifier">args</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:arglist</span>, <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:str</span>, <span class="ruby-identifier">name</span>))
@@ -450,21 +446,21 @@
         </div>
       </div>
 
-      <div id="method-M000030" class="method-detail">
-        <a name="M000030"></a>
+      <div id="method-M000027" class="method-detail">
+        <a name="M000027"></a>
 
         <div class="method-heading">
-          <a href="#M000030" class="method-signature">
+          <a href="#M000027" class="method-signature">
           <span class="method-name">process_defn</span><span class="method-args">(tree)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000030-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000030-source">
+            onclick="toggleCode('M000027-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000027-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 205</span>
+<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 197</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">process_defn</span>(<span class="ruby-identifier">tree</span>)
       <span class="ruby-ivar">@last_args</span> = <span class="ruby-identifier">tree</span>[<span class="ruby-value">2</span>]
       <span class="ruby-ivar">@last_method_name</span> = <span class="ruby-identifier">tree</span>[<span class="ruby-value">1</span>]
@@ -476,21 +472,21 @@
         </div>
       </div>
 
-      <div id="method-M000033" class="method-detail">
-        <a name="M000033"></a>
+      <div id="method-M000030" class="method-detail">
+        <a name="M000030"></a>
 
         <div class="method-heading">
-          <a href="#M000033" class="method-signature">
+          <a href="#M000030" class="method-signature">
           <span class="method-name">process_defs</span><span class="method-args">(tree)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000033-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000033-source">
+            onclick="toggleCode('M000030-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000030-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 246</span>
+<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 234</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">process_defs</span>(<span class="ruby-identifier">tree</span>)
       <span class="ruby-identifier">block_tree</span> = <span class="ruby-identifier">class_scope</span>( <span class="ruby-value str">&quot;&quot;</span> ) {
         <span class="ruby-identifier">process</span>(<span class="ruby-identifier">tree</span>[<span class="ruby-value">4</span>])
@@ -502,21 +498,21 @@
         </div>
       </div>
 
-      <div id="method-M000021" class="method-detail">
-        <a name="M000021"></a>
+      <div id="method-M000018" class="method-detail">
+        <a name="M000018"></a>
 
         <div class="method-heading">
-          <a href="#M000021" class="method-signature">
+          <a href="#M000018" class="method-signature">
           <span class="method-name">process_dxstr</span><span class="method-args">(tree)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000021-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000021-source">
+            onclick="toggleCode('M000018-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000018-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 126</span>
+<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 118</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">process_dxstr</span>(<span class="ruby-identifier">tree</span>)
        <span class="ruby-identifier">dstr_tree</span> = <span class="ruby-identifier">tree</span>.<span class="ruby-identifier">dup</span>
        <span class="ruby-identifier">dstr_tree</span>[<span class="ruby-value">0</span>] = <span class="ruby-identifier">:dstr</span>
@@ -529,51 +525,47 @@
         </div>
       </div>
 
-      <div id="method-M000018" class="method-detail">
-        <a name="M000018"></a>
+      <div id="method-M000015" class="method-detail">
+        <a name="M000015"></a>
 
         <div class="method-heading">
-          <a href="#M000018" class="method-signature">
+          <a href="#M000015" class="method-signature">
           <span class="method-name">process_gasgn</span><span class="method-args">(tree)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000018-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000018-source">
+            onclick="toggleCode('M000015-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000015-source">
 <pre>
 <span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 60</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">process_gasgn</span>(<span class="ruby-identifier">tree</span>)
 
-      <span class="ruby-identifier">args1</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:arglist</span>, <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:lit</span>, <span class="ruby-identifier">tree</span>[<span class="ruby-value">1</span>]))
-      <span class="ruby-identifier">args2</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:arglist</span>, <span class="ruby-identifier">process</span>(<span class="ruby-identifier">tree</span>[<span class="ruby-value">2</span>]))
+      <span class="ruby-identifier">args1</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:arglist</span>, <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:lit</span>, <span class="ruby-identifier">tree</span>[<span class="ruby-value">1</span>]), <span class="ruby-identifier">process</span>(<span class="ruby-identifier">tree</span>[<span class="ruby-value">2</span>]))
 
-      <span class="ruby-identifier">firstcall</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>, <span class="ruby-identifier">hook_handler_reference</span>, <span class="ruby-identifier">:hooked_gasgn</span>, <span class="ruby-identifier">args1</span>)
-
-      <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>, <span class="ruby-identifier">firstcall</span>, <span class="ruby-identifier">:set_value</span>, <span class="ruby-identifier">args2</span>)
-
+      <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>, <span class="ruby-identifier">hook_handler_reference</span>, <span class="ruby-identifier">:hooked_gasgn</span>, <span class="ruby-identifier">args1</span>)
     <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
       </div>
 
-      <div id="method-M000028" class="method-detail">
-        <a name="M000028"></a>
+      <div id="method-M000025" class="method-detail">
+        <a name="M000025"></a>
 
         <div class="method-heading">
-          <a href="#M000028" class="method-signature">
+          <a href="#M000025" class="method-signature">
           <span class="method-name">process_gvar</span><span class="method-args">(tree)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000028-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000028-source">
+            onclick="toggleCode('M000025-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000025-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 192</span>
+<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 184</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">process_gvar</span>(<span class="ruby-identifier">tree</span>)
       <span class="ruby-identifier">name</span> = <span class="ruby-identifier">tree</span>[<span class="ruby-value">1</span>]
 
@@ -585,21 +577,21 @@
         </div>
       </div>
 
-      <div id="method-M000023" class="method-detail">
-        <a name="M000023"></a>
+      <div id="method-M000020" class="method-detail">
+        <a name="M000020"></a>
 
         <div class="method-heading">
-          <a href="#M000023" class="method-signature">
+          <a href="#M000020" class="method-signature">
           <span class="method-name">process_module</span><span class="method-args">(tree)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000023-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000023-source">
+            onclick="toggleCode('M000020-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000020-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 139</span>
+<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 131</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">process_module</span>(<span class="ruby-identifier">tree</span>)
       <span class="ruby-identifier">module_name_tree</span> = <span class="ruby-identifier">tree</span>[<span class="ruby-value">1</span>]
       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">module_name_tree</span>.<span class="ruby-identifier">instance_of?</span> <span class="ruby-constant">Sexp</span>
@@ -617,103 +609,55 @@
         </div>
       </div>
 
-      <div id="method-M000032" class="method-detail">
-        <a name="M000032"></a>
+      <div id="method-M000029" class="method-detail">
+        <a name="M000029"></a>
 
         <div class="method-heading">
-          <a href="#M000032" class="method-signature">
+          <a href="#M000029" class="method-signature">
           <span class="method-name">process_super</span><span class="method-args">(tree)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000032-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000032-source">
+            onclick="toggleCode('M000029-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000029-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 230</span>
+<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 222</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">process_super</span>(<span class="ruby-identifier">tree</span>)
 
           <span class="ruby-identifier">receiver</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:self</span>)
 
-          <span class="ruby-identifier">args1</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:arglist</span>, <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:lit</span>, <span class="ruby-ivar">@last_method_name</span>), <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>, <span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">:binding</span>, <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:arglist</span>)))
-          <span class="ruby-identifier">args2</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:arglist</span>, <span class="ruby-identifier">hook_handler_reference</span>)
-
-          <span class="ruby-identifier">firstcall</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>, <span class="ruby-identifier">receiver</span>, <span class="ruby-identifier">:local_hooked_method</span>, <span class="ruby-identifier">args1</span>)
-          <span class="ruby-identifier">secondcall</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>, <span class="ruby-identifier">firstcall</span>, <span class="ruby-identifier">:set_hook_handler</span>, <span class="ruby-identifier">args2</span>)
-          <span class="ruby-identifier">thirdcall</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>,<span class="ruby-identifier">secondcall</span>,<span class="ruby-identifier">:set_class</span>,<span class="ruby-identifier">s</span>(<span class="ruby-identifier">:arglist</span>, <span class="ruby-identifier">superclass_call_tree</span>))
+          <span class="ruby-identifier">firstcall</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>, <span class="ruby-identifier">hook_handler_reference</span>,
+                <span class="ruby-identifier">:hooked_method</span>,
+                <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:arglist</span>, <span class="ruby-identifier">receiver</span>, <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:lit</span>,<span class="ruby-ivar">@last_method_name</span>), <span class="ruby-identifier">superclass_call_tree</span>))
 
           <span class="ruby-comment cmt"># pass the args passed to super</span>
-          <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>, <span class="ruby-identifier">thirdcall</span>, <span class="ruby-identifier">:call</span>, <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:arglist</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">tree</span>[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>]))
-
+          <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>, <span class="ruby-identifier">firstcall</span>, <span class="ruby-identifier">:call</span>, <span class="ruby-identifier">process</span>(<span class="ruby-identifier">s</span>(<span class="ruby-identifier">:arglist</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">tree</span>[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>])))
     <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
       </div>
 
-      <div id="method-M000022" class="method-detail">
-        <a name="M000022"></a>
+      <div id="method-M000019" class="method-detail">
+        <a name="M000019"></a>
 
         <div class="method-heading">
-          <a href="#M000022" class="method-signature">
+          <a href="#M000019" class="method-signature">
           <span class="method-name">process_xstr</span><span class="method-args">(tree)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000022-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000022-source">
+            onclick="toggleCode('M000019-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000019-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 134</span>
+<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 126</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">process_xstr</span>(<span class="ruby-identifier">tree</span>)
       <span class="ruby-identifier">args</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:arglist</span>, <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:lit</span>, <span class="ruby-identifier">tree</span>[<span class="ruby-value">1</span>]) )
       <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>, <span class="ruby-identifier">hook_handler_reference</span>, <span class="ruby-identifier">:hooked_xstr</span>, <span class="ruby-identifier">args</span>)
-    <span class="ruby-keyword kw">end</span>
-</pre>
-          </div>
-        </div>
-      </div>
-
-      <div id="method-M000034" class="method-detail">
-        <a name="M000034"></a>
-
-        <div class="method-heading">
-          <a href="#M000034" class="method-signature">
-          <span class="method-name">process_zsuper</span><span class="method-args">(tree)</span>
-          </a>
-        </div>
-      
-        <div class="method-description">
-          <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000034-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000034-source">
-<pre>
-<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 253</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">process_zsuper</span>(<span class="ruby-identifier">tree</span>)
-
-          <span class="ruby-identifier">receiver</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:self</span>)
-
-          <span class="ruby-identifier">args1</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:arglist</span>, <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:lit</span>, <span class="ruby-ivar">@last_method_name</span>), <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>, <span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">:binding</span>, <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:arglist</span>)))
-          <span class="ruby-identifier">args2</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:arglist</span>, <span class="ruby-identifier">hook_handler_reference</span>)
-
-          <span class="ruby-identifier">firstcall</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>, <span class="ruby-identifier">receiver</span>, <span class="ruby-identifier">:local_hooked_method</span>, <span class="ruby-identifier">args1</span>)
-          <span class="ruby-identifier">secondcall</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>, <span class="ruby-identifier">firstcall</span>, <span class="ruby-identifier">:set_hook_handler</span>, <span class="ruby-identifier">args2</span>)
-          <span class="ruby-identifier">thirdcall</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>,<span class="ruby-identifier">secondcall</span>,<span class="ruby-identifier">:set_class</span>,<span class="ruby-identifier">s</span>(<span class="ruby-identifier">:arglist</span>, <span class="ruby-identifier">superclass_call_tree</span>))
-
-          <span class="ruby-comment cmt"># pass the args of the current defn</span>
-
-          <span class="ruby-identifier">args</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:arglist</span>)
-          <span class="ruby-ivar">@last_args</span>[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">arg_sym</span><span class="ruby-operator">|</span>
-            <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">arg_sym</span>.<span class="ruby-identifier">to_s</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;*&quot;</span>
-              <span class="ruby-identifier">args</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:splat</span>, <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:lvar</span>, <span class="ruby-identifier">arg_sym</span>.<span class="ruby-identifier">to_s</span>[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>].<span class="ruby-identifier">to_sym</span>))
-            <span class="ruby-keyword kw">else</span>
-              <span class="ruby-identifier">args</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:lvar</span>, <span class="ruby-identifier">arg_sym</span>)
-            <span class="ruby-keyword kw">end</span>
-          <span class="ruby-keyword kw">end</span>
-
-          <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>, <span class="ruby-identifier">thirdcall</span>, <span class="ruby-identifier">:call</span>, <span class="ruby-identifier">args</span>)
     <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
@@ -725,7 +669,7 @@
 
         <div class="method-heading">
           <a href="#M000031" class="method-signature">
-          <span class="method-name">superclass_call_tree</span><span class="method-args">()</span>
+          <span class="method-name">process_zsuper</span><span class="method-args">(tree)</span>
           </a>
         </div>
       
@@ -734,7 +678,47 @@
             onclick="toggleCode('M000031-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="M000031-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 212</span>
+<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 241</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">process_zsuper</span>(<span class="ruby-identifier">tree</span>)
+
+          <span class="ruby-identifier">receiver</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:self</span>)
+
+          <span class="ruby-identifier">firstcall</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>, <span class="ruby-identifier">hook_handler_reference</span>,
+                <span class="ruby-identifier">:hooked_method</span>,
+                <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:arglist</span>, <span class="ruby-identifier">receiver</span>, <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:lit</span>,<span class="ruby-ivar">@last_method_name</span>), <span class="ruby-identifier">superclass_call_tree</span>))
+
+          <span class="ruby-comment cmt"># pass the args of the current defn</span>
+          <span class="ruby-identifier">args</span> = <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:arglist</span>)
+          <span class="ruby-ivar">@last_args</span>[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">arg_sym</span><span class="ruby-operator">|</span>
+            <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">arg_sym</span>.<span class="ruby-identifier">to_s</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;*&quot;</span>
+              <span class="ruby-identifier">args</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:splat</span>, <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:lvar</span>, <span class="ruby-identifier">arg_sym</span>.<span class="ruby-identifier">to_s</span>[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>].<span class="ruby-identifier">to_sym</span>))
+            <span class="ruby-keyword kw">else</span>
+              <span class="ruby-identifier">args</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:lvar</span>, <span class="ruby-identifier">arg_sym</span>)
+            <span class="ruby-keyword kw">end</span>
+          <span class="ruby-keyword kw">end</span>
+
+          <span class="ruby-identifier">s</span>(<span class="ruby-identifier">:call</span>, <span class="ruby-identifier">firstcall</span>, <span class="ruby-identifier">:call</span>, <span class="ruby-identifier">args</span>)
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000028" class="method-detail">
+        <a name="M000028"></a>
+
+        <div class="method-heading">
+          <a href="#M000028" class="method-signature">
+          <span class="method-name">superclass_call_tree</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000028-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000028-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/evalhook/tree_processor.rb, line 204</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">superclass_call_tree</span>
       <span class="ruby-identifier">current_class_call</span> = <span class="ruby-keyword kw">nil</span>
 

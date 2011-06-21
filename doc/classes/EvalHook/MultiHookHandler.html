@@ -88,12 +88,12 @@
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000041">add</a>&nbsp;&nbsp;
-      <a href="#M000043">handle_cdecl</a>&nbsp;&nbsp;
-      <a href="#M000044">handle_gasgn</a>&nbsp;&nbsp;
-      <a href="#M000042">handle_method</a>&nbsp;&nbsp;
-      <a href="#M000045">handle_xstr</a>&nbsp;&nbsp;
-      <a href="#M000040">new</a>&nbsp;&nbsp;
+      <a href="#M000035">add</a>&nbsp;&nbsp;
+      <a href="#M000037">handle_cdecl</a>&nbsp;&nbsp;
+      <a href="#M000038">handle_gasgn</a>&nbsp;&nbsp;
+      <a href="#M000036">handle_method</a>&nbsp;&nbsp;
+      <a href="#M000039">handle_xstr</a>&nbsp;&nbsp;
+      <a href="#M000034">new</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -115,21 +115,21 @@
     <div id="methods">
       <h3 class="section-bar">Public Class methods</h3>
 
-      <div id="method-M000040" class="method-detail">
-        <a name="M000040"></a>
+      <div id="method-M000034" class="method-detail">
+        <a name="M000034"></a>
 
         <div class="method-heading">
-          <a href="#M000040" class="method-signature">
+          <a href="#M000034" class="method-signature">
           <span class="method-name">new</span><span class="method-args">()</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000040-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000040-source">
+            onclick="toggleCode('M000034-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000034-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook/multi_hook_handler.rb, line 26</span>
+<span class="ruby-comment cmt"># File lib/evalhook/multi_hook_handler.rb, line 28</span>
   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>
     <span class="ruby-ivar">@nested_hook_handlers</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-keyword kw">end</span>
@@ -140,11 +140,11 @@
 
       <h3 class="section-bar">Public Instance methods</h3>
 
-      <div id="method-M000041" class="method-detail">
-        <a name="M000041"></a>
+      <div id="method-M000035" class="method-detail">
+        <a name="M000035"></a>
 
         <div class="method-heading">
-          <a href="#M000041" class="method-signature">
+          <a href="#M000035" class="method-signature">
           <span class="method-name">add</span><span class="method-args">(nested_hh)</span>
           </a>
         </div>
@@ -154,10 +154,10 @@
 Add a nested hook handler to the hook handler chain (see examples)
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000041-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000041-source">
+            onclick="toggleCode('M000035-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000035-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook/multi_hook_handler.rb, line 31</span>
+<span class="ruby-comment cmt"># File lib/evalhook/multi_hook_handler.rb, line 33</span>
   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add</span>(<span class="ruby-identifier">nested_hh</span>)
     <span class="ruby-ivar">@nested_hook_handlers</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">nested_hh</span>
   <span class="ruby-keyword kw">end</span>
@@ -166,21 +166,21 @@ Add a nested hook handler to the hook handler chain (see examples)
         </div>
       </div>
 
-      <div id="method-M000043" class="method-detail">
-        <a name="M000043"></a>
+      <div id="method-M000037" class="method-detail">
+        <a name="M000037"></a>
 
         <div class="method-heading">
-          <a href="#M000043" class="method-signature">
+          <a href="#M000037" class="method-signature">
           <span class="method-name">handle_cdecl</span><span class="method-args">(*args)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000043-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000043-source">
+            onclick="toggleCode('M000037-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000037-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook/multi_hook_handler.rb, line 53</span>
+<span class="ruby-comment cmt"># File lib/evalhook/multi_hook_handler.rb, line 55</span>
   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">handle_cdecl</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
     <span class="ruby-identifier">lastret</span> = <span class="ruby-keyword kw">nil</span>
 
@@ -196,21 +196,21 @@ Add a nested hook handler to the hook handler chain (see examples)
         </div>
       </div>
 
-      <div id="method-M000044" class="method-detail">
-        <a name="M000044"></a>
+      <div id="method-M000038" class="method-detail">
+        <a name="M000038"></a>
 
         <div class="method-heading">
-          <a href="#M000044" class="method-signature">
+          <a href="#M000038" class="method-signature">
           <span class="method-name">handle_gasgn</span><span class="method-args">(*args)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000044-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000044-source">
+            onclick="toggleCode('M000038-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000038-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook/multi_hook_handler.rb, line 64</span>
+<span class="ruby-comment cmt"># File lib/evalhook/multi_hook_handler.rb, line 66</span>
   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">handle_gasgn</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
 
     <span class="ruby-identifier">lastret</span> = <span class="ruby-keyword kw">nil</span>
@@ -227,21 +227,21 @@ Add a nested hook handler to the hook handler chain (see examples)
         </div>
       </div>
 
-      <div id="method-M000042" class="method-detail">
-        <a name="M000042"></a>
+      <div id="method-M000036" class="method-detail">
+        <a name="M000036"></a>
 
         <div class="method-heading">
-          <a href="#M000042" class="method-signature">
+          <a href="#M000036" class="method-signature">
           <span class="method-name">handle_method</span><span class="method-args">(klass, recv, method_id)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000042-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000042-source">
+            onclick="toggleCode('M000036-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000036-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook/multi_hook_handler.rb, line 35</span>
+<span class="ruby-comment cmt"># File lib/evalhook/multi_hook_handler.rb, line 37</span>
   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">handle_method</span>(<span class="ruby-identifier">klass</span>, <span class="ruby-identifier">recv</span>, <span class="ruby-identifier">method_id</span>)
     <span class="ruby-identifier">lastret</span> = <span class="ruby-keyword kw">nil</span>
 
@@ -264,21 +264,21 @@ Add a nested hook handler to the hook handler chain (see examples)
         </div>
       </div>
 
-      <div id="method-M000045" class="method-detail">
-        <a name="M000045"></a>
+      <div id="method-M000039" class="method-detail">
+        <a name="M000039"></a>
 
         <div class="method-heading">
-          <a href="#M000045" class="method-signature">
+          <a href="#M000039" class="method-signature">
           <span class="method-name">handle_xstr</span><span class="method-args">(str)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000045-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000045-source">
+            onclick="toggleCode('M000039-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000039-source">
 <pre>
-<span class="ruby-comment cmt"># File lib/evalhook/multi_hook_handler.rb, line 76</span>
+<span class="ruby-comment cmt"># File lib/evalhook/multi_hook_handler.rb, line 78</span>
   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">handle_xstr</span>(<span class="ruby-identifier">str</span>)
 
     <span class="ruby-identifier">lastret</span> = <span class="ruby-keyword kw">nil</span>
