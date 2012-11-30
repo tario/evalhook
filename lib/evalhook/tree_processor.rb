@@ -86,7 +86,7 @@ module EvalHook
             )
       end
 
-      s(:call, firstcall, :call, process(tree[3]))
+      s(:call, firstcall, :call, process(tree[3]) || s(:arglist))
     end
 
     def process_cdecl(tree)
