@@ -71,8 +71,7 @@ module EvalHook
       receiver = process(original_receiver|| s(:self))
 
       firstcall = nil
-
-      if tree[3] == s(:arglist)
+      if tree[3] == s(:arglist) or tree[3] == nil
         firstcall = s(:call,
             hook_handler_reference,
             :hooked_variable_method,
