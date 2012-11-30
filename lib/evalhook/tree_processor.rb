@@ -136,7 +136,11 @@ module EvalHook
       end
 
       class_scope(nil) {
-        s(:module, module_name_tree, process(tree[2]))
+        module_tree = s(:module, module_name_tree)
+        tree[2..-1].each do |subtree|
+          module_tree << process(subtree)
+        end
+        module_tree
       }
     end
 
