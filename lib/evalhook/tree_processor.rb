@@ -157,11 +157,15 @@ module EvalHook
 
       if tree[2]
         class_scope(tree[1]) do
-          s(:class, class_name_tree, process(tree[2]), process(tree[3]))
+          class_tree = s(:class, class_name_tree, process(tree[2]))
+          tree[3..-1].map(&method(:process)).each(&class_tree.method(:<<))
+          class_tree
         end
       else
         class_scope(tree[1]) do
-          s(:class, class_name_tree, nil, process(tree[3]))
+          class_tree = s(:class, class_name_tree, nil)
+          tree[3..-1].map(&method(:process)).each(&class_tree.method(:<<))
+          class_tree
         end
       end
     end
