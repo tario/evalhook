@@ -85,7 +85,18 @@ module EvalHook
             )
       end
 
-      s(:call, firstcall, :call, process(tree[3]) || s(:arglist))
+      arglist = s(:arglist)
+      if tree[3]
+        if tree[3][0] == :arglist
+          arglist = tree[3]
+        else
+          tree[3..-1].each do |st|
+            arglist << st
+          end
+        end
+      end
+
+      s(:call, firstcall, :call, process(arglist) || s(:arglist))
     end
 
     def process_cdecl(tree)
