@@ -1,12 +1,12 @@
 require 'rubygems'
 require 'rake'
+require 'rdoc/task'
+require 'rubygems/package_task'
 require 'rake/testtask'
-require 'rake/rdoctask'
-require 'rake/gempackagetask'
 
 spec = Gem::Specification.new do |s|
   s.name = 'evalhook'
-  s.version = '0.5.1'
+  s.version = '0.5.2'
   s.author = 'Dario Seminara'
   s.email = 'robertodarioseminara@gmail.com'
   s.platform = Gem::Platform::RUBY
@@ -38,7 +38,7 @@ Rake::RDocTask.new :rdoc do |rd|
 end
 
 desc 'Build Gem'
-Rake::GemPackageTask.new spec do |pkg|
+Gem::PackageTask.new spec do |pkg|
   pkg.need_tar = true
 end
 
