@@ -68,7 +68,11 @@ module EvalHook
     def process_call(tree)
       original_receiver = tree[1]
 
-      receiver = process(original_receiver|| s(:self))
+      receiver = if original_receiver
+        s(:call, hook_handler_reference, :private_method_check, s(:arglist,process(original_receiver),s(:lit,tree[2])))
+      else
+        s(:self)
+      end
 
       firstcall = nil
       if tree[3] == s(:arglist) or tree[3] == nil

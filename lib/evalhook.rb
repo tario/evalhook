@@ -284,6 +284,11 @@ module EvalHook
       end
     end
 
+    def private_method_check(recv, mname)
+      recv.public_method(mname) rescue NameError raise NoMethodError
+      recv
+    end
+
   end
 
 	module ModuleMethods
