@@ -6,7 +6,7 @@ require 'rake/testtask'
 
 spec = Gem::Specification.new do |s|
   s.name = 'evalhook'
-  s.version = '0.5.3'
+  s.version = '0.5.4'
   s.author = 'Dario Seminara'
   s.email = 'robertodarioseminara@gmail.com'
   s.platform = Gem::Platform::RUBY
