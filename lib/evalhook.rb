@@ -139,8 +139,15 @@ module EvalHook
 
     def hooked_method(receiver, mname, klass = nil) #:nodoc:
       m = nil
+      is_method_missing = false
+
       unless klass
-        m = receiver.method(mname)
+        m = begin
+          receiver.method(mname)
+        rescue
+          is_method_missing = true
+          receiver.public_method(:method_missing)
+        end
         klass = m.owner
       else
         m = klass.instance_method(mname).bind(receiver)
@@ -160,6 +167,10 @@ module EvalHook
         end
       end
 
+      if is_method_missing
+        orig_m = m
+        m = lambda{|*x| orig_m.call(mname,*x) }
+      end
       m
     end
 
