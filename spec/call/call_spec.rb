@@ -3,7 +3,7 @@ require "evalhook"
 
 describe EvalHook::HookHandler, "hook handler hooks" do
 
-  it "should raise NoMethodError when tring to call private method" do
+  it "should raise NoMethodError when trying to call private method" do
     hh = EvalHook::HookHandler.new
     lambda {
       hh.evalhook("{}.system('ls -l')", binding)
@@ -11,7 +11,7 @@ describe EvalHook::HookHandler, "hook handler hooks" do
   end
 
 
-  it "should raise NoMethodError when tring to call private method" do
+  it "should raise NoMethodError when trying to call private method" do
     hh = EvalHook::HookHandler.new
     lambda {
       hh.evalhook("
@@ -29,4 +29,21 @@ describe EvalHook::HookHandler, "hook handler hooks" do
     }.should_not raise_error
   end
 
+  class XDefinedOutside55
+    def method_missing(name)
+      name
+    end
+  end
+  XDefinedOutside55_ins = XDefinedOutside55.new
+
+  context "when there is method_missing defined" do
+    it "shouldn't raise NoMethodError when trying to call a public method NOT defined" do
+      hh = EvalHook::HookHandler.new
+      lambda {
+        hh.evalhook("
+          XDefinedOutside55_ins.foo
+          ", binding).should be == :foo
+      }.should_not raise_error
+    end
+  end
 end
