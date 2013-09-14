@@ -46,4 +46,22 @@ describe EvalHook::HookHandler, "hook handler hooks" do
       }.should_not raise_error
     end
   end
+
+  class XDefinedOutside56
+    def method_missing(name, param1)
+      name
+    end
+  end
+  XDefinedOutside56_ins = XDefinedOutside56.new
+  
+  context "when there is method_missing defined (two arguments)" do
+    it "shouldn't raise NoMethodError when trying to call a public method NOT defined" do
+      hh = EvalHook::HookHandler.new
+      lambda {
+        hh.evalhook("
+          XDefinedOutside56_ins.foo(1)
+          ", binding).should be == :foo
+      }.should_not raise_error
+    end
+  end
 end
