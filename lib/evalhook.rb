@@ -168,7 +168,14 @@ module EvalHook
       if local_vars.include? mname.to_s
         HookedCallValue.new( _binding.eval(mname.to_s) )
       else
-        m = receiver.method(mname)
+        is_method_missing = false
+        m = begin 
+          receiver.method(mname)
+        rescue
+          is_method_missing = true
+          receiver.method(:method_missing)
+        end
+
         klass = m.owner
         ret = handle_method(klass, receiver, mname )
 
@@ -184,6 +191,10 @@ module EvalHook
           end
         end
 
+        if is_method_missing
+          orig_m = m
+          m = lambda{|*x| orig_m.call(mname,*x) }
+        end
         m
       end
     end
@@ -285,7 +296,15 @@ module EvalHook
     end
 
     def private_method_check(recv, mname)
-      recv.public_method(mname) rescue NameError raise NoMethodError
+      begin
+        recv.public_method(mname) 
+      rescue NameError 
+        begin
+          recv.public_method(:method_missing) 
+        rescue NameError
+          raise NoMethodError
+        end
+      end
       recv
     end
 
