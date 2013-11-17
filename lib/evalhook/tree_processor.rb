@@ -18,13 +18,10 @@ you should have received a copy of the gnu general public license
 along with evalhook.  if not, see <http://www.gnu.org/licenses/>.
 
 =end
-require "ruby_parser"
 require "partialruby"
 require "sexp_processor"
 
 module EvalHook
-
-
   class TreeProcessor < SexpProcessor
     def initialize(hook_handler)
       super()

@@ -38,28 +38,6 @@ module EvalHook
     end
   end
 
-  class Packet
-    def initialize(emulationcode) #:nodoc:
-      @emulationcode = emulationcode
-    end
-
-    # Executes the code with a given binding, source name (optional) and line (optional)
-    #
-    # See EvalHook::HookHandler#packet for more info
-    #
-    # Example:
-    #
-    #   hook_handler = HookHandler.new
-    #
-    #   pack = hook_handler.packet('print "hello world\n"')
-    #   10.times do
-    #     pack.run
-    #   end
-    def run(binding_, name = "(eval)", line = 1)
-      eval(@emulationcode, binding_, name, line)
-    end
-  end
-
   class HookHandler
 
     include RedirectHelper
@@ -69,6 +47,16 @@ module EvalHook
     def initialize
       super
       self.base_namespace = Object
+    end
+
+    def partialruby_context
+      unless @partialruby_context
+        @partialruby_context = PartialRuby::Context.new
+        @partialruby_context.pre_process do |tree|
+          EvalHook::TreeProcessor.new(self).process(tree)
+        end
+      end
+      @partialruby_context
     end
 
     def base_namespace=( obj )
@@ -272,22 +260,7 @@ module EvalHook
     #     pack.run
     #   end
     def packet(code)
-
-      tree = nil
-
-      begin
-        tree = RubyParser.new.parse code
-      rescue
-        raise SyntaxError
-      end
-
-      context = PartialRuby::PureRubyContext.new
-
-      tree = EvalHook::TreeProcessor.new(self).process(tree)
-
-      emulationcode = context.emul tree
-
-      EvalHook::Packet.new(emulationcode)
+      partialruby_context.packet(code)
     end
 
     if ($evalmimic_defined)
