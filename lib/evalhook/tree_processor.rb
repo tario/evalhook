@@ -252,7 +252,7 @@ module EvalHook
 
     def process_defs(tree)
       block_tree = class_scope( "" ) {
-        process(tree[4])
+        s(:block, *tree[4..-1].map(&method(:process)))
       }
       s(:defs, process(tree[1]), tree[2], tree[3], block_tree)
     end
