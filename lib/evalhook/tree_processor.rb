@@ -217,7 +217,7 @@ module EvalHook
       @last_args = tree[2]
       @last_method_name = tree[1]
 
-      s(tree[0],tree[1],tree[2],process(tree[3]))
+      s(tree[0],tree[1],tree[2],*tree[3..-1].map(&method(:process)))
     end
 
     def superclass_call_tree
