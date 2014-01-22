@@ -1,3 +1,7 @@
+0.5.8 Fixed issue #9 (block variables shadowing methods)
+
+0.5.7 Fixed methods with multiple lines (for new versions of ruby)
+
 0.5.6 Removed ruby_parser dependency
 
 0.5.5 Fixed handling of method_missing
