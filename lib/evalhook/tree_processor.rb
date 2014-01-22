@@ -72,7 +72,7 @@ module EvalHook
       end
 
       firstcall = nil
-      if tree[3] == s(:arglist) or tree[3] == nil
+      if tree[1] == nil and (tree[3] == s(:arglist) or tree[3] == nil)
         firstcall = s(:call,
             hook_handler_reference,
             :hooked_variable_method,
