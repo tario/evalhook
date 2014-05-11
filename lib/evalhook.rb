@@ -38,6 +38,21 @@ module EvalHook
     end
   end
 
+  class Packet
+    def initialize(partialruby_packet, global_variable_name)
+      @partialruby_packet = partialruby_packet
+      @global_variable_name = global_variable_name
+    end
+
+    def run(*args)
+      @partialruby_packet.run(*args)
+    end
+
+    def dispose
+      eval("#{@global_variable_name} = nil") if @global_variable_name
+    end
+  end
+
   class HookHandler
 
     include RedirectHelper
@@ -52,6 +67,7 @@ module EvalHook
     def partialruby_context
       unless @partialruby_context
         @partialruby_context = PartialRuby::Context.new
+
         @partialruby_context.pre_process do |tree|
           @global_variable_name = "$hook_handler_" + rand(10000000000).to_s
           eval("#{@global_variable_name} = self")
@@ -262,8 +278,14 @@ module EvalHook
     #   10.times do
     #     pack.run
     #   end
+    #
+    #   pack.dispose
+    #
     def packet(code)
-      partialruby_context.packet(code)
+      @global_variable_name = nil
+      partialruby_packet = partialruby_context.packet(code)
+
+      EvalHook::Packet.new(partialruby_packet, @global_variable_name)
     end
 
     if ($evalmimic_defined)
