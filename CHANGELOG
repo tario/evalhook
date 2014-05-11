@@ -1,3 +1,5 @@
+0.6.0 Added dispose methods to allow freeing resources used by evalhook code
+
 0.5.8 Fixed issue #9 (block variables shadowing methods)
 
 0.5.7 Fixed methods with multiple lines (for new versions of ruby)
