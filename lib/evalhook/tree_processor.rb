@@ -23,8 +23,9 @@ require "sexp_processor"
 
 module EvalHook
   class TreeProcessor < SexpProcessor
-    def initialize(hook_handler)
+    def initialize(hook_handler, global_variable_name)
       super()
+      @hh_ref_global_name = global_variable_name
       @hook_handler = hook_handler
       @def_scope = Array.new
       self.require_empty = false
@@ -43,14 +44,6 @@ module EvalHook
     end
 
     def hook_handler_reference
-      # create a global_variable name
-      unless @hh_ref_global_name
-        global_variable_name = "$hook_handler_" + rand(10000000000).to_s
-        eval("#{global_variable_name} = @hook_handler")
-
-        @hh_ref_global_name = global_variable_name.to_sym
-      end
-
       s(:gvar, @hh_ref_global_name)
     end
 

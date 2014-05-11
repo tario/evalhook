@@ -53,7 +53,10 @@ module EvalHook
       unless @partialruby_context
         @partialruby_context = PartialRuby::Context.new
         @partialruby_context.pre_process do |tree|
-          EvalHook::TreeProcessor.new(self).process(tree)
+          @global_variable_name = "$hook_handler_" + rand(10000000000).to_s
+          eval("#{@global_variable_name} = self")
+
+          EvalHook::TreeProcessor.new(self, @global_variable_name).process(tree)
         end
       end
       @partialruby_context
