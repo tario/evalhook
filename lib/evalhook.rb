@@ -285,7 +285,17 @@ module EvalHook
       @global_variable_name = nil
       partialruby_packet = partialruby_context.packet(code)
 
-      EvalHook::Packet.new(partialruby_packet, @global_variable_name)
+      @all_packets ||= []
+      newpacket = EvalHook::Packet.new(partialruby_packet, @global_variable_name)
+      @all_packets << newpacket
+      newpacket
+    end
+
+    # Disposes all code packets created on this context
+    def dispose
+      if @all_packets
+        @all_packets.each(&:dispose)
+      end
     end
 
     if ($evalmimic_defined)
